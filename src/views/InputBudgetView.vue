@@ -40,6 +40,8 @@ function modalOpen(goal) {
 // 모달 닫기
 function modalClose() {
   modalCheck.value = false
+  inputBudget.value = ''
+  inputMemo.value = ''
 }
 
 // 목표 예산 카드 선택하기
