@@ -153,4 +153,10 @@ onMounted(() => {
   flex: 1 1 calc(50% - 20px);
   max-width: calc(50% - 20px);
 }
+@media (max-width: 768px) {
+  .travel-card.two-column .card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
 </style>
