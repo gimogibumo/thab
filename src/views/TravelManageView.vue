@@ -105,7 +105,7 @@ onMounted(() => {
 
 <style scoped>
 .content-container {
-  padding: 0 20px;
+  margin: 100px;
 }
 
 .tabs {

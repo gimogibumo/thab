@@ -13,6 +13,7 @@ const routes = [
     children: [
       { path: '', component: MainView },
       { path: 'travel_manage', component: TravelManageView },
+      { path: 'travel/:id', component: TravelManageView }, // 여행 관리 상세탭으로 컴포넌트 수정
       { path: 'expense_input', component: InputExpenseView },
       { path: 'expense_list', component: ListExpenseView },
     ],

@@ -27,15 +27,17 @@
       </div>
     </div>
     <div class="button-container">
-      <button class="manage-button">여행 관리하기</button>
+      <button class="manage-button" @click="goToManagePage">여행 관리하기</button>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 const props = defineProps({
   coverImage: String,
+  id: String,
   title: String,
   startDate: String,
   endDate: String,
@@ -92,6 +94,12 @@ const progress = computed(() => {
 })
 
 const showProgress = computed(() => props.status !== 'past')
+
+const router = useRouter()
+const goToManagePage = () => {
+  console.log('여행 ID:', props.id)
+  router.push(`/travel_manage/${props.id}`)
+}
 </script>
 
 <style scoped>
