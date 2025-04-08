@@ -3,7 +3,7 @@
     <div class="card-header" :style="{ backgroundImage: `url(${coverImage})` }">
       <span class="d-day">{{ dDay }}</span>
       <div class="text-overlay">
-        <p class="trip-info">{{ tripInfo }}</p>
+        <p class="trip-info">{{ title }}</p>
         <p class="trip-dates">{{ startDate }} - {{ endDate }}</p>
       </div>
     </div>
@@ -19,11 +19,11 @@
     <div class="budget-info">
       <div class="budget-item">
         <span class="label">{{ budgetLabel1 }}</span>
-        <span class="value">{{ totalBudget.toLocaleString() }}원</span>
+        <span class="value">{{ mainBudget.toLocaleString() }}원</span>
       </div>
       <div class="budget-item">
         <span class="label">{{ budgetLabel2 }}</span>
-        <span class="value">{{ savedAmount.toLocaleString() }}원</span>
+        <span class="value">{{ subAmount.toLocaleString() }}원</span>
       </div>
     </div>
     <div class="button-container">
@@ -36,14 +36,14 @@
 import { computed } from 'vue'
 const props = defineProps({
   coverImage: String,
-  dDay: String,
-  tripInfo: String,
+  title: String,
   startDate: String,
   endDate: String,
-  progress: Number,
   totalBudget: Number,
-  savedAmount: Number,
+  income: Number,
+  totalSpent: Number,
   status: String,
+  dDay: String,
   size: {
     type: String,
     default: 'small',
@@ -63,15 +63,35 @@ const budgetLabel2 = computed(() => {
   return ''
 })
 
+const mainBudget = computed(() => {
+  if (props.status === 'ongoing' || props.status === 'past') return props.income
+  if (props.status === 'upcoming') return props.totalBudget
+  return 0
+})
+
+const subAmount = computed(() => {
+  if (props.status === 'upcoming') return props.income
+  if (props.status === 'ongoing' || props.status === 'past') return props.totalSpent
+  return 0
+})
+
 const progressLabel = computed(() => {
   if (props.status === 'ongoing') return '예산 대비 지출'
   if (props.status === 'upcoming') return '목표 예산 달성률'
   return ''
 })
 
-const showProgress = computed(() => {
-  return props.status === 'ongoing' || props.status === 'upcoming'
+const progress = computed(() => {
+  if (props.status === 'upcoming') {
+    return props.totalBudget ? Math.round((props.income / props.totalBudget) * 100) : 0
+  }
+  if (props.status === 'ongoing') {
+    return props.income ? Math.round((props.totalSpent / props.income) * 100) : 0
+  }
+  return 0
 })
+
+const showProgress = computed(() => props.status !== 'past')
 </script>
 
 <style scoped>
@@ -82,17 +102,23 @@ const showProgress = computed(() => {
   margin: 10px auto;
   box-sizing: border-box;
   position: relative;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .card.small {
   width: 425px;
   max-width: 500px;
+  min-height: 530px;
   margin-left: 0;
 }
 
 .card.large {
   width: 600px;
   max-width: 700px;
+  min-height: 400px;
 }
 
 .card-header {

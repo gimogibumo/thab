@@ -9,26 +9,21 @@ today.setHours(0, 0, 0, 0)
 
 const travelCards = reactive([])
 
-// 여행 상태와 D-Day 계산 함수
 const calculateTravelStatus = (card) => {
   const startDate = new Date(card.startDate)
   const endDate = new Date(card.endDate)
 
-  const todayWithoutTime = new Date(today)
-  todayWithoutTime.setHours(0, 0, 0, 0)
+  const diffDays = Math.floor((startDate - today) / (1000 * 60 * 60 * 24))
 
-  // D-Day 계산
-  const timeDiff = Math.ceil((startDate - todayWithoutTime) / (1000 * 60 * 60 * 24))
-
-  if (todayWithoutTime >= startDate && todayWithoutTime <= endDate) {
+  if (today >= startDate && today <= endDate) {
     card.status = 'ongoing'
     card.dDay = '여행 중'
-  } else if (todayWithoutTime > endDate) {
+  } else if (today > endDate) {
     card.status = 'past'
     card.dDay = '완료'
   } else {
     card.status = 'upcoming'
-    card.dDay = `D-${timeDiff}`
+    card.dDay = `D-${diffDays}`
   }
 }
 
@@ -97,9 +92,10 @@ onMounted(() => {
       >
         <TravelCard
           v-for="(card, index) in filteredAndSortedCards"
-          :key="index"
+          :key="card.id"
           v-bind="card"
           :status="card.status"
+          :dDay="card.dDay"
           :size="activeTab === 'ongoing' ? 'large' : 'small'"
         />
       </div>
