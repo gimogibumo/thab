@@ -9,6 +9,14 @@
 
     <div class="flex-grow-1 overflow-auto">
       <div class="px-3 py-2">
+        <!-- 홈 버튼: 일정 관리 바로 위 -->
+        <div class="mb-2">
+          <router-link to="/" class="nav-btn d-flex align-items-center">
+            <i class="bi bi-house-door"></i>
+            <span v-if="!isCollapsed" class="ms-2">홈</span>
+          </router-link>
+        </div>
+
         <div v-for="category in navCategories" :key="category.name">
           <div class="text-muted px-3 fw-bold" v-if="!isCollapsed">{{ category.name }}</div>
           <div v-for="item in category.items" :key="item.name" class="ms-3">
@@ -38,26 +46,28 @@ import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 
 const isCollapsed = ref(false)
 const toggled = ref(false)
+
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
   toggled.value = !toggled.value
-  console.log(isCollapsed.value)
 }
+
 const handleResize = () => {
   if (window.innerWidth <= 1024 || toggled.value) {
     isCollapsed.value = true
-    console.log('phonesize')
   } else {
     isCollapsed.value = false
-    console.log('originalsize')
   }
 }
+
 onMounted(() => {
   window.addEventListener('resize', handleResize)
 })
+
 onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize)
 })
+
 watch(isCollapsed, (newVal) => {
   const contentElements = document.querySelectorAll("[class^='content']")
   contentElements.forEach((el) => {
@@ -93,6 +103,29 @@ const navCategories = [
 </script>
 
 <style scoped>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+body,
+button,
+input,
+textarea {
+  font-family:
+    'Pretendard Variable',
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    'Helvetica Neue',
+    'Segoe UI',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    sans-serif;
+}
+
 .sidebar {
   width: 270px;
   height: 100vh;
@@ -112,7 +145,6 @@ const navCategories = [
   display: flex;
   align-items: center;
   gap: 8px;
-  row-gap: 8px;
   padding-top: 12px;
   padding-bottom: 12px;
   padding-left: 0px;
