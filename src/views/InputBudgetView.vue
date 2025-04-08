@@ -96,8 +96,8 @@ function addBudget() {
             <div class="date">목표일: {{ goal.date }}</div>
           </div>
           <div class="amount">
-            <div class="saved">{{ goal.saved }}원</div>
-            <div class="target">목표: {{ goal.target }}원</div>
+            <div class="saved">{{ goal.saved.toLocaleString() }}원</div>
+            <div class="target">목표: {{ goal.target.toLocaleString() }}원</div>
           </div>
         </div>
         <div class="progress-bar">

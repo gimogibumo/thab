@@ -84,7 +84,7 @@ const topCategory = computed(() => {
           class="category-box">
           <div class="category-header">
             <div>{{ item.name }}</div>
-            <div>{{ item.amount }}원 ({{ item.percent }}%)</div>
+            <div>{{ item.amount.toLocaleString() }}원 ({{ item.percent }}%)</div>
           </div>
           <div class="progress-bar">
             <div
@@ -144,7 +144,7 @@ const topCategory = computed(() => {
 
 .total-content {
   font-weight: bold;
-  font-size: 28px;
+  font-size: 24px;
 }
 
 .middle {
