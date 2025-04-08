@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
 import axios from 'axios'
@@ -58,8 +57,102 @@ onMounted(() => {
   fetchTravelCards()
 })
 </script>
-=======
->>>>>>> 32f8b124f06836c0c36419a08dc537bd9a74c63d
 <template>
-  <div class="content">TravelMavageView</div>
+  <div class="content">
+    <!-- 공통 부모 컨테이너 -->
+    <div class="content-container">
+      <!-- 탭 -->
+      <div class="tabs">
+        <div
+          class="tab"
+          :class="{ active: activeTab === 'ongoing' }"
+          @click="activeTab = 'ongoing'"
+        >
+          여행 중
+        </div>
+        <div
+          class="tab"
+          :class="{ active: activeTab === 'upcoming' }"
+          @click="activeTab = 'upcoming'"
+        >
+          예정된 여행
+        </div>
+        <div class="tab" :class="{ active: activeTab === 'past' }" @click="activeTab = 'past'">
+          지난 여행
+        </div>
+      </div>
+
+      <!-- 카드 리스트 -->
+      <div
+        class="travel-card"
+        :class="{
+          'two-column': activeTab !== 'ongoing',
+          'one-column': activeTab === 'ongoing',
+        }"
+      >
+        <TravelCard
+          v-for="(card, index) in filteredAndSortedCards"
+          :key="card.id"
+          v-bind="card"
+          :status="card.status"
+          :dDay="card.dDay"
+          :size="activeTab === 'ongoing' ? 'large' : 'small'"
+        />
+      </div>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.content-container {
+  margin: 100px;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: 1px solid #a47764;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #a47764;
+  cursor: pointer;
+  text-align: center;
+}
+
+.tab.active {
+  background-color: #a47764;
+  color: white;
+}
+
+.travel-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.travel-card.one-column .card {
+  flex: 1 1 100%;
+  max-width: 100%;
+}
+
+.travel-card.two-column .card {
+  flex: 1 1 calc(50% - 20px);
+  max-width: calc(50% - 20px);
+}
+@media (max-width: 768px) {
+  .travel-card.two-column .card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+</style>
