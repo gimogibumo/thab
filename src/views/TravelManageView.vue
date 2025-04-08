@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
 import axios from 'axios'
@@ -57,6 +58,8 @@ onMounted(() => {
   fetchTravelCards()
 })
 </script>
+=======
+>>>>>>> 32f8b124f06836c0c36419a08dc537bd9a74c63d
 <template>
   <div class="content">TravelMavageView</div>
 </template>
