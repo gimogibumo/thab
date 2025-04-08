@@ -13,6 +13,7 @@ import Header from '@/components/Header.vue'
 
 <style scoped>
 .content {
+  flex-grow: 1;
   margin-left: 270px;
   padding: 20px;
   height: 100vh;
