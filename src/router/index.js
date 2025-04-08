@@ -4,6 +4,7 @@ import TravelManageView from '@/views/TravelManageView.vue'
 import MainLayout from '@/layout/MainLayout.vue'
 import InputExpenseView from '@/views/InputExpenseView.vue'
 import ListExpenseView from '@/views/ListExpenseView.vue'
+import CreateTravel from '@/views/CreateTravelView.vue'
 import InputBudgetView from '@/views/InputBudgetView.vue'
 
 const routes = [
@@ -17,7 +18,8 @@ const routes = [
       { path: 'travel/:id', component: TravelManageView }, // 여행 관리 상세탭으로 컴포넌트 수정
       { path: 'expense_input', component: InputExpenseView },
       { path: 'expense_list', component: ListExpenseView },
-      { path: 'budget_input', component: InputBudgetView },
+      { path: 'create', component: CreateTravel},
+      { path: 'budget_input', component: InputBudgetView }
     ],
   },
 ]
