@@ -23,6 +23,9 @@ const formData = ref({
   title: '',
   startDate: '',
   endDate: '',
+  destination: '',
+  description: '',
+  currency: '',
   budget: {
     stay: 0,
     transport: 0,
@@ -30,7 +33,10 @@ const formData = ref({
     tour: 0,
     shopping: 0,
     etc: 0
-  }
+  },
+  totalBudget: '',
+  income: 0,
+  totalSpent: 0
 })
 
 const nextStep = () => {
