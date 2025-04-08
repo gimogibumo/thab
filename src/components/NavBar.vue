@@ -45,7 +45,7 @@
           <router-link to="/expense_list" class="nav-btn">
             <i class="bi bi-list"></i> 지출 내역
           </router-link>
-          <router-link to="/income_input" class="nav-btn">
+          <router-link to="/budget_input" class="nav-btn">
             <i class="bi bi-graph-up"></i> 수입 입력
           </router-link>
         </div>
