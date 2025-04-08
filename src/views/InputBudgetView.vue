@@ -25,25 +25,24 @@ const goals = reactive([
   }
 ])
 
-const savedAmount = 1650000
-const targetAmount = 2000000
-
-const progressPercent = Math.floor((savedAmount / targetAmount) * 100)
-const remainingAmount = targetAmount - savedAmount
-
 const selectedId = ref(null)
 const modalCheck = ref(false)
 const selectedGoal = ref(null)
+const inputBudget = ref('')
+const inputMemo = ref('')
 
+// 모달 열기
 function modalOpen(goal) {
   modalCheck.value = true
   selectedGoal.value = goal
 }
 
+// 모달 닫기
 function modalClose() {
   modalCheck.value = false
 }
 
+// 목표 예산 카드 선택하기
 function selectCard(id) {
   if (selectedId.value === id) {
     selectedId.value = null
@@ -54,112 +53,106 @@ function selectCard(id) {
   }
 }
 
+// 저축하기
+function addBudget() {
+  const amount = parseInt(inputBudget.value.replace(/[^0-9]/g, ''))
+  const memo = inputMemo.value
+
+  if (!amount || amount <= 0) {
+    alert('유효한 금액을 입력해주세요.')
+    return
+  }
+
+  // 오늘 날짜 생성
+  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '.')
+
+  // 내역 추가
+  selectedGoal.value.details.unshift({
+    date: today,
+    title: memo,
+    amount
+  })
+
+  // 저장 금액 증가
+  selectedGoal.value.saved += amount
+
+  inputBudget.value = ''
+  modalClose()
+}
+
 </script>
 <template>
   <div class="content">
-      <div class="page-title">예산 모으기</div>
-      <div class="goal-wrap" v-for="goal in goals" :key="goal.id">
-        <div class="goal-card"
-             :class="[
+    <div class="page-title">예산 모으기</div>
+    <div class="goal-wrap" v-for="goal in goals" :key="goal.id">
+      <div class="goal-card"
+           :class="[
                { active: selectedId === goal.id },
                selectedId !== null ? 'shrinked' : ''
              ]"
-             @click="selectCard(goal.id)">
-          <div class="top">
-            <div>
-              <div class="title">{{ goal.title }}</div>
-              <div class="date">목표일: {{ goal.date }}</div>
-            </div>
-            <div class="amount">
-              <div class="saved">{{ goal.saved }}원</div>
-              <div class="target">목표: {{ goal.target }}원</div>
-            </div>
+           @click="selectCard(goal.id)">
+        <div class="top">
+          <div>
+            <div class="title">{{ goal.title }}</div>
+            <div class="date">목표일: {{ goal.date }}</div>
           </div>
-          <div class="progress-bar">
-            <div class="progress" :style="{ width: progressPercent + '%' }"></div>
-          </div>
-          <div class="bottom">
-            <div>{{ progressPercent }}% 달성</div>
-            <div>잔여: {{ remainingAmount.toLocaleString() }}원</div>
+          <div class="amount">
+            <div class="saved">{{ goal.saved }}원</div>
+            <div class="target">목표: {{ goal.target }}원</div>
           </div>
         </div>
+        <div class="progress-bar">
+          <div class="progress"
+               :style="{ width: Math.floor((goal.saved / goal.target) * 100) + '%' }"></div>
         </div>
-
-        <div class="slide-panel" :class="{ active: selectedId !== null }">
-          <button class="slide-close-btn" @click="selectCard(null)">×</button>
-          <div v-if="selectedGoal">
-            <div class="title">{{ selectedGoal.title }} 저축 내역</div>
-            <div class="list-content"
-                 v-for="item in selectedGoal.details"
-                 :key="item.date + item.title">
-              <div>
-                <div class="input-date">{{ item.date }}</div>
-                <div class="input-title">{{ item.title }}</div>
-              </div>
-              <div class="input">+{{ item.amount.toLocaleString() }}원</div>
-            </div>
-            <button class="open-modal-btn" @click="modalOpen(selectedGoal)">저축하기</button>
-          </div>
-      </div>
-
-      <!-- 모달창 ui -->
-      <div v-show="modalCheck" class="modal-overlay" @click="modalClose">
-        <div class="modal-container" @click.stop>
-          <div class="modal-content">
-            <div class="modal-title">{{ selectedGoal?.title }}에 저축하기</div>
-            <div>
-              <div class="save-money">저축 금액</div>
-              <input type="text" placeholder="금액을 입력하세요" />
-              <div class="save-memo">메모</div>
-              <input type="text" placeholder="메모를 입력하세요" />
-            </div>
-          </div>
-          <div class="modal-btn">
-            <button @click="modalClose">닫기</button>
-            <button @click="modalClose">확인</button>
-          </div>
+        <div class="bottom">
+          <div>{{ Math.floor((goal.saved / goal.target) * 100) }}% 달성</div>
+          <div>잔여: {{ (goal.target - goal.saved).toLocaleString() }}원</div>
         </div>
       </div>
+    </div>
+
+    <div class="slide-panel" :class="{ active: selectedId !== null }">
+      <button class="slide-close-btn" @click="selectCard(null)">×</button>
+      <div v-if="selectedGoal">
+        <div class="title">{{ selectedGoal.title }} 저축 내역</div>
+        <div class="list-content"
+             v-for="item in selectedGoal.details"
+             :key="item.date + item.title">
+          <div>
+            <div class="input-date">{{ item.date }}</div>
+            <div class="input-title">{{ item.title }}</div>
+          </div>
+          <div class="input">+{{ item.amount.toLocaleString() }}원</div>
+        </div>
+        <button class="open-modal-btn" @click="modalOpen(selectedGoal)">저축하기</button>
+      </div>
+    </div>
+
+    <!-- 모달창 ui -->
+    <div v-show="modalCheck" class="modal-overlay" @click="modalClose">
+      <div class="modal-container" @click.stop>
+        <div class="modal-content">
+          <div class="modal-title">{{ selectedGoal?.title }}에 저축하기</div>
+          <div>
+            <div class="save-money">저축 금액</div>
+            <input type="text" v-model="inputBudget" placeholder="금액을 입력하세요" />
+            <div class="save-memo">메모</div>
+            <input type="text" v-model="inputMemo" placeholder="메모를 입력하세요" />
+          </div>
+        </div>
+        <div class="modal-btn">
+          <button @click="modalClose">닫기</button>
+          <button @click="addBudget">확인</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-/* ===== Layout ===== */
-.slide-panel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 350px;
-  height: 100vh;
-  background: #fff;
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
-  padding: 30px 20px;
-  z-index: 2000;
-  transition: transform 0.3s ease;
-  transform: translateX(100%);
-}
-
-.slide-panel.active {
-  transform: translateX(0);
-}
-
-.slide-close-btn {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  font-size: 20px;
-  cursor: pointer;
-  background: none;
-  border: none;
-}
-
 .content {
   padding: 50px;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .page-title {
@@ -168,7 +161,7 @@ function selectCard(id) {
   margin-bottom: 50px;
 }
 
-/* ===== Goal Card ===== */
+/* ===== 목표 예산 ===== */
 .goal-wrap {
   display: flex;
   align-items: flex-start;
@@ -252,7 +245,7 @@ function selectCard(id) {
   color: #555;
 }
 
-/* ===== Budget List (Details) ===== */
+/* ===== 저축 내역 ===== */
 .budget-list .title {
   font-size: 16px;
   font-weight: bold;
@@ -285,7 +278,7 @@ function selectCard(id) {
   color: #888;
 }
 
-/* ===== Modal ===== */
+/* ===== 모달 ===== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -320,7 +313,7 @@ function selectCard(id) {
   border-radius: 8px;
 }
 
-/* ===== Modal Buttons ===== */
+/* ===== 모달 버튼 ===== */
 .modal-btn {
   display: flex;
   justify-content: flex-end;
@@ -337,7 +330,7 @@ function selectCard(id) {
   cursor: pointer;
 }
 
-/* ===== Button: "저축하기" ===== */
+/* ===== 저축하기 버튼 ===== */
 .open-modal-btn {
   background: #7B5E48;
   color: white;
@@ -347,6 +340,35 @@ function selectCard(id) {
   font-weight: bold;
   cursor: pointer;
   margin-top: 20px;
+}
+
+/* ===== 슬라이드 패널 ===== */
+.slide-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 350px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  padding: 30px 20px;
+  z-index: 2000;
+  transition: transform 0.3s ease;
+  transform: translateX(100%);
+}
+
+.slide-panel.active {
+  transform: translateX(0);
+}
+
+.slide-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 20px;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 
 /* 태블릿 대응 (768px 이하) */
