@@ -57,7 +57,6 @@ function selectCard(id) {
 </script>
 <template>
   <div class="content">
-    <div class="container">
       <div class="page-title">예산 모으기</div>
       <div class="goal-wrap" v-for="goal in goals" :key="goal.id">
         <div class="goal-card"
@@ -121,7 +120,6 @@ function selectCard(id) {
           </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -156,7 +154,7 @@ function selectCard(id) {
 }
 
 .content {
-  padding: 40px;
+  padding: 50px;
 }
 
 .container {
@@ -350,7 +348,6 @@ function selectCard(id) {
   cursor: pointer;
   margin-top: 20px;
 }
-
 
 /* 태블릿 대응 (768px 이하) */
 @media (max-width: 768px) {

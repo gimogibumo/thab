@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex">
+  <div :class="['main-layout', isCollapsed ? 'collapsed' : 'expanded']">
     <NavBar />
     <Header />
     <router-view />
@@ -7,19 +7,42 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useSidebarStore } from '@/stores/sidebar'
 import NavBar from '@/components/NavBar.vue'
 import Header from '@/components/Header.vue'
+
+const sidebarStore = useSidebarStore()
+const isCollapsed = computed(() => sidebarStore.isCollapsed)
 </script>
 
 <style scoped>
+.main-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+.collapsed .content {
+  margin-left: 80px;
+  transition: margin-left 0.3s ease;
+}
+
+.expanded .content {
+  margin-left: 270px;
+  transition: margin-left 0.3s ease;
+}
+
 .content {
   flex-grow: 1;
-  margin-left: 270px;
   padding: 20px;
-  height: 100vh;
   overflow-y: auto;
 }
-.colors {
-  background-color: #8b6f5c;
+
+@media (max-width: 1024px) {
+  .collapsed .content,
+  .expanded .content {
+    margin-left: 0;
+  }
 }
 </style>
