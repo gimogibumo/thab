@@ -13,9 +13,9 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import TravelForm1 from '@/layout/TravelForm1.vue'
-import TravelForm2 from '@/layout/TravelForm2.vue'
-import TravelForm3 from '@/layout/TravelForm3.vue'
+import TravelForm1 from '@/components/TravelForm1.vue'
+import TravelForm2 from '@/components/TravelForm2.vue'
+import TravelForm3 from '@/components/TravelForm3.vue'
  
 const step = ref(1)
 
@@ -52,19 +52,5 @@ const currentStepComponent = computed(() => {
 <style scoped>
 .content{
   flex-grow: 1;
-}
-.page-container {
-  display: flex;
-  height: 100vh;
-}
-.sidebar {
-  width: 250px;
-  background-color: #8b6a55;
-}
-.main-content {
-  flex-grow: 1;
-  padding: 1rem;
-  overflow-y: auto;
-  background-color: #f8f9fa;
 }
 </style>
