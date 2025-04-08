@@ -1,19 +1,25 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import CreateTravelHeader from '@/components/CreateTravelHeader.vue'
 import StepIndicator from '@/components/StepIndicator.vue'
 
-// Props와 emit 설정
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue', 'next'])
 
-// 양방향 바인딩을 위한 computed
 const localForm = computed({
   get: () => props.modelValue,
   set: (val) => emit('update:modelValue', val)
 })
-</script>
 
+// 🔸 종료일이 시작일보다 빠른지 여부 체크
+const isInvalidDate = computed(() => {
+  return (
+    localForm.value.startDate &&
+    localForm.value.endDate &&
+    new Date(localForm.value.endDate) < new Date(localForm.value.startDate)
+  )
+})
+</script>
 <template>
   <div class="step-wrapper">
     <CreateTravelHeader title="새로운 여행 만들기" subtitle="나의 특별한 여행" />
@@ -34,7 +40,6 @@ const localForm = computed({
             v-model="localForm.title"
           />
         </div>
-
         <!-- 날짜 입력 -->
         <div class="row">
           <div class="col-md-6 mb-3">
@@ -51,10 +56,10 @@ const localForm = computed({
               type="date" 
               class="form-control"
               v-model="localForm.endDate"
+              :min="localForm.startDate" 
             />
           </div>
         </div>
-
         <!-- 다음 버튼 -->
         <div class="d-flex justify-content-end">
           <button @click="$emit('next')" class="btn text-white" style="background-color: #8B6F5C;">다음</button>
