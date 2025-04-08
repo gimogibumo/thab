@@ -1,36 +1,108 @@
 {
-    "trips": [
-      {
-        "id": "4473",
-        "title": "일본 오사카 여행",
-        "startDate": "2025-04-12",
-        "endDate": "2025-04-14",
-        "budget": {
-          "stay": 100000,
-          "transport": 300000,
-          "food": 100000,
-          "tour": 100000,
-          "shopping": 100000,
-          "etc": 100000
-        },
-        "destination": "오사카",
-        "description": "오사카 유니버셜 스튜디오에서 재밌게 놀 예정",
-        "totalBudget": 800000
+  "trips": [
+    {
+      "id": "4473",
+      "title": "일본 오사카 여행",
+      "startDate": "2025-04-12",
+      "endDate": "2025-04-14",
+      "budget": {
+        "stay": 100000,
+        "transport": 300000,
+        "food": 100000,
+        "tour": 100000,
+        "shopping": 100000,
+        "etc": 100000
       },
-      {
-        "id": "8e3c",
-        "title": "",
-        "startDate": "2025-04-09",
-        "endDate": "2025-04-10",
-        "budget": {
-          "stay": 0,
-          "transport": 0,
-          "food": 0,
-          "tour": 0,
-          "shopping": 0,
-          "etc": 0
-        },
-        "totalBudget": 0
-      }
-    ]
-  }
+      "destination": "오사카",
+      "description": "오사카 유니버셜 스튜디오에서 재밌게 놀 예정",
+      "totalBudget": 800000
+    },
+    {
+      "id": "8e3c",
+      "title": "",
+      "startDate": "2025-04-09",
+      "endDate": "2025-04-10",
+      "budget": {
+        "stay": 0,
+        "transport": 0,
+        "food": 0,
+        "tour": 0,
+        "shopping": 0,
+        "etc": 0
+      },
+      "totalBudget": 0
+    },
+    {
+      "id": "431c",
+      "title": "한국 경주 여행",
+      "startDate": "2025-03-04",
+      "endDate": "2025-03-20",
+      "destination": "경주",
+      "description": "경주월드에서 야무지게 놀거다.",
+      "budget": {
+        "stay": 200000,
+        "transport": 200000,
+        "food": 200000,
+        "tour": 200000,
+        "shopping": 200000,
+        "etc": 200000
+      },
+      "totalBudget": 1200000
+    },
+    {
+      "id": "6728",
+      "title": "일본 후쿠오카 여행",
+      "startDate": "2025-05-09",
+      "endDate": "2025-05-24",
+      "destination": "후쿠오카",
+      "description": "후쿠오카에서 맛있는거 야무지게 먹기",
+      "budget": {
+        "stay": 50000,
+        "transport": 50000,
+        "food": 50000,
+        "tour": 50000,
+        "shopping": 50000,
+        "etc": 50000
+      },
+      "totalBudget": 300000
+    },
+    {
+      "id": "5794",
+      "title": "프랑스 파리 여행",
+      "startDate": "2025-04-10",
+      "endDate": "2025-04-24",
+      "destination": "파리",
+      "description": "파리에서 빵 야무지게 먹고올 ㅇ{ㅖ정",
+      "budget": {
+        "stay": 100000,
+        "transport": 100000,
+        "food": 100000,
+        "tour": 100000,
+        "shopping": 100000,
+        "etc": 100000
+      },
+      "totalBudget": 600000,
+      "currency": "EUR"
+    },
+    {
+      "id": "93aa",
+      "title": "미국 뉴욕 여행",
+      "startDate": "2025-04-09",
+      "endDate": "2025-04-25",
+      "destination": "뉴욕",
+      "description": "대충 기깔나게 놀 예정",
+      "currency": "USD",
+      "budget": {
+        "stay": 200000,
+        "transport": 200000,
+        "food": 200000,
+        "tour": 200000,
+        "shopping": 200000,
+        "etc": 200000
+      },
+      "totalBudget": 1200000,
+      "income": "",
+      "totalSpent": ""
+    }
+  ]
+}
