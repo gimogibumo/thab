@@ -75,10 +75,7 @@ function addBudget() {
     amount
   })
 
-  // 저장 금액 증가
   selectedGoal.value.saved += amount
-
-  inputBudget.value = ''
   modalClose()
 }
 
@@ -137,15 +134,15 @@ function addBudget() {
         <div class="modal-content">
           <div class="modal-title">{{ selectedGoal?.title }}에 저축하기</div>
           <div>
-            <div class="save-money">저축 금액</div>
-            <input type="text" v-model="inputBudget" placeholder="금액을 입력하세요" />
-            <div class="save-memo">메모</div>
-            <input type="text" v-model="inputMemo" placeholder="메모를 입력하세요" />
+            <div class="modal-money">저축 금액</div>
+            <input class="modal-input-money" type="text" v-model="inputBudget" placeholder="금액을 입력하세요" />
+            <div class="modal-memo">메모</div>
+            <input class="modal-input-memo" type="text" v-model="inputMemo" placeholder="메모를 입력하세요" />
           </div>
         </div>
         <div class="modal-btn">
-          <button @click="modalClose">닫기</button>
-          <button @click="addBudget">확인</button>
+          <button class="cancel" @click="modalClose">취소</button>
+          <button class="save" @click="addBudget">저축하기</button>
         </div>
       </div>
     </div>
@@ -323,13 +320,36 @@ function addBudget() {
 }
 
 .modal-btn button {
-  background-color: #7B5E48;
-  color: white;
+  flex: 1;
+  margin: 0 auto;
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
-  margin-left: 10px;
   cursor: pointer;
+}
+
+.modal-btn {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancel {
+  background: #F4F0ED;
+  color: #8B6F5C;
+}
+
+.save {
+  background: #8B6F5C;
+  color: white;
+}
+
+.modal-input-memo, .modal-input-money {
+  margin-top: 10px;
+}
+
+.modal-memo {
+  margin-top: 20px;
 }
 
 /* ===== 저축하기 버튼 ===== */
