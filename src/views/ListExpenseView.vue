@@ -8,8 +8,8 @@ const filter = reactive({
   selectedTravelJson: undefined,
 })
 const expenseList = ref([])
-const editingId = ref(null) // ⭐ 현재 수정 중인 ID 저장
-const editedExpense = ref({}) // ⭐ 수정할 값 임시 저장
+const editingId = ref(null)
+const editedExpense = ref({})
 const travels = ref([])
 const isModalOpen = ref(false)
 const modalData = ref({})
@@ -92,7 +92,7 @@ async function deleteExpense(id) {
 function startEditing(item) {
   if (confirm('지출 내역을 수정하시겠습니까?')) {
     editingId.value = item.id
-    editedExpense.value = { ...item } // 복사해서 수정 시작
+    editedExpense.value = { ...item } 
   }
 }
 
@@ -101,7 +101,7 @@ async function saveExpense(id) {
     try {
       await axios.put(`http://localhost:3000/expense/${id}`, editedExpense.value)
       editingId.value = null
-      listExpense() // 저장 후 다시 목록 불러오기
+      listExpense() 
     } catch (err) {
       console.log(err)
     }
@@ -119,7 +119,7 @@ function changeKeyword(e) {
 }
 
 function openModal(item) {
-  modalData.value = { ...item } // 선택한 item 복사
+  modalData.value = { ...item }
   isModalOpen.value = true
 }
 

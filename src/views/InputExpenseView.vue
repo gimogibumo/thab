@@ -85,51 +85,58 @@ function cancelForm() {
   <div class="content">
     <h1>지출 입력</h1>
     <form @submit.prevent="submitForm">
-      <label for="inputName">여행 선택</label><br />
-      <select id="inputName" v-model="selectedTravel">
-        <option v-for="travel in travels" :key="travel.id" :value="travel">
-          {{ travel.title }}
-        </option>
-      </select>
-
-      <label for="expenseDate">여행 날짜</label>
-      <input
-        id="expenseDate"
-        type="date"
-        v-model="expense.date"
-        :min="selectedTravel?.startDate"
-        :max="selectedTravel?.endDate"
-        :disabled="!selectedTravel"
-      />
-
-      <label for="expenseName">지출 항목</label><br />
-      <input
-        type="text"
-        id="expenseName"
-        v-model="expense.expenseName"
-        placeholder="지출 항목을 입력해주세요"
-      /><br />
-
-      <label for="category">카테고리</label><br />
-      <select id="category" v-model="expense.category">
-        <option selected hidden value="">카테고리를 선택하세요</option>
-        <option>숙박</option>
-        <option>식비</option>
-        <option>교통</option>
-        <option>쇼핑</option>
-        <option>관광</option>
-        <option>기타</option></select
-      ><br />
-
-      <label for="amount">금액</label><br />
-      <input
-        type="number"
-        id="amount"
-        v-model="expense.amount"
-        :min="1"
-        step="1"
-        @input="validateAmount"
-      /><br />
+      <div class="selectTravel">
+        <label for="inputName">여행 선택</label><br />
+        <select id="inputName" v-model="selectedTravel">
+          <option selected hidden value="undefined">여행을 선택하세요</option>
+          <option v-for="travel in travels" :key="travel.id" :value="travel">
+            {{ travel.title }}
+          </option></select
+        ><br />
+      </div>
+      <div class="selectDate">
+        <label for="expenseDate">여행 날짜</label><br />
+        <input
+          id="expenseDate"
+          type="date"
+          v-model="expense.date"
+          :min="selectedTravel?.startDate"
+          :max="selectedTravel?.endDate"
+          :disabled="!selectedTravel"
+        /><br />
+      </div>
+      <div class="selectItemName">
+        <label for="expenseName">지출 항목</label><br />
+        <input
+          type="text"
+          id="expenseName"
+          v-model="expense.expenseName"
+          placeholder="지출 항목을 입력해주세요"
+        /><br />
+      </div>
+      <div class="selectCategory">
+        <label for="category">카테고리</label><br />
+        <select id="category" v-model="expense.category">
+          <option selected hidden value="">카테고리를 선택하세요</option>
+          <option>숙박</option>
+          <option>식비</option>
+          <option>교통</option>
+          <option>쇼핑</option>
+          <option>관광</option>
+          <option>기타</option></select
+        ><br />
+      </div>
+      <div class="selectAccount">
+        <label for="amount">금액</label><br />
+        <input
+          type="number"
+          id="amount"
+          v-model="expense.amount"
+          :min="1"
+          step="1"
+          @input="validateAmount"
+        /><br />
+      </div>
 
       <label for="memo">메모</label><br />
       <input type="text" id="memo" v-model="expense.memo" /><br />
@@ -138,4 +145,15 @@ function cancelForm() {
     </form>
   </div>
 </template>
-<style scoped></style>
+<style scoped>
+h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #333;
+}
+form {
+  background: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+</style>
