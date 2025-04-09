@@ -1,26 +1,6 @@
 {
   "trips": [
     {
-      "id": "d18e",
-      "title": "",
-      "startDate": "",
-      "endDate": "",
-      "destination": "",
-      "description": "",
-      "currency": "",
-      "budget": {
-        "stay": 0,
-        "transport": 0,
-        "food": 0,
-        "tour": 0,
-        "shopping": 0,
-        "etc": 0
-      },
-      "totalBudget": 0,
-      "income": 0,
-      "totalSpent": 0
-    },
-    {
       "id": "d9bc",
       "title": "서울 근교 당일치기 여행",
       "startDate": "2025-04-07",
@@ -37,8 +17,95 @@
         "etc": 5000
       },
       "totalBudget": 80000,
+      "income": 80000,
+      "totalSpent": 80000
+    },
+    {
+      "id": "4473",
+      "title": "일본 오사카 여행",
+      "startDate": "2025-04-12",
+      "endDate": "2025-04-14",
+      "destination": "오사카",
+      "description": "오사카 유니버셜 스튜디오에서 재밌게 놀 예정",
+      "currency": "KRW",
+      "budget": {
+        "stay": 100000,
+        "transport": 300000,
+        "food": 100000,
+        "tour": 100000,
+        "shopping": 100000,
+        "etc": 100000
+      },
+      "totalBudget": 800000,
       "income": 0,
       "totalSpent": 0
+    }
+  ],
+  "checkedList": [
+    {
+      "id": "cadb",
+      "tripId": "4473",
+      "checklist": [
+        {
+          "label": "여권",
+          "checked": true
+        },
+        {
+          "label": "슬리퍼",
+          "checked": true
+        },
+        {
+          "label": "비행기 티켓 확인",
+          "checked": true
+        },
+        {
+          "label": "호텔 예약",
+          "checked": true
+        },
+        {
+          "label": "여권 확인",
+          "checked": false
+        }
+      ]
+    },
+    {
+      "id": "67d0",
+      "tripId": "d9bc",
+      "checklist": [
+        {
+          "label": "여권",
+          "checked": false
+        },
+        {
+          "label": "슬리퍼",
+          "checked": false
+        },
+        {
+          "label": "비행기 티켓 확인",
+          "checked": false
+        },
+        {
+          "label": "호텔 예약",
+          "checked": false
+        },
+        {
+          "label": "짐싸기",
+          "checked": false
+        }
+      ]
+    }
+  ],
+  "expense": [
+    {
+      "id": "ad15",
+      "travelsKey": "4473",
+      "inputName": "123",
+      "expenseName": "123",
+      "category": "관광",
+      "customCategory": "",
+      "amount": 123,
+      "memo": "",
+      "date": "2025-04-08"
     }
   ]
 }
