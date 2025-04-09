@@ -1,41 +1,113 @@
-
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
 
-const goals = reactive([
-  {
-    budgetId: 1,
-    title: '도쿄 여행',
-    date: '2024.01.15',
-    saved: 1650000,
-    target: 2000000,
-    details: [
-      { date: '2025.04.08', title: '연말 보너스', category: '숙박', amount: 1153000 },
-      { date: '2025.04.01', title: '커피값 아낌 ㅎㅎ', category: '쇼핑', amount: 20000 }
-    ]
-  },
-  {
-    budgetId: 2,
-    title: '파리 여행',
-    date: '2024.07.01',
-    saved: 500000,
-    target: 3000000,
-    details: [
-      { date: '2025.04.01', title: '부수입', category: '기타', amount: 300000 }
-    ]
-  }
-])
+const income = ref([])
+const travels = ref(null)
 
 const selectedId = ref(null)
+const selectedIncome = ref(null)
 const modalCheck = ref(false)
-const selectedGoal = ref(null)
 const inputBudget = ref('')
 const inputMemo = ref('')
 
+onMounted(async () => {
+  try {
+    const [travelRes, incomeRes] = await Promise.all([
+      axios.get('http://localhost:3000/travel'),
+      axios.get('http://localhost:3000/income')
+    ])
+
+    const travelList = travelRes.data.map(travel => {
+      const matchedIncome = incomeRes.data.find(i => i.travelId === travel.id)
+      const totalSaved = matchedIncome ? matchedIncome.saved : 0
+      const details = matchedIncome ? matchedIncome.details : []
+
+      return {
+        ...travel,
+        saved: totalSaved,
+        details
+      }
+    })
+
+    travels.value = travelList
+    income.value = incomeRes.data
+  } catch (err) {
+    console.error('데이터 불러오기 실패:', err)
+  }
+})
+
+
+// 저축하기
+async function addIncome() {
+  const amount = parseInt(inputBudget.value.replace(/[^0-9]/g, ''))
+  const memo = inputMemo.value
+
+  if (!amount || amount <= 0) {
+    alert('유효한 금액을 입력해주세요.')
+    return
+  }
+
+  // 오늘 날짜 생성
+  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '.')
+
+  const newDetail = {
+    date: today,
+    title: memo,
+    category: '저축', // 필요 시 카테고리 분류
+    amount: amount
+  }
+
+  if (!selectedIncome.value) {
+    alert('선택된 여행이 없습니다.')
+    return
+  }
+if (!selectedIncome.value.details) {
+  selectedIncome.value.details = []
+}
+
+const existing = income.value.find(i => i.travelId === selectedIncome.value.id)
+
+if (existing) {
+  // 기존 항목 업데이트
+  existing.saved += amount
+  existing.details.unshift(newDetail) // 이 부분만 수행
+
+  try {
+    await axios.patch(`http://localhost:3000/income/${existing.id}`, {
+      details: existing.details,
+      saved: existing.saved
+    })
+  } catch (err) {
+    console.error('저축 수정 실패:', err)
+  }
+} else {
+  // 새 항목 DB에 저장
+  const newIncome = {
+    travelId: selectedIncome.value.id,
+    saved: amount,
+    details: [newDetail]
+  }
+
+  try {
+    const res = await axios.post('http://localhost:3000/income', newIncome)
+    income.value.push(res.data)
+  } catch (err) {
+    console.error('새 저축 추가 실패:', err)
+  }
+}
+
+  // 입력값 초기화
+  inputBudget.value = ''
+  inputMemo.value = ''
+
+  modalClose()
+}
+
 // 모달 열기
-function modalOpen(goal) {
+function modalOpen(income) {
   modalCheck.value = true
-  selectedGoal.value = goal
+  selectedIncome.value = income
 }
 
 // 모달 닫기
@@ -49,90 +121,66 @@ function modalClose() {
 function selectCard(id) {
   if (selectedId.value === id) {
     selectedId.value = null
-    selectedGoal.value = null
+    selectedIncome.value = null
   } else {
     selectedId.value = id
-    selectedGoal.value = goals.find((goal) => goal.budgetId === id) || null
+    selectedIncome.value = travels.value.find((income) => income.id === id) || null
   }
 }
-
-// 저축하기
-function addBudget() {
-  const amount = parseInt(inputBudget.value.replace(/[^0-9]/g, ''))
-  const memo = inputMemo.value
-
-  if (!amount || amount <= 0) {
-    alert('유효한 금액을 입력해주세요.')
-    return
-  }
-
-  // 오늘 날짜 생성
-  const today = new Date().toISOString().slice(0, 10).replace(/-/g, '.')
-
-  // 내역 추가
-  selectedGoal.value.details.unshift({
-    date: today,
-    title: memo,
-    amount
-  })
-
-  selectedGoal.value.saved += amount
-  modalClose()
-}
-
 </script>
 <template>
   <div class="content">
     <div class="page-title">예산 모으기</div>
-    <div class="goal-wrap" v-for="goal in goals" :key="goal.budgetId">
+    <div class="goal-wrap" v-for="travel in travels" :key="travel.id">
       <div class="goal-card"
            :class="[
-               { active: selectedId === goal.budgetId },
+               { active: selectedId === travel.id },
                selectedId !== null ? 'shrinked' : '']"
-           @click="selectCard(goal.budgetId)">
+           @click="selectCard(travel.id)">
         <div class="top">
           <div>
-            <div class="title">{{ goal.title }}</div>
-            <div class="date">목표일: {{ goal.date }}</div>
+            <div class="title">{{ travel.title }}</div>
+            <div class="date">목표일: {{ travel.startDate }}</div>
           </div>
           <div class="amount">
-            <div class="saved">{{ goal.saved.toLocaleString() }}원</div>
-            <div class="target">목표: {{ goal.target.toLocaleString() }}원</div>
+            <div class="saved">{{ travel.saved.toLocaleString() }}원</div>
+            <div class="target">목표: {{ travel.totalBudget.toLocaleString() }}원</div>
           </div>
         </div>
         <div class="progress-bar">
           <div class="progress"
-               :style="{ width: Math.floor((goal.saved / goal.target) * 100) + '%' }"></div>
+               :style="{ width: Math.floor((travel.saved / travel.totalBudget) * 100) + '%' }"></div>
         </div>
         <div class="bottom">
-          <div>{{ Math.floor((goal.saved / goal.target) * 100) }}% 달성</div>
-          <div>잔여: {{ (goal.target - goal.saved).toLocaleString() }}원</div>
+          <div>{{ Math.floor((travel.saved / travel.totalBudget) * 100) }}% 달성</div>
+          <div>잔여: {{ (travel.totalBudget - travel.saved).toLocaleString() }}원</div>
         </div>
       </div>
     </div>
 
+    <!-- 사이드 패널 -->
     <div class="slide-panel" :class="{ active: selectedId !== null }">
       <button class="slide-close-btn" @click="selectCard(null)">×</button>
-      <div v-if="selectedGoal">
-        <div class="title">{{ selectedGoal.title }} 저축 내역</div>
+      <div v-if="selectedIncome">
+        <div class="title">{{ selectedIncome.title }} 저축 내역</div>
         <div class="list-content"
-             v-for="item in selectedGoal.details"
+             v-for="item in selectedIncome.details"
              :key="item.date + item.title">
           <div>
             <div class="input-date">{{ item.date }}</div>
             <div class="input-title">{{ item.title }}</div>
           </div>
-          <div class="input">+{{ item.amount.toLocaleString() }}원</div>
+          <div class="input">+{{ item.amount }}원</div>
         </div>
-        <button class="open-modal-btn" @click="modalOpen(selectedGoal)">저축하기</button>
+        <button class="open-modal-btn" @click="modalOpen(selectedIncome)">저축하기</button>
       </div>
     </div>
 
-    <!-- 모달창 ui -->
+    <!-- 모달 -->
     <div v-show="modalCheck" class="modal-overlay" @click="modalClose">
       <div class="modal-container" @click.stop>
         <div class="modal-content">
-          <div class="modal-title">{{ selectedGoal?.title }}에 저축하기</div>
+          <div class="modal-title">{{ selectedIncome?.title }}에 저축하기</div>
           <div>
             <div class="modal-content">저축 금액</div>
             <input class="modal-input" type="text" v-model="inputBudget"
@@ -144,7 +192,7 @@ function addBudget() {
         </div>
         <div class="modal-btn">
           <button class="cancel" @click="modalClose">취소</button>
-          <button class="save" @click="addBudget">저축하기</button>
+          <button class="save" @click="addIncome">저축하기</button>
         </div>
       </div>
     </div>
@@ -159,6 +207,7 @@ function addBudget() {
 .content::-webkit-scrollbar {
   display: none;
 }
+
 .page-title {
   font-size: 24px;
   font-weight: bold;
@@ -301,6 +350,7 @@ function addBudget() {
   position: relative;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
+
 .modal-content {
   margin-bottom: 10px;
 }
