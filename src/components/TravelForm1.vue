@@ -56,11 +56,7 @@ const isInvalidDate = computed(() => {
               type="date" 
               class="form-control"
               v-model="localForm.endDate"
-<<<<<<< HEAD
               :min="localForm.startDate"  
-=======
-              :min="localForm.startDate" 
->>>>>>> e76aafe5c3aacad3c2252a90d752fb534da784f4
             />
           </div>
         </div>
