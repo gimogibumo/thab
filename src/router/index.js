@@ -17,7 +17,7 @@ const routes = [
       { path: 'travel_manage', component: TravelManageView },
       { path: 'expense_input', component: InputExpenseView },
       { path: 'expense_list', component: ListExpenseView },
-      { path: 'signup', component: SignUpView },
+      // { path: 'signup', component: SignUpView },
       { path: 'create', component: CreateTravel },
     ],
   },
