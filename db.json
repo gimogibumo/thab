@@ -39,6 +39,26 @@
       "totalBudget": 800000,
       "income": 0,
       "totalSpent": 0
+    },
+    {
+      "id": "d9bc",
+      "title": "서울 근교 당일치기 여행",
+      "startDate": "2025-04-07",
+      "endDate": "2025-04-08",
+      "destination": "서울",
+      "description": "벛꽃 구경하고 맛집 투어",
+      "currency": "KRW",
+      "budget": {
+        "stay": 0,
+        "transport": 30000,
+        "food": 20000,
+        "tour": 15000,
+        "shopping": 10000,
+        "etc": 5000
+      },
+      "totalBudget": 80000,
+      "income": 0,
+      "totalSpent": 0
     }
   ],
   "checkedList": [
