@@ -7,6 +7,9 @@ import ListExpenseView from '@/views/ListExpenseView.vue'
 import InputBudgetView from '@/views/InputBudgetView.vue'
 import StatsView from '@/views/StatsView.vue'
 import MyPageView from '@/views/MyPageView.vue'
+import SignUpView from '@/views/SignUpView.vue'
+
+import CreateTravel from '@/views/CreateTravelView.vue'
 
 const routes = [
   {
@@ -16,9 +19,10 @@ const routes = [
     children: [
       { path: '', component: MainView },
       { path: 'travel_manage', component: TravelManageView },
-      { path: 'travel/:id', component: TravelManageView }, // 여행 관리 상세탭으로 컴포넌트 수정
       { path: 'expense_input', component: InputExpenseView },
       { path: 'expense_list', component: ListExpenseView },
+      { path: 'signup', component: SignUpView },
+      { path: 'create', component: CreateTravel},
       { path: 'budget_input', component: InputBudgetView }, // 예산 모으기
       { path: 'stats', component: StatsView }, // 통계
       { path: 'my_page', component: MyPageView} // 마이 페이지
