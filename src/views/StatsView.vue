@@ -1,10 +1,13 @@
 <script setup>
 import { computed } from 'vue'
+import { Chart, registerables } from 'chart.js'
+
+Chart.register(...registerables)
 
 const expenses = [
   { expenseId: 1, category: '숙박', description: '도쿄 숙박비', date: '2024-02-15', amount: 450000 },
   { expenseId: 2, category: '식비', description: '라멘', date: '2024-02-15', amount: 15000 },
-  { expenseId: 3, category: '쇼핑', description: '에어팟', date: '2025-04-15', amount: 300000 },
+  { expenseId: 3, category: '쇼핑', description: '에어팟', date: '2025-04-15', amount: 300000 }
 ]
 
 // 카테고리 리스트
@@ -64,15 +67,15 @@ const topCategory = computed(() => {
     <div class="top">
       <div class="total-expense">
         <div class="total-title">총 지출</div>
-        <div class="total-content">{{totalExpense.toLocaleString()}}</div>
+        <div class="total-content">{{ totalExpense.toLocaleString() }}</div>
       </div>
       <div class="month-expense">
         <div class="total-title">이번 달 지출</div>
-        <div class="total-content">{{monthExpense.toLocaleString()}}</div>
+        <div class="total-content">{{ monthExpense.toLocaleString() }}</div>
       </div>
       <div class="top-expense">
         <div class="total-title">지출 1위 카테고리</div>
-        <div class="total-content">{{topCategory.toLocaleString()}}</div>
+        <div class="total-content">{{ topCategory.toLocaleString() }}</div>
       </div>
     </div>
     <div class="middle">
@@ -100,11 +103,12 @@ const topCategory = computed(() => {
         <div class="travel-title">여행별 지출 추이</div>
         <div class="graph">
           <div class="non-graph">🛬<br><br>여행을 다녀온 후<br>THAB에 기록해 보세요!</div>
+          <div class="graph">
+            <canvas id="doughnut-chart2"></canvas>
         </div>
       </div>
     </div>
-    <!--          <div class="progress"-->
-    <!--               :style="{ width: Math.floor((goal.saved / goal.target) * 100) + '%' }"></div>-->
+  </div>
   </div>
 </template>
 
@@ -112,7 +116,9 @@ const topCategory = computed(() => {
 .content {
   padding: 3% 5%;
 }
-
+.content::-webkit-scrollbar {
+  display: none;
+}
 .page-title {
   font-size: 24px;
   font-weight: bold;

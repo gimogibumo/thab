@@ -87,8 +87,7 @@ function addBudget() {
       <div class="goal-card"
            :class="[
                { active: selectedId === goal.id },
-               selectedId !== null ? 'shrinked' : ''
-             ]"
+               selectedId !== null ? 'shrinked' : '']"
            @click="selectCard(goal.id)">
         <div class="top">
           <div>
@@ -135,9 +134,11 @@ function addBudget() {
           <div class="modal-title">{{ selectedGoal?.title }}에 저축하기</div>
           <div>
             <div class="modal-money">저축 금액</div>
-            <input class="modal-input-money" type="text" v-model="inputBudget" placeholder="금액을 입력하세요" />
+            <input class="modal-input-money" type="text" v-model="inputBudget"
+                   placeholder="금액을 입력하세요" />
             <div class="modal-memo">메모</div>
-            <input class="modal-input-memo" type="text" v-model="inputMemo" placeholder="메모를 입력하세요" />
+            <input class="modal-input-memo" type="text" v-model="inputMemo"
+                   placeholder="메모를 입력하세요" />
           </div>
         </div>
         <div class="modal-btn">
@@ -153,7 +154,9 @@ function addBudget() {
 .content {
   padding: 50px;
 }
-
+.content::-webkit-scrollbar {
+  display: none;
+}
 .page-title {
   font-size: 24px;
   font-weight: bold;
