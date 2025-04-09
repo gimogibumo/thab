@@ -1,5 +1,5 @@
 {
-  "trips": [
+  "travel": [
     {
       "id": "d9bc",
       "title": "서울 근교 당일치기 여행",
@@ -41,10 +41,10 @@
       "totalSpent": 0
     }
   ],
-  "checkedList": [
+  "travelChecklist": [
     {
       "id": "cadb",
-      "tripId": "4473",
+      "travelId": "4473",
       "checklist": [
         {
           "label": "여권",
@@ -70,7 +70,7 @@
     },
     {
       "id": "67d0",
-      "tripId": "d9bc",
+      "travelId": "d9bc",
       "checklist": [
         {
           "label": "여권",
@@ -98,12 +98,45 @@
   "expense": [
     {
       "id": "ad15",
-      "travelsKey": "4473",
+      "travelId": "4473",
       "inputName": "123",
       "expenseName": "123",
       "category": "관광",
       "customCategory": "",
-      "amount": 123,
+      "amount": 50000,
+      "memo": "",
+      "date": "2025-04-08"
+    },
+    {
+      "id": "ad15",
+      "travelId": "4473",
+      "inputName": "123",
+      "expenseName": "123",
+      "category": "식비",
+      "customCategory": "",
+      "amount": 50000,
+      "memo": "",
+      "date": "2025-04-08"
+    },
+    {
+      "id": "ad15",
+      "travelId": "4473",
+      "inputName": "123",
+      "expenseName": "123",
+      "category": "기타",
+      "customCategory": "",
+      "amount": 50000,
+      "memo": "",
+      "date": "2025-04-08"
+    },
+    {
+      "id": "ad15",
+      "travelId": "4473",
+      "inputName": "123",
+      "expenseName": "123",
+      "category": "교통",
+      "customCategory": "",
+      "amount": 50000,
       "memo": "",
       "date": "2025-04-08"
     }

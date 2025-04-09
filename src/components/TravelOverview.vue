@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
 const props = defineProps({
-  tripId: {
+  travelId: {
     type: String,
     required: true,
   },
@@ -13,6 +13,7 @@ const checkedItems = ref([])
 const budget = ref({})
 const totalBudget = ref(0)
 const recentExpenses = ref([])
+const allExpenses = ref([]) // 🔹 모든 지출 데이터
 
 const categoryLabels = {
   stay: '숙박',
@@ -26,20 +27,21 @@ const categoryLabels = {
 onMounted(async () => {
   try {
     const checklistRes = await axios.get(
-      `http://localhost:3000/checkedList?tripId=${props.tripId}`
+      `http://localhost:3000/travelChecklist?travelId=${props.travelId}`
     )
     checkedItems.value = checklistRes.data[0]?.checklist || []
 
-    const tripRes = await axios.get(
-      `http://localhost:3000/trips/${props.tripId}`
+    const travelRes = await axios.get(
+      `http://localhost:3000/travel/${props.travelId}`
     )
-    budget.value = tripRes.data.budget || {}
-    totalBudget.value = tripRes.data.totalBudget || 0
+    budget.value = travelRes.data.budget || {}
+    totalBudget.value = travelRes.data.totalBudget || 0
 
     const expenseRes = await axios.get(
-      `http://localhost:3000/expense?travelsKey=${props.tripId}&_sort=date&_order=desc&_limit=5`
+      `http://localhost:3000/expense?travelId=${props.travelId}&_sort=date&_order=desc`
     )
-    recentExpenses.value = expenseRes.data
+    allExpenses.value = expenseRes.data
+    recentExpenses.value = expenseRes.data.slice(0, 5) // 🔹 최근 5건만 따로 저장
   } catch (err) {
     console.error('데이터 로딩 오류:', err)
   }
@@ -53,8 +55,9 @@ const getTotalUsed = () => {
 
 
 const getUsedAmount = (key) => {
-  // 실제 로직에서는 expense 목록을 필터링해서 계산해야 함
-  return Math.round((budget.value[key] || 0) * 0)
+  const label = categoryLabels[key] || key // 예: 'food' -> '식비'
+  const matchedExpenses = allExpenses.value.filter(exp => exp.category === label)
+  return matchedExpenses.reduce((acc, cur) => acc + (cur.amount || 0), 0)
 }
 
 const getCategoryPercentage = (key) => {
@@ -143,7 +146,7 @@ const getCategoryPercentage = (key) => {
         <div class="card p-4 shadow-sm d-flex flex-column">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="fw-bold mb-0">최근 지출 내역</h5>
-            <a href="#" class="text-muted small">전체보기</a>
+            <a href="#" class="text-muted small" @click.prevent="$emit('change-tab', 'budget')">전체보기</a>
           </div>
           <div v-if="recentExpenses.length === 0" class="text-muted">
             지출 내역이 없습니다.

@@ -2,11 +2,11 @@
 import { ref, onMounted, watch } from 'vue'
 import axios from 'axios'
 
-// props로 tripId 받기
+// props로 travelId 받기
 const props = defineProps({
-  tripId: String
+    travelId: String
 })
-console.log('받은 tripId:', props.tripId)
+console.log('받은 travelId:', props.travelId)
 
 const checklistItems = ref([])
 const newItem = ref('')
@@ -14,18 +14,18 @@ const newItem = ref('')
 const defaultItems = ['여권', '슬리퍼', '비행기 티켓 확인', '호텔 예약', '짐싸기']
 
 onMounted(async () => {
-  if (!props.tripId) return
+  if (!props.travelId) return
 
-  const res = await axios.get(`http://localhost:3000/checkedList?tripId=${props.tripId}`)
+  const res = await axios.get(`http://localhost:3000/travelChecklist?travelId=${props.travelId}`)
   if (res.data.length === 0) {
     const newChecklist = {
-      tripId: props.tripId,
+        travelId: props.travelId,
       checklist: defaultItems.map(label => ({
         label,
         checked: false
       }))
     }
-    const created = await axios.post(`http://localhost:3000/checkedList`, newChecklist)
+    const created = await axios.post(`http://localhost:3000/travelChecklist`, newChecklist)
     checklistItems.value = created.data
   } else {
     checklistItems.value = res.data[0]
@@ -36,7 +36,7 @@ watch(
   () => checklistItems.value.checklist,
   async (newVal) => {
     if (!checklistItems.value?.id) return
-    await axios.patch(`http://localhost:3000/checkedList/${checklistItems.value.id}`, {
+    await axios.patch(`http://localhost:3000/travelChecklist/${checklistItems.value.id}`, {
       checklist: newVal
     })
   },
@@ -80,7 +80,7 @@ const submitNewItem = async () => {
     checked: false
   })
 
-  await axios.patch(`http://localhost:3000/checkedList/${checklistItems.value.id}`, {
+  await axios.patch(`http://localhost:3000/travelChecklist/${checklistItems.value.id}`, {
     checklist: checklistItems.value.checklist
   })
 
@@ -90,7 +90,7 @@ const submitNewItem = async () => {
 
 const deleteItem = async (index) => {
   checklistItems.value.checklist.splice(index, 1)
-  await axios.patch(`http://localhost:3000/checkedList/${checklistItems.value.id}`, {
+  await axios.patch(`http://localhost:3000/travelChecklist/${checklistItems.value.id}`, {
     checklist: checklistItems.value.checklist
   })
 }

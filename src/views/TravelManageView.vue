@@ -43,7 +43,7 @@ const filteredAndSortedCards = computed(() => {
 
 const fetchTravelCards = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/trips')
+    const response = await axios.get('http://localhost:3000/travel')
     response.data.forEach((card) => {
       calculateTravelStatus(card)
       travelCards.push(card)

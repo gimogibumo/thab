@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps({
-  trip: Object,
+  travel: Object,
   activeTab: String
 })
 
@@ -10,10 +10,10 @@ const formatDate = (dateStr) => {
 }
 </script>
 <template>
-  <div v-if="trip" class="bg-light p-4 rounded">
+  <div v-if="travel" class="bg-light p-4 rounded">
     <div class="mb-2">
-      <h5 class="mb-1 fw-bold">{{ trip.title }}</h5>
-      <small class="text-muted">{{ formatDate(trip.startDate) }} - {{ formatDate(trip.endDate) }}</small>
+      <h5 class="mb-1 fw-bold">{{ travel.title }}</h5>
+      <small class="text-muted">{{ formatDate(travel.startDate) }} - {{ formatDate(travel.endDate) }}</small>
     </div>
 
     <!-- 버튼들을 개별로 배치 -->

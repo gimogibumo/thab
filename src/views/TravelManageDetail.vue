@@ -9,16 +9,16 @@ import TravelChecklist from '@/components/TravelChecklist.vue'
 import TravelOverview from '@/components/TravelOverview.vue'
 
 const route = useRoute()
-const tripId = route.params.id // URL에서 tripId 가져오기
+const travelId = route.params.id // URL에서 travelId 가져오기
 
-const trip = ref(null)
+const travel = ref(null)
 const activeTab = ref('overview')
 const checklistItems = ref([])
 
 onMounted(async () => {
   try {
-    const res = await axios.get(`http://localhost:3000/trips/${tripId}`)
-    trip.value = res.data
+    const res = await axios.get(`http://localhost:3000/travel/${travelId}`)
+    travel.value = res.data
 
     checklistItems.value = [
       { label: '여권 확인', checked: true },
@@ -48,13 +48,13 @@ const currentTabComponent = computed(() => {
   <div class="content">
     <div class="p-4 bg-light min-vh-100">
       <!-- 상단 여행 정보 헤더 -->
-      <TravelDetailHeader :trip="trip" @change-tab="activeTab = $event" :active-tab="activeTab" />
+      <TravelDetailHeader :travel="travel" @change-tab="activeTab = $event" :active-tab="activeTab" />
   
-      <!-- trip이 로드되었을 때만 하위 컴포넌트를 렌더링 -->
+      <!-- travel 로드되었을 때만 하위 컴포넌트를 렌더링 -->
       <component
-        v-if="trip"
+        v-if="travel"
         :is="currentTabComponent"
-        :trip-id="trip.id"
+        :travel-id="travel.id"
       />
     </div>
   </div>

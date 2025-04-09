@@ -18,13 +18,13 @@ const totalBudget = computed(() => {
   return b.stay + b.transport + b.food + b.tour + b.shopping + b.etc
 })
 
-function handleCreateTrip() {
-  const tripData = {
+function handleCreateTravel() {
+  const travelData = {
     ...localForm.value,
     totalBudget: totalBudget.value,
   }
 
-  axios.post('http://localhost:3000/trips', tripData)
+  axios.post('http://localhost:3000/travel', travelData)
     .then(() => {
       alert('여행이 성공적으로 저장되었습니다!')
       emit('next')
@@ -81,7 +81,7 @@ function handleCreateTrip() {
           <!-- 버튼들 -->
             <div class="d-flex justify-content-between">
                 <button @click="$emit('back')" class="btn btn-outline-secondary">이전</button>
-                <button @click="handleCreateTrip" class="btn text-white" style="background-color: #8B6F5C;">여행 만들기</button>
+                <button @click="handleCreateTravel" class="btn text-white" style="background-color: #8B6F5C;">여행 만들기</button>
             </div>
         </div>
       </div>
