@@ -21,6 +21,28 @@
       "amount": 10000,
       "memo": "test",
       "date": "2024-04-03"
+    },
+    {
+      "id": "ca09",
+      "travelsKey": "4423",
+      "inputName": "프랑스 뉴욕 여행",
+      "expenseName": "고기",
+      "category": "식비",
+      "customCategory": "",
+      "amount": 10000,
+      "memo": "",
+      "date": "2024-03-15"
+    },
+    {
+      "id": "d3ec",
+      "travelsKey": "4473",
+      "inputName": "일본 오사카 여행",
+      "expenseName": "지하철",
+      "category": "교통",
+      "customCategory": "",
+      "amount": 1000,
+      "memo": "",
+      "date": "2025-04-14"
     }
   ],
   "travels": [
