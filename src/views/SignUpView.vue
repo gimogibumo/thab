@@ -1,6 +1,6 @@
 <template>
   <div class="signup-flow">
-    <StepAgreement v-if="step === 1" :agreed="agreed" @next="nextStep" />
+    <StepAgreement v-if="step === 1" v-model:agreed="agreed" @next="nextStep" />
     <StepForm v-else-if="step === 2" :formData="formData" @next="nextStep" />
     <StepComplete v-else-if="step === 3" :formData="formData" @reset="reset" />
   </div>
