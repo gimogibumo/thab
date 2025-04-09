@@ -2,6 +2,7 @@
 import { ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { convertCurrency } from '@/utils/exchangeConverter'
 
 const router = useRouter()
 const categories = ['숙박', '식비', '교통', '관광', '쇼핑', '기타']
@@ -325,5 +326,14 @@ h1 {
 .dropdown-leave-from {
   opacity: 1;
   transform: translateY(0);
+}
+option {
+  background: #fff;
+  color: #333;
+  font-size: 16px;
+  padding: 10px;
+}
+.content {
+  padding: 3% 5%;
 }
 </style>
