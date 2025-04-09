@@ -8,6 +8,7 @@ const props = defineProps({
     required: true,
   },
 })
+const emit = defineEmits(['change-tab'])
 
 const checkedItems = ref([])
 const budget = ref({})
@@ -41,7 +42,7 @@ onMounted(async () => {
       `http://localhost:3000/expense?travelId=${props.travelId}&_sort=date&_order=desc`
     )
     allExpenses.value = expenseRes.data
-    recentExpenses.value = expenseRes.data.slice(0, 5) // 🔹 최근 5건만 따로 저장
+    recentExpenses.value = expenseRes.data.slice(0, 3) // 🔹 최근 5건만 따로 저장
   } catch (err) {
     console.error('데이터 로딩 오류:', err)
   }
@@ -70,7 +71,7 @@ const getCategoryPercentage = (key) => {
 
 
 <template>
-<div class="container">
+<div class="container-fluid px-4">
   <div class="row gx-3 gy-4 align-items-stretch">
       <!-- 예산 현황 카드 -->
       <div class="col-md-8">

@@ -55,6 +55,7 @@ const currentTabComponent = computed(() => {
         v-if="travel"
         :is="currentTabComponent"
         :travel-id="travel.id"
+        @change-tab="activeTab = $event"
       />
     </div>
   </div>
