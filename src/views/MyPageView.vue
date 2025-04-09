@@ -29,6 +29,10 @@
         <div class="info-title">비밀번호</div>
         <div class="info-content">123456</div>
       </div>
+      <div class="btn">
+        <button class="btn-info-update">정보 수정</button>
+        <button class="btn-pwd-update">비밀번호 변경</button>
+      </div>
     </div>
   </div>
 </template>
@@ -81,4 +85,23 @@ img {
   font-size: 18px;
 }
 
+button {
+  flex: 1;
+  margin-right: 10px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-pwd-update {
+  background: white;
+  color: #8B6F5C;
+  border: 1px #8B6F5C solid;
+}
+
+.btn-info-update {
+  background: #8B6F5C;
+  color: white;
+}
 </style>
