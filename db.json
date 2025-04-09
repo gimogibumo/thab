@@ -76,25 +76,37 @@
   "income": [
     {
       "travelId": "d9bc",
-      "saved": 1368,
+      "saved": 3500,
       "details": [
         {
           "date": "2025.04.09",
-          "title": "ㄴㅇㅅ",
+          "title": "2000",
           "category": "저축",
-          "amount": 789
+          "amount": 2500
         },
         {
           "date": "2025.04.09",
-          "title": "오",
+          "title": "ㅈㅂㅈㅂ",
           "category": "저축",
-          "amount": 456
+          "amount": 500
         },
         {
           "date": "2025.04.09",
-          "title": "제발~~",
+          "title": "진짜????",
           "category": "저축",
-          "amount": 123
+          "amount": 200
+        },
+        {
+          "date": "2025.04.09",
+          "title": "200",
+          "category": "저축",
+          "amount": 200
+        },
+        {
+          "date": "2025.04.09",
+          "title": "100",
+          "category": "저축",
+          "amount": 100
         }
       ],
       "id": 1

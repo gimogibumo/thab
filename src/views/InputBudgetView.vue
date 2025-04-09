@@ -10,6 +10,15 @@ const selectedIncome = ref(null)
 const modalCheck = ref(false)
 const inputBudget = ref('')
 const inputMemo = ref('')
+const selectedDetailIndex = ref(null) // 몇 번째를 수정할 건지 추적
+const categories = [
+      { id: 1, name: '식비' },
+      { id: 2, name: '교통' },
+      { id: 3, name: '숙박' },
+      { id: 4, name: '쇼핑' },
+      { id: 5, name: '관광' },
+      { id: 6, name: '기타' }
+    ]
 
 onMounted(async () => {
   try {
@@ -48,59 +57,100 @@ async function addIncome() {
     return
   }
 
-  // 오늘 날짜 생성
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '.')
-
-  const newDetail = {
-    date: today,
-    title: memo,
-    category: '저축', // 필요 시 카테고리 분류
-    amount: amount
-  }
 
   if (!selectedIncome.value) {
     alert('선택된 여행이 없습니다.')
     return
   }
-if (!selectedIncome.value.details) {
-  selectedIncome.value.details = []
-}
 
-const existing = income.value.find(i => i.travelId === selectedIncome.value.id)
+  const existing = income.value.find(i => i.travelId === selectedIncome.value.id)
 
-if (existing) {
-  // 기존 항목 업데이트
-  existing.saved += amount
-  existing.details.unshift(newDetail) // 이 부분만 수행
+  if (selectedDetailIndex.value !== null) {
+    // 수정 모드일 때
+    const oldDetail = selectedIncome.value.details[selectedDetailIndex.value]
 
-  try {
-    await axios.patch(`http://localhost:3000/income/${existing.id}`, {
-      details: existing.details,
-      saved: existing.saved
-    })
-  } catch (err) {
-    console.error('저축 수정 실패:', err)
+    // 저장 금액 업데이트
+    selectedIncome.value.saved -= oldDetail.amount
+    selectedIncome.value.saved += amount
+
+    const updatedDetail = {
+      ...oldDetail,
+      title: memo,
+      amount,
+      date: oldDetail.date // 날짜는 유지
+    }
+
+    selectedIncome.value.details[selectedDetailIndex.value] = updatedDetail
+    selectedDetailIndex.value = null
+
+    // 기존 income에도 반영
+    if (existing) {
+      existing.details = [...selectedIncome.value.details]
+      existing.saved = selectedIncome.value.saved
+
+      try {
+        await axios.patch(`http://localhost:3000/income/${existing.id}`, {
+          details: existing.details,
+          saved: existing.saved
+        })
+      } catch (err) {
+        console.error('수정 저장 실패:', err)
+      }
+    }
+
+  } else {
+    // 새로 추가하는 경우
+    const newDetail = {
+      date: today,
+      title: memo,
+      category: '저축',
+      amount
+    }
+
+    if (existing) {
+      existing.saved += amount
+      // existing.details.unshift(newDetail)
+
+      try {
+        await axios.patch(`http://localhost:3000/income/${existing.id}`, {
+          details: existing.details,
+          saved: existing.saved
+        })
+      } catch (err) {
+        console.error('저축 수정 실패:', err)
+      }
+
+      selectedIncome.value.details.unshift(newDetail)
+      selectedIncome.value.saved += amount
+
+    } else {
+      const newIncome = {
+        travelId: selectedIncome.value.id,
+        saved: amount,
+        details: [newDetail]
+      }
+
+      try {
+        const res = await axios.post('http://localhost:3000/income', newIncome)
+        income.value.push(res.data)
+      } catch (err) {
+        console.error('새 저축 추가 실패:', err)
+      }
+
+      selectedIncome.value.details = [newDetail]
+      selectedIncome.value.saved = amount
+    }
   }
-} else {
-  // 새 항목 DB에 저장
-  const newIncome = {
-    travelId: selectedIncome.value.id,
-    saved: amount,
-    details: [newDetail]
+
+  const travelItem = travels.value.find(t => t.id === selectedIncome.value.id)
+  if (travelItem) {
+    travelItem.saved = selectedIncome.value.saved
   }
 
-  try {
-    const res = await axios.post('http://localhost:3000/income', newIncome)
-    income.value.push(res.data)
-  } catch (err) {
-    console.error('새 저축 추가 실패:', err)
-  }
-}
-
-  // 입력값 초기화
+  // 초기화
   inputBudget.value = ''
   inputMemo.value = ''
-
   modalClose()
 }
 
@@ -127,6 +177,46 @@ function selectCard(id) {
     selectedIncome.value = travels.value.find((income) => income.id === id) || null
   }
 }
+
+function editDetail(index) {
+  const item = selectedIncome.value.details[index]
+  inputBudget.value = item.amount.toString()
+  inputMemo.value = item.title
+  selectedDetailIndex.value = index
+  modalCheck.value = true
+}
+
+async function deleteDetail(index) {
+  if (!selectedIncome.value) return
+
+  // 실제 삭제
+  selectedIncome.value.details.splice(index, 1)
+
+  // 저장액 재계산
+  selectedIncome.value.saved = selectedIncome.value.details.reduce((sum, d) => sum + d.amount, 0)
+
+  // income에도 반영
+  const existing = income.value.find(i => i.travelId === selectedIncome.value.id)
+  if (existing) {
+    existing.details = [...selectedIncome.value.details]
+    existing.saved = selectedIncome.value.saved
+
+    try {
+      await axios.patch(`http://localhost:3000/income/${existing.id}`, {
+        details: existing.details,
+        saved: existing.saved
+      })
+    } catch (err) {
+      console.error('삭제 후 저장 실패:', err)
+    }
+  }
+  const travelItem = travels.value.find(t => t.id === selectedIncome.value.id)
+  if (travelItem) {
+    travelItem.saved = selectedIncome.value.saved
+  }
+}
+
+
 </script>
 <template>
   <div class="content">
@@ -164,38 +254,54 @@ function selectCard(id) {
       <div v-if="selectedIncome">
         <div class="title">{{ selectedIncome.title }} 저축 내역</div>
         <div class="list-content"
-             v-for="item in selectedIncome.details"
+             v-for="(item, index) in selectedIncome.details"
              :key="item.date + item.title">
           <div>
             <div class="input-date">{{ item.date }}</div>
             <div class="input-title">{{ item.title }}</div>
           </div>
           <div class="input">+{{ item.amount }}원</div>
+          <div class="category">{{ item.category }}</div>
+          <div class="icons">
+            <button @click="editDetail(index)">✏️</button>
+            <button @click="deleteDetail(index)">🗑️</button>
+          </div>
         </div>
         <button class="open-modal-btn" @click="modalOpen(selectedIncome)">저축하기</button>
       </div>
     </div>
 
     <!-- 모달 -->
-    <div v-show="modalCheck" class="modal-overlay" @click="modalClose">
-      <div class="modal-container" @click.stop>
-        <div class="modal-content">
-          <div class="modal-title">{{ selectedIncome?.title }}에 저축하기</div>
-          <div>
-            <div class="modal-content">저축 금액</div>
-            <input class="modal-input" type="text" v-model="inputBudget"
-                   placeholder="금액을 입력하세요" />
-            <div class="modal-content">메모</div>
-            <input class="modal-input" type="text" v-model="inputMemo"
-                   placeholder="메모를 입력하세요" />
-          </div>
-        </div>
-        <div class="modal-btn">
-          <button class="cancel" @click="modalClose">취소</button>
-          <button class="save" @click="addIncome">저축하기</button>
-        </div>
+   <!-- 모달 -->
+<div v-show="modalCheck" class="modal-overlay" @click="modalClose">
+  <div class="modal-container" @click.stop>
+    <div class="modal-content">
+      <div class="modal-title">{{ selectedIncome?.title }}에 저축하기</div>
+      <div>
+        <div class="modal-content">저축 금액</div>
+        <input class="modal-input" type="text" v-model="inputBudget"
+               placeholder="금액을 입력하세요" />
+
+        <div class="modal-content">카테고리</div>
+        <select class="modal-input" v-model="selectedCategory">
+          <option disabled value="">카테고리를 선택하세요</option>
+          <option v-for="category in categories" :key="category.id" :value="category.name">
+            {{ category.name }}
+          </option>
+        </select>
+
+        <div class="modal-content">메모</div>
+        <input class="modal-input" type="text" v-model="inputMemo"
+               placeholder="메모를 입력하세요" />
       </div>
     </div>
+    <div class="modal-btn">
+      <button class="cancel" @click="modalClose">취소</button>
+      <button class="save" @click="addIncome">저축하기</button>
+    </div>
+  </div>
+</div>
+
   </div>
 </template>
 
@@ -453,6 +559,19 @@ function selectCard(id) {
   cursor: pointer;
   background: none;
   border: none;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 /* 태블릿 대응 (768px 이하) */
