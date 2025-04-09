@@ -65,7 +65,7 @@ onMounted(fetchExpenses)
 <template>
   <div class="content">
     <div class="container">
-      <StatsChart />
+      <StatsChart :travelId="travelId" :expenses="expenses" />
       <div class="expenses">
         <h3>지출 내역</h3>
         <div class="filters">
