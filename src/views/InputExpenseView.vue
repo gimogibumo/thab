@@ -4,7 +4,12 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 
 const router = useRouter()
+const categories = ['숙박', '식비', '교통', '관광', '쇼핑', '기타']
+const showCategories = ref(false)
 
+function toggleCategories() {
+  showCategories.value = !showCategories.value
+}
 const expense = reactive({
   travelsKey: '',
   inputName: '',
@@ -15,65 +20,53 @@ const expense = reactive({
   memo: '',
   date: '',
 })
+
 const travels = ref([])
-const selectedTravel = ref(undefined)
+const selectedTravel = ref()
+
 onMounted(async () => {
   try {
     const res = await axios.get('http://localhost:3000/travels')
     travels.value = res.data
-    console.log(travels.value)
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
 })
+
 watch(selectedTravel, (newTravel) => {
   if (newTravel) {
-    console.log('여행이 선택되었습니다:', newTravel.title)
     expense.inputName = newTravel.title
     expense.travelsKey = newTravel.id
     expense.date = ''
   }
 })
 
-// 양수 정수만 입력되게 검사하는 함수
 function validateAmount() {
   if (expense.amount !== '') {
     expense.amount = Math.floor(Number(expense.amount))
-
-    if (expense.amount < 1) {
-      expense.amount = 1 // 0이 아니라 1로 고정!
-    }
+    if (expense.amount < 1) expense.amount = 1
   }
+}
+
+function selectCategory(cat) {
+  expense.category = cat
 }
 
 async function submitForm() {
-  if (!expense) {
-    console.error('expense 객체가 없습니다!')
-    return
-  }
+  if (!expense.inputName) return alert('여행을 선택해주세요!')
+  if (!expense.expenseName) return alert('지출 항목을 입력해주세요!')
+  if (!expense.category) return alert('카테고리를 선택해주세요!')
+  if (!expense.date) return alert('여행 날짜를 선택해주세요!')
 
-  if (expense.inputName == '') {
-    alert('여행을 선택해주세요!')
-    return
-  } else if (expense.expenseName == '') {
-    alert('지출 항목을 입력해주세요!')
-    return
-  } else if (expense.category == '') {
-    alert('카테고리를 선택해주세요!')
-    return
-  } else if (expense.date == '') {
-    alert('여행 날짜를 선택해주세요!')
-    return
-  }
   try {
-    const res = await axios.post('http://localhost:3000/expense', expense)
-    console.log('저장 성공', res.data)
+    await axios.post('http://localhost:3000/expense', expense)
+    alert('지출 내역이 저장되었습니다!')
+    router.push('/expense_list')
   } catch (err) {
-    console.log(err)
+    console.error(err)
   }
-  alert('지출 내역이 저장되었습니다!')
-  router.push('/expense_list')
 }
+
 function cancelForm() {
   if (confirm('정말로 취소하시겠습니까? (작성한 내용들은 모두 사라집니다!)')) {
     router.push('/')
@@ -85,71 +78,90 @@ function cancelForm() {
   <div class="content">
     <h1>지출 입력</h1>
     <form @submit.prevent="submitForm">
-      <div class="container">
-        <div class="selectTravel">
-          <label for="inputName">여행 선택</label><br />
-          <select id="inputName" v-model="selectedTravel">
-            <option selected hidden value="undefined">여행을 선택하세요</option>
-            <option v-for="travel in travels" :key="travel.id" :value="travel">
-              {{ travel.title }}
-            </option></select
-          ><br />
+      <div class="main">
+        <div class="container">
+          <div class="selectTravel">
+            <label for="inputName">여행 선택</label>
+            <select id="inputName" v-model="selectedTravel">
+              <option selected hidden value="undefined">여행을 선택하세요</option>
+              <option v-for="travel in travels" :key="travel.id" :value="travel">
+                {{ travel.title }}
+              </option>
+            </select>
+          </div>
+
+          <div class="selectDate">
+            <label for="expenseDate">여행 날짜</label>
+            <input
+              id="expenseDate"
+              type="date"
+              v-model="expense.date"
+              :min="selectedTravel?.startDate"
+              :max="selectedTravel?.endDate"
+              :disabled="!selectedTravel"
+            />
+          </div>
+
+          <div class="selectItemName">
+            <label for="expenseName">지출 항목</label>
+            <input
+              type="text"
+              id="expenseName"
+              v-model="expense.expenseName"
+              placeholder="지출 항목을 입력해주세요"
+            />
+          </div>
+
+          <div class="selectCategory">
+            <label>카테고리</label>
+            <div class="categoryBar" @click="toggleCategories">
+              <span>{{ expense.category || '카테고리를 선택하세요' }}</span>
+              <button type="button" class="categoryButton" :class="{ open: showCategories }">
+                ▼
+              </button>
+            </div>
+            <transition name="dropdown">
+              <div v-if="showCategories" class="category-buttons">
+                <button
+                  v-for="cat in categories"
+                  :key="cat"
+                  type="button"
+                  :class="['category-button', expense.category === cat ? 'selected' : '']"
+                  @click="(selectCategory(cat), (showCategories = false))"
+                >
+                  {{ cat }}
+                </button>
+              </div>
+            </transition>
+          </div>
+
+          <div class="selectAccount">
+            <label for="amount">금액</label>
+            <input
+              type="number"
+              id="amount"
+              v-model="expense.amount"
+              :min="1"
+              step="1"
+              @input="validateAmount"
+            />
+          </div>
+
+          <div class="inputMemo">
+            <label for="memo">메모</label>
+            <input type="text" id="memo" v-model="expense.memo" />
+          </div>
         </div>
-        <div class="selectDate">
-          <label for="expenseDate">여행 날짜</label><br />
-          <input
-            id="expenseDate"
-            type="date"
-            v-model="expense.date"
-            :min="selectedTravel?.startDate"
-            :max="selectedTravel?.endDate"
-            :disabled="!selectedTravel"
-          /><br />
+
+        <div class="buttons">
+          <button type="button" @click="cancelForm" class="cancel-button">취소</button>
+          <button type="submit" class="save-button">저장하기</button>
         </div>
-        <div class="selectItemName">
-          <label for="expenseName">지출 항목</label><br />
-          <input
-            type="text"
-            id="expenseName"
-            v-model="expense.expenseName"
-            placeholder="지출 항목을 입력해주세요"
-          /><br />
-        </div>
-        <div class="selectCategory">
-          <label for="category">카테고리</label><br />
-          <select id="category" v-model="expense.category">
-            <option selected hidden value="">카테고리를 선택하세요</option>
-            <option>숙박</option>
-            <option>식비</option>
-            <option>교통</option>
-            <option>쇼핑</option>
-            <option>관광</option>
-            <option>기타</option></select
-          ><br />
-        </div>
-        <div class="selectAccount">
-          <label for="amount">금액</label><br />
-          <input
-            type="number"
-            id="amount"
-            v-model="expense.amount"
-            :min="1"
-            step="1"
-            @input="validateAmount"
-          /><br />
-        </div>
-        <div class="inputMemo">
-          <label for="memo">메모</label><br />
-          <input type="text" id="memo" v-model="expense.memo" /><br />
-        </div>
-      </div>
-      <div class="buttons">
-        <button @click="cancelForm" class="cancel-button">취소</button>
-        <button type="submit" class="save-button">저장하기</button>
       </div>
     </form>
   </div>
 </template>
+
 <style scoped>
 h1 {
   font-size: 2rem;
@@ -157,18 +169,22 @@ h1 {
   margin-bottom: 2rem;
   color: #222;
 }
+
+.main {
+  margin: 0 auto;
+  width: 60%;
+}
+
 .container {
-  background: white;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  width: 800px;
-  margin: auto;
+  width: 100%;
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   border-radius: 1rem;
   gap: 1.5rem;
   padding: 2rem;
 }
+
 .container select,
 .container input {
   width: 100%;
@@ -176,15 +192,15 @@ h1 {
   border: 1px solid #ddd;
   border-radius: 0.3rem;
   padding: 0 15px;
-  margin: 5px;
+  margin: 5px 0;
   color: #333;
   background: #f9f9f9;
 }
-/* 버튼 */
+
 .buttons {
   text-align: right;
-  margin: 50px 0;
 }
+
 .buttons button {
   border-radius: 0.5rem;
   width: 120px;
@@ -192,32 +208,15 @@ h1 {
   margin: 10px;
   font-size: 16px;
   font-weight: 600;
-  color: #5c3a2f;
-  background-color: #fff;
-  border: 1px solid #a47764;
-}
-/* 취소 버튼 */
-.buttons .cancel-button {
-  color: #a47764;
-  background-color: #fff;
   transition: all 0.3s ease;
 }
 
-/* 저장 버튼 */
-.buttons .save-button {
-  color: #fff;
-  background-color: #a47764;
-  transition: all 0.3s ease;
-}
-/* 저장 버튼 hover (흰색으로 변경) */
-.buttons .save-button:hover {
+.cancel-button:hover,
+.save-button:hover {
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
   transform: translateY(-3px);
 }
-.buttons .cancel-button:hover {
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-  transform: translateY(-3px);
-}
+
 .selectTravel,
 .selectDate,
 .selectItemName,
@@ -225,19 +224,106 @@ h1 {
 .inputMemo {
   width: 100%;
 }
-/* 지출 항목 */
+
 .selectItemName {
   width: 60%;
 }
-/* 카테고리 항목 */
+
 .selectCategory {
   width: 36%;
   margin-left: auto;
+  position: relative;
 }
+
+.selectCategory > .categoryBar {
+  width: 100%;
+  height: 48px;
+  border: 1px solid #ddd;
+  border-radius: 0.3rem;
+  padding: 0 15px;
+  margin: 5px 0;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .inputMemo input {
   height: 96px;
 }
+
 .selectAccount {
   width: 55%;
+}
+
+.category-buttons {
+  position: absolute;
+  top: 100%;
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  /* margin-top: 10px; */
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.category-button {
+  padding: 10px 0;
+  border: 2px solid #c8b4a8;
+  border-radius: 10px;
+  background-color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+  height: 48px;
+}
+
+.category-button.selected {
+  background-color: #a87c6a;
+  color: white;
+  border-color: #a87c6a;
+}
+.save-button {
+  background-color: #a47764;
+  border: 1px solid #fff;
+  color: #fff;
+}
+.cancel-button {
+  background-color: #fff;
+  border: 1px solid #a47764;
+  color: #5c3a2f;
+}
+.categoryBar {
+  cursor: pointer;
+}
+.categoryButton {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  transform: rotate(0deg);
+  transition: transform 0.3s;
+}
+.categoryButton.open {
+  transform: rotate(180deg);
+}
+/* 드롭다운 트랜지션 */
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.3s ease;
+}
+.dropdown-enter-from,
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.dropdown-enter-to,
+.dropdown-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
