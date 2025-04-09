@@ -1,115 +1,95 @@
 <template>
-  <!-- 모바일용 햄버거 메뉴 -->
-  <div class="d-lg-none p-2 bg-brown text-white">
-    <button
-      class="btn btn-outline-light"
-      type="button"
-      data-bs-toggle="offcanvas"
-      data-bs-target="#offcanvasNav"
-      aria-controls="offcanvasNav"
-    >
-      <i class="bi bi-list"></i> 메뉴
-    </button>
-  </div>
-
-  <!-- 데스크탑용 NavBar -->
-  <div class="sidebar d-none d-lg-flex flex-column bg-brown text-white">
-    <div class="text-center py-4 border-bottom">
+  <div :class="['sidebar', isCollapsed ? 'collapsed' : 'expanded']">
+    <div v-if="!isCollapsed" class="text-center py-4 border-bottom">
       <div class="fs-2 fw-bold">THAB</div>
       <div class="profile-circle mx-auto mt-3"></div>
       <div class="mt-2 fw-semibold">김이윤박</div>
       <div class="text-muted small">도쿄 여행 중 (2/5)</div>
     </div>
 
-    <!-- 스크롤 가능한 네비게이션 메뉴 -->
     <div class="flex-grow-1 overflow-auto">
       <div class="px-3 py-2">
-        <div class="mb-3">
-          <router-link to="/" class="nav-btn"> <i class="bi bi-house-door"></i> 홈 </router-link>
-        </div>
-
-        <!-- 대분류: 일정 관리 -->
-        <div class="text-muted px-3">일정 관리</div>
-        <div>
-          <router-link to="/travel_manage" class="nav-btn">
-            <i class="bi bi-square"></i> 여행
-          </router-link>
-        </div>
-
-        <!-- 대분류: 가계부 -->
-        <div class="text-muted px-3 mt-3">가계부</div>
-        <div>
-          <router-link to="/expense_input" class="nav-btn">
-            <i class="bi bi-plus"></i> 지출 입력
-          </router-link>
-          <router-link to="/expense_list" class="nav-btn">
-            <i class="bi bi-list"></i> 지출 내역
-          </router-link>
-          <router-link to="/income_input" class="nav-btn">
-            <i class="bi bi-graph-up"></i> 수입 입력
-          </router-link>
-        </div>
-
-        <!-- 대분류: 리포트 -->
-        <div class="text-muted px-3 mt-3">리포트</div>
-        <div>
-          <router-link to="/stats" class="nav-btn">
-            <i class="bi bi-bar-chart"></i> 통계
-          </router-link>
-        </div>
-
-        <!-- 대분류: 설정 -->
-        <div class="text-muted px-3 mt-3">설정</div>
-        <div>
-          <router-link to="/settings" class="nav-btn">
-            <i class="bi bi-gear"></i> 환율 설정
-          </router-link>
+        <div v-for="category in navCategories" :key="category.name">
+          <div class="text-muted px-3 fw-bold" v-if="!isCollapsed">{{ category.name }}</div>
+          <div v-for="item in category.items" :key="item.name" class="ms-3">
+            <router-link :to="item.path" class="nav-btn d-flex align-items-center">
+              <i :class="item.icon"></i>
+              <span v-if="!isCollapsed" class="ms-2">{{ item.name }}</span>
+            </router-link>
+          </div>
+          <hr v-if="!isCollapsed" class="my-1" />
         </div>
       </div>
     </div>
 
-    <!-- 로그아웃 버튼 -->
-    <div class="px-3 mb-3">
-      <button class="btn btn-danger w-100 d-flex align-items-center gap-2">
-        <i class="bi bi-box-arrow-right"></i> 로그아웃
+    <div class="px-3 mb-3 d-flex justify-content-between">
+      <button v-if="!isCollapsed" class="btn btn-danger w-75">
+        <i class="bi bi-box-arrow-right"></i> <span v-if="!isCollapsed">로그아웃</span>
       </button>
-    </div>
-  </div>
-
-  <!-- 모바일용 Offcanvas 메뉴 -->
-  <div class="offcanvas offcanvas-start bg-brown text-white" tabindex="-1" id="offcanvasNav">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title">메뉴</h5>
-      <button
-        type="button"
-        class="btn-close text-reset"
-        data-bs-dismiss="offcanvas"
-        aria-label="Close"
-      ></button>
-    </div>
-    <div class="offcanvas-body">
-      <ul class="list-unstyled">
-        <li v-for="item in navItems" :key="item.name">
-          <router-link :to="item.path" class="nav-btn">
-            <i :class="item.icon"></i> {{ item.name }}
-          </router-link>
-        </li>
-      </ul>
+      <button class="btn btn-light" @click="toggleSidebar">
+        <i :class="isCollapsed ? 'bi bi-arrow-bar-right' : 'bi bi-arrow-bar-left'"></i>
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 
-const navItems = ref([
-  { name: '홈', path: '/', icon: 'bi bi-house-door' },
-  { name: '여행', path: '/travel_manage', icon: 'bi bi-square' },
-  { name: '지출 입력', path: '/expense_input', icon: 'bi bi-plus' },
-  { name: '지출 내역', path: '/expense_list', icon: 'bi bi-list' },
-  { name: '통계', path: '/stats', icon: 'bi bi-bar-chart' },
-  { name: '환율 설정', path: '/settings', icon: 'bi bi-gear' },
-])
+const isCollapsed = ref(false)
+const toggled = ref(false)
+const toggleSidebar = () => {
+  isCollapsed.value = !isCollapsed.value
+  toggled.value = !toggled.value
+  console.log(isCollapsed.value)
+}
+const handleResize = () => {
+  if (window.innerWidth <= 1024 || toggled.value) {
+    isCollapsed.value = true
+    console.log('phonesize')
+  } else {
+    isCollapsed.value = false
+    console.log('originalsize')
+  }
+}
+onMounted(() => {
+  window.addEventListener('resize', handleResize)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+})
+watch(isCollapsed, (newVal) => {
+  const contentElements = document.querySelectorAll("[class^='content']")
+  contentElements.forEach((el) => {
+    el.style.marginLeft = newVal ? '80px' : '270px'
+  })
+})
+
+const navCategories = [
+  {
+    name: '일정 관리',
+    items: [{ name: '여행', path: '/travel_manage', icon: 'bi bi-square' }],
+  },
+  {
+    name: '가계부',
+    items: [
+      { name: '지출 입력', path: '/expense_input', icon: 'bi bi-plus' },
+      { name: '지출 내역', path: '/expense_list', icon: 'bi bi-list' },
+      { name: '수입 입력', path: '/budget_input', icon: 'bi bi-graph-up' },
+    ],
+  },
+  {
+    name: '리포트',
+    items: [
+      { name: '일별 리포트', path: '/daily-report', icon: 'bi bi-graph-up-arrow' },
+      { name: '통계', path: '/stats', icon: 'bi bi-bar-chart' },
+    ],
+  },
+  {
+    name: '설정',
+    items: [{ name: '환율 설정', path: '/settings', icon: 'bi bi-gear' }],
+  },
+]
 </script>
 
 <style scoped>
@@ -121,6 +101,32 @@ const navItems = ref([
   top: 0;
   overflow-y: auto;
   background-color: #8b6f5c;
+  transition: width 0.3s ease;
+}
+
+.collapsed {
+  width: 70px;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  row-gap: 8px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin: 0px 0;
+  background-color: transparent;
+  color: white;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background-color: #8b6f5c;
+  border-radius: 6px;
 }
 
 .profile-circle {
@@ -131,28 +137,19 @@ const navItems = ref([
   border: 2px solid #8b6f5c;
 }
 
-.nav-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  margin: 2px 0;
-  background-color: transparent;
-  color: white;
-  text-decoration: none;
+.collapsed .nav-btn span {
+  display: none;
 }
 
-.nav-btn:hover,
-.nav-btn.active {
-  background-color: #8b6f5c;
-  border-radius: 6px;
+.collapsed .text-muted {
+  display: none;
 }
 
-.bg-brown {
-  background-color: #8b6f5c;
+.collapsed .profile-circle {
+  display: none;
 }
 
-.offcanvas {
-  width: 270px;
+.content {
+  transition: 0.3s ease;
 }
 </style>

@@ -6,6 +6,8 @@ import InputExpenseView from '@/views/InputExpenseView.vue'
 import ListExpenseView from '@/views/ListExpenseView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 
+import CreateTravel from '@/views/CreateTravelView.vue'
+
 const routes = [
   {
     path: '/',
@@ -17,6 +19,7 @@ const routes = [
       { path: 'expense_input', component: InputExpenseView },
       { path: 'expense_list', component: ListExpenseView },
       { path: 'signup', component: SignUpView },
+      { path: 'create', component: CreateTravel}
     ],
   },
 ]
