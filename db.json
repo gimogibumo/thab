@@ -19,6 +19,26 @@
       "totalBudget": 80000,
       "income": 80000,
       "totalSpent": 80000
+    },
+    {
+      "id": "s9eo",
+      "title": "경기도 화성 당일치기!",
+      "startDate": "2025-04-07",
+      "endDate": "2025-04-08",
+      "destination": "서울",
+      "description": "벛꽃 구경하고 맛집 투어",
+      "currency": "KRW",
+      "budget": {
+        "stay": 0,
+        "transport": 30000,
+        "food": 20000,
+        "tour": 15000,
+        "shopping": 10000,
+        "etc": 5000
+      },
+      "totalBudget": 200000,
+      "income": 80000,
+      "totalSpent": 80000
     }
   ],
   "travelChecklist": [
@@ -71,44 +91,35 @@
       "amount": 50000,
       "memo": "",
       "date": "2025-04-08"
+    },
+     {
+      "id": "d822",
+      "travelId": "1234",
+      "inputName": "123",
+      "expenseName": "123",
+      "category": "관광",
+      "customCategory": "",
+      "amount": 100000,
+      "memo": "",
+      "date": "2025-04-08"
+    },
+    {
+      "id": "s9eo",
+      "travelId": "9876",
+      "inputName": "123",
+      "expenseName": "123",
+      "category": "숙박",
+      "customCategory": "",
+      "amount": 300000,
+      "memo": "",
+      "date": "2025-04-08"
     }
   ],
   "income": [
     {
       "travelId": "d9bc",
-      "saved": 3500,
-      "details": [
-        {
-          "date": "2025.04.09",
-          "title": "2000",
-          "category": "저축",
-          "amount": 2500
-        },
-        {
-          "date": "2025.04.09",
-          "title": "ㅈㅂㅈㅂ",
-          "category": "저축",
-          "amount": 500
-        },
-        {
-          "date": "2025.04.09",
-          "title": "진짜????",
-          "category": "저축",
-          "amount": 200
-        },
-        {
-          "date": "2025.04.09",
-          "title": "200",
-          "category": "저축",
-          "amount": 200
-        },
-        {
-          "date": "2025.04.09",
-          "title": "100",
-          "category": "저축",
-          "amount": 100
-        }
-      ],
+      "saved": 1100,
+      "details": [],
       "id": 1
     }
   ]
