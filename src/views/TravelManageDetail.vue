@@ -55,6 +55,14 @@ const currentTabComponent = computed(() => {
       />
 
       <!-- travel 로드되었을 때만 하위 컴포넌트를 렌더링 -->
+      <component
+        v-if="travel"
+        :is="currentTabComponent"
+        :travel-id="travel.id"
+        @change-tab="activeTab = $event"
+      />
+
+      <!-- travel 로드되었을 때만 하위 컴포넌트를 렌더링 -->
       <component v-if="travel" :is="currentTabComponent" :travel-id="travel.id" />
     </div>
   </div>
