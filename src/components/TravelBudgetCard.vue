@@ -106,12 +106,12 @@ const saveEdit = () => {
     </div>
     <div class="info">
       <template v-if="isEditing">
-        <input v-model="editedExpense.inputName" placeholder="입력자" />
-        <input v-model="editedExpense.expenseName" placeholder="항목명" />
+        <input v-model="editedExpense.expenseName" placeholder="입력자" />
+        <input v-model="editedExpense.memo" placeholder="항목명" />
       </template>
       <template v-else>
-        <div class="name">{{ expense.inputName }}</div>
-        <div class="expense-name memo">{{ expense.expenseName }}</div>
+        <div class="name">{{ expense.expenseName }}</div>
+        <div class="expense-name memo">{{ expense.memo }}</div>
       </template>
     </div>
     <div class="money-info">

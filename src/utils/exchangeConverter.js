@@ -1,4 +1,5 @@
-import exchangeRates from '@/../public/exchangeRates.json';
+const response = await fetch('/exchangeRate.json')
+const exchangeRates = await response.json()
 
 const parseRate = (rateStr) => {
   if (typeof rateStr === 'string') {

@@ -99,12 +99,12 @@
     {
       "id": "ad15",
       "travelId": "4473",
-      "inputName": "123",
-      "expenseName": "123",
+      "inputName": "",
+      "expenseName": "김밥",
       "category": "관광",
       "customCategory": "",
       "amount": 50000,
-      "memo": "",
+      "memo": "충무로 김밥",
       "date": "2025-04-08"
     },
     {

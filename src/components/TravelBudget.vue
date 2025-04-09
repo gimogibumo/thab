@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import TravelBudgetCard from '@/components/TravelBudgetCard.vue'
 import StatsChart from '@/components/StatsChart.vue'
-import CategoryDropdown from '@/components/CategoryDropdown.vue'
+// import CategoryDropdown from '@/components/CategoryDropdown.vue'
 import axios from 'axios'
 
 const props = defineProps({

@@ -166,7 +166,7 @@ const getCategoryPercentage = (key) => {
               </div>
               <div class="fw-bold">{{ expense.expenseName }}</div>
               <div class="d-flex justify-content-between align-items-center mt-1">
-                <div class="text-muted small">{{ expense.description || '지출 내용 없음' }}</div>
+                <div class="text-muted small">{{ expense.memo || '지출 내용 없음' }}</div>
                 <div class="fw-bold">{{ expense.amount.toLocaleString() }}원</div>
               </div>
             </li>
