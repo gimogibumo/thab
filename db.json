@@ -1,4 +1,62 @@
 {
+  "expense": [
+    {
+      "id": "2042",
+      "travelsKey": "4423",
+      "inputName": "프랑스 뉴욕 여행",
+      "expenseName": "지하철",
+      "category": "교통",
+      "customCategory": "",
+      "amount": 10000,
+      "memo": "",
+      "date": "2024-04-10"
+    },
+    {
+      "id": "2d8b",
+      "travelsKey": "4423",
+      "inputName": "프랑스 뉴욕 여행",
+      "expenseName": "지하철",
+      "category": "교통",
+      "customCategory": "",
+      "amount": 10000,
+      "memo": "test",
+      "date": "2024-04-03"
+    }
+  ],
+  "travels": [
+    {
+      "id": "4473",
+      "title": "일본 오사카 여행",
+      "startDate": "2025-04-12",
+      "endDate": "2025-04-14",
+      "budget": {
+        "stay": 100000,
+        "transport": 300000,
+        "food": 100000,
+        "tour": 100000,
+        "shopping": 100000,
+        "etc": 100000
+      },
+      "destination": "오사카",
+      "description": "오사카 유니버셜 스튜디오에서 재밌게 놀 예정",
+      "totalBudget": 800000
+    },
+    {
+      "id": "4423",
+      "title": "프랑스 뉴욕 여행",
+      "startDate": "2024-03-12",
+      "endDate": "2024-04-14",
+      "budget": {
+        "stay": 100000,
+        "transport": 300000,
+        "food": 100000,
+        "tour": 100000,
+        "shopping": 100000,
+        "etc": 100000
+      },
+      "destination": "오사카",
+      "description": "오사카 유니버셜 스튜디오에서 재밌게 놀 예정",
+      "totalBudget": 800000
   "trips": [
     {
       "id": "d18e",

@@ -4,8 +4,9 @@ import TravelManageView from '@/views/TravelManageView.vue'
 import MainLayout from '@/layout/MainLayout.vue'
 import InputExpenseView from '@/views/InputExpenseView.vue'
 import ListExpenseView from '@/views/ListExpenseView.vue'
-import CreateTravel from '@/views/CreateTravelView.vue'
+import SignUpView from '@/views/SignUpView.vue'
 
+import CreateTravel from '@/views/CreateTravelView.vue'
 
 const routes = [
   {
@@ -17,6 +18,7 @@ const routes = [
       { path: 'travel_manage', component: TravelManageView },
       { path: 'expense_input', component: InputExpenseView },
       { path: 'expense_list', component: ListExpenseView },
+      { path: 'signup', component: SignUpView },
       { path: 'create', component: CreateTravel}
     ],
   },
