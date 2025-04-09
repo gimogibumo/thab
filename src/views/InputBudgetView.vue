@@ -4,24 +4,24 @@ import { ref, reactive } from 'vue'
 
 const goals = reactive([
   {
-    id: 1,
+    budgetId: 1,
     title: '도쿄 여행',
     date: '2024.01.15',
     saved: 1650000,
     target: 2000000,
     details: [
-      { date: '2025.04.08', title: '연말 보너스', amount: 1153000 },
-      { date: '2025.04.01', title: '커피값 아낌 ㅎㅎ', amount: 20000 }
+      { date: '2025.04.08', title: '연말 보너스', category: '숙박', amount: 1153000 },
+      { date: '2025.04.01', title: '커피값 아낌 ㅎㅎ', category: '쇼핑', amount: 20000 }
     ]
   },
   {
-    id: 2,
+    budgetId: 2,
     title: '파리 여행',
     date: '2024.07.01',
     saved: 500000,
     target: 3000000,
     details: [
-      { date: '2025.04.01', title: '부수입', amount: 300000 }
+      { date: '2025.04.01', title: '부수입', category: '기타', amount: 300000 }
     ]
   }
 ])
@@ -52,7 +52,7 @@ function selectCard(id) {
     selectedGoal.value = null
   } else {
     selectedId.value = id
-    selectedGoal.value = goals.find((goal) => goal.id === id) || null
+    selectedGoal.value = goals.find((goal) => goal.budgetId === id) || null
   }
 }
 
@@ -84,12 +84,12 @@ function addBudget() {
 <template>
   <div class="content">
     <div class="page-title">예산 모으기</div>
-    <div class="goal-wrap" v-for="goal in goals" :key="goal.id">
+    <div class="goal-wrap" v-for="goal in goals" :key="goal.budgetId">
       <div class="goal-card"
            :class="[
-               { active: selectedId === goal.id },
+               { active: selectedId === goal.budgetId },
                selectedId !== null ? 'shrinked' : '']"
-           @click="selectCard(goal.id)">
+           @click="selectCard(goal.budgetId)">
         <div class="top">
           <div>
             <div class="title">{{ goal.title }}</div>
@@ -153,8 +153,9 @@ function addBudget() {
 
 <style scoped>
 .content {
-  padding: 50px;
+  padding: 3% 5%;
 }
+
 .content::-webkit-scrollbar {
   display: none;
 }
@@ -175,7 +176,7 @@ function addBudget() {
 .goal-card {
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   padding: 20px;
   width: 1000px;
   transition: all 0.3s ease;

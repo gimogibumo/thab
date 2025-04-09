@@ -4,12 +4,11 @@ import TravelManageView from '@/views/TravelManageView.vue'
 import MainLayout from '@/layout/MainLayout.vue'
 import InputExpenseView from '@/views/InputExpenseView.vue'
 import ListExpenseView from '@/views/ListExpenseView.vue'
+import SignUpView from '@/views/SignUpView.vue'
+import CreateTravel from '@/views/CreateTravelView.vue'
 import InputBudgetView from '@/views/InputBudgetView.vue'
 import StatsView from '@/views/StatsView.vue'
 import MyPageView from '@/views/MyPageView.vue'
-import SignUpView from '@/views/SignUpView.vue'
-
-import CreateTravel from '@/views/CreateTravelView.vue'
 
 const routes = [
   {
