@@ -32,6 +32,28 @@
       "amount": 1000,
       "memo": "",
       "date": "2025-04-14"
+    },
+    {
+      "id": "5e38",
+      "travelsKey": "4423",
+      "inputName": "프랑스 뉴욕 여행",
+      "expenseName": "지하철",
+      "category": "숙박",
+      "customCategory": "",
+      "amount": 180305,
+      "memo": "ㅇㅇ",
+      "date": "2024-04-12"
+    },
+    {
+      "id": "d3c7",
+      "travelsKey": "4423",
+      "inputName": "프랑스 뉴욕 여행",
+      "expenseName": "지하철",
+      "category": "숙박",
+      "customCategory": "",
+      "amount": 0,
+      "memo": "",
+      "date": "2024-04-04"
     }
   ],
   "travels": [
