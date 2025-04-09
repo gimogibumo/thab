@@ -137,11 +137,13 @@ function cancelForm() {
           @input="validateAmount"
         /><br />
       </div>
-
-      <label for="memo">메모</label><br />
-      <input type="text" id="memo" v-model="expense.memo" /><br />
-      <button @click="cancelForm">취소</button>
-      <button type="submit">저장하기</button>
+      <div class="inputMemo">
+        <label for="memo">메모</label><br />
+        <input type="text" id="memo" v-model="expense.memo" /><br />
+      </div>
+      <div class="buttons">
+        <button @click="cancelForm">취소</button> <button type="submit">저장하기</button>
+      </div>
     </form>
   </div>
 </template>
@@ -155,5 +157,11 @@ h1 {
 form {
   background: white;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  gap: 1.5rem;
 }
 </style>
