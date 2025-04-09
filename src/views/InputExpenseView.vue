@@ -4,7 +4,6 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { convertCurrency } from '@/utils/exchangeConverter'
 
-// 10000000000000000
 const router = useRouter()
 const categories = ['숙박', '식비', '교통', '관광', '쇼핑', '기타']
 const showCategories = ref(false)
@@ -37,7 +36,7 @@ const expense = reactive({
 })
 
 const travels = ref([])
-const selectedTravel = ref('')
+const selectedTravel = ref()
 
 onMounted(async () => {
   try {
@@ -111,369 +110,196 @@ function cancelForm() {
 
 <template>
   <div class="content">
-    <h1>지출 입력</h1>
-    <form @submit.prevent="submitForm">
-      <div class="main">
-        <div class="container">
-          <div class="selectTravel">
-            <label for="inputName">여행 선택</label>
-            <select id="inputName" v-model="selectedTravel">
-              <option selected hidden value="">여행을 선택하세요</option>
-              <option
-                v-for="travel in travels"
-                :key="travel.id"
-                :value="travel"
-                style="overflow-x: auto; white-space: nowrap"
-              >
-                {{ travel.title }}
-              </option>
-            </select>
-          </div>
+    <div class="container py-4">
+      <h1 class="mb-4 fw-bold">지출 입력</h1>
+      <form @submit.prevent="submitForm">
+        <div class="main">
+          <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="inputName" class="form-label">여행 선택</label>
+                  <select id="inputName" class="form-select" v-model="selectedTravel">
+                    <option selected hidden value="undefined">여행을 선택하세요</option>
+                    <option
+                      v-for="travel in travels"
+                      :key="travel.id"
+                      :value="travel"
+                      class="text-nowrap overflow-auto"
+                    >
+                      {{ travel.title }}
+                    </option>
+                  </select>
+                </div>
 
-          <div class="selectDate">
-            <label for="expenseDate">여행 날짜</label>
-            <input
-              id="expenseDate"
-              type="date"
-              v-model="expense.date"
-              :min="selectedTravel?.startDate"
-              :max="selectedTravel?.endDate"
-              :disabled="!selectedTravel"
-            />
-          </div>
+                <div class="col-12">
+                  <label for="expenseDate" class="form-label">여행 날짜</label>
+                  <input
+                    id="expenseDate"
+                    type="date"
+                    class="form-control"
+                    v-model="expense.date"
+                    :min="selectedTravel?.startDate"
+                    :max="selectedTravel?.endDate"
+                    :disabled="!selectedTravel"
+                  />
+                </div>
 
-          <div class="selectItemName">
-            <label for="expenseName">지출 항목</label>
-            <input
-              type="text"
-              id="expenseName"
-              v-model="expense.expenseName"
-              placeholder="지출 항목을 입력해주세요"
-              style="overflow-x: auto; white-space: nowrap"
-            />
-          </div>
+                <div class="col-md-8">
+                  <label for="expenseName" class="form-label">지출 항목</label>
+                  <input
+                    type="text"
+                    id="expenseName"
+                    class="form-control"
+                    v-model="expense.expenseName"
+                    placeholder="지출 항목을 입력해주세요"
+                  />
+                </div>
 
-          <div class="selectCategory">
-            <label>카테고리</label>
-            <div class="categoryBar" @click="toggleCategories">
-              <span>{{ expense.category || '카테고리를 선택하세요' }}</span>
-              <button type="button" class="categoryButton" :class="{ open: showCategories }">
-                ▼
-              </button>
-            </div>
-            <transition name="dropdown">
-              <div v-if="showCategories" class="category-buttons">
-                <button
-                  v-for="cat in categories"
-                  :key="cat"
-                  type="button"
-                  :class="['category-button', expense.category === cat ? 'selected' : '']"
-                  @click="(selectCategory(cat), (showCategories = false))"
-                >
-                  {{ cat }}
-                </button>
+                <div class="col-md-4">
+                  <label class="form-label">카테고리</label>
+                  <div class="dropdown">
+                    <button
+                      class="form-select d-flex justify-content-between align-items-center"
+                      type="button"
+                      id="categoryDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                      @click="toggleCategories"
+                    >
+                      <span>{{ expense.category || '카테고리를 선택하세요' }}</span>
+                      <i
+                        class="bi"
+                        :class="showCategories ? 'bi-chevron-up' : 'bi-chevron-down'"
+                      ></i>
+                    </button>
+                    <ul
+                      class="dropdown-menu w-100"
+                      :class="{ show: showCategories }"
+                      aria-labelledby="categoryDropdown"
+                    >
+                      <li v-for="cat in categories" :key="cat">
+                        <button
+                          type="button"
+                          class="dropdown-item"
+                          :class="{ active: expense.category === cat }"
+                          @click="(selectCategory(cat), (showCategories = false))"
+                        >
+                          {{ cat }}
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label for="amount" class="form-label">금액</label>
+                  <div class="input-group">
+                    <input
+                      type="number"
+                      id="amount"
+                      class="form-control"
+                      v-model="expense.amount"
+                      :min="1"
+                      step="1"
+                      @input="validateAmount"
+                      :disabled="!selectedCurrency"
+                    />
+                    <div class="dropdown">
+                      <button
+                        class="btn btn-outline-secondary dropdown-toggle"
+                        type="button"
+                        id="currencyDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        @click="toggleCurrencyDropdown"
+                      >
+                        {{ selectedCurrency || '선택' }}
+                      </button>
+                      <ul
+                        class="dropdown-menu dropdown-menu-end"
+                        :class="{ show: showCurrencyDropdown }"
+                        style="max-height: 200px; overflow-y: auto"
+                        aria-labelledby="currencyDropdown"
+                      >
+                        <li v-for="currency in currencyJson" :key="currency.cur_unit">
+                          <button
+                            type="button"
+                            class="dropdown-item"
+                            @click="selectCurrency(currency.cur_unit)"
+                          >
+                            {{ currency.cur_unit }}
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">KRW</label>
+                  <div class="form-control bg-light same-height">
+                    {{ moneyByWon ? moneyByWon + ' 원' : '' }}
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label for="memo" class="form-label">메모</label>
+                  <textarea
+                    id="memo"
+                    class="form-control"
+                    v-model="expense.memo"
+                    rows="3"
+                  ></textarea>
+                </div>
               </div>
-            </transition>
-          </div>
-
-          <div class="selectAccount">
-            <label for="amount">금액</label>
-            <input
-              type="number"
-              id="amount"
-              v-model="expense.amount"
-              :min="1"
-              step="1"
-              @input="validateAmount"
-              style="overflow-x: auto; white-space: nowrap"
-              :disabled="!selectedCurrency"
-            />
-          </div>
-          <div class="selectCurrency">
-            <label></label>
-            <div class="currencyBar" @click="toggleCurrencyDropdown">
-              <span>{{ selectedCurrency || '선택' }}</span>
-              <button type="button" class="currencyButton" :class="{ open: showCurrencyDropdown }">
-                ▼
-              </button>
-            </div>
-            <transition name="dropdown">
-              <div v-if="showCurrencyDropdown" class="currency-dropdown">
-                <button
-                  v-for="currency in currencyJson"
-                  :key="currency.cur_unit"
-                  type="button"
-                  class="currency-option"
-                  @click="selectCurrency(currency.cur_unit)"
-                >
-                  {{ currency.cur_unit }}
-                </button>
-              </div>
-            </transition>
-          </div>
-
-          <div class="resultWonContainer">
-            <label>KRW</label>
-            <div class="resultWon" style="overflow-x: auto; white-space: nowrap">
-              {{ moneyByWon ? moneyByWon + ' 원' : '' }}
             </div>
           </div>
 
-          <div class="inputMemo">
-            <label for="memo">메모</label>
-            <input
-              type="text"
-              id="memo"
-              v-model="expense.memo"
-              style="overflow-y: auto; resize: none"
-            />
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" @click="cancelForm" class="btn btn-outline-secondary">
+              취소
+            </button>
+            <button type="submit" class="btn btn-primary">저장하기</button>
           </div>
         </div>
-
-        <div class="buttons">
-          <button type="button" @click="cancelForm" class="cancel-button">취소</button>
-          <button type="submit" class="save-button">저장하기</button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 
 <style scoped>
-h1 {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 2rem;
-  color: #222;
-}
-
-.container {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  border-radius: 1rem;
-  gap: 1.5rem;
-  padding: 2rem;
-}
-
-.container select,
-.container input {
-  width: 100%;
-  height: 48px;
-  border: 1px solid #ddd;
-  border-radius: 0.3rem;
-  padding: 0 15px;
-  margin: 5px 0;
-  color: #333;
-  background: #f9f9f9;
-}
-
-.buttons {
-  text-align: right;
-}
-
-.buttons button {
-  border-radius: 0.5rem;
-  width: 120px;
-  height: 50px;
-  margin: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.cancel-button:hover,
-.save-button:hover {
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-  transform: translateY(-3px);
-}
-
-.selectTravel,
-.selectDate,
-.selectItemName,
-.selectCategory,
-.inputMemo {
-  width: 100%;
-}
-
-.selectItemName {
-  width: 60%;
-}
-
-.selectCategory {
-  width: 36%;
-  margin-left: auto;
-  position: relative;
-}
-
-.selectCategory > .categoryBar {
-  width: 100%;
-  height: 48px;
-  border: 1px solid #ddd;
-  border-radius: 0.3rem;
-  padding: 0 15px;
-  margin: 5px 0;
-  background: #f9f9f9;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.inputMemo input {
-  height: 96px;
-}
-
-.selectAccount {
-  width: 50%;
-}
-
-.category-buttons {
-  position: absolute;
-  top: 100%;
-  display: grid;
-  width: 100%;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  z-index: 10;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.category-button {
-  padding: 10px 0;
-  border: 2px solid #c8b4a8;
-  border-radius: 10px;
-  background-color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s;
-  width: 100%;
-  height: 48px;
-}
-
-.category-button.selected {
+/* Bootstrap 5 will handle most styling, but we can add custom styles here */
+.dropdown-item.active,
+.dropdown-item:active {
   background-color: #a87c6a;
-  color: white;
-  border-color: #a87c6a;
 }
-.save-button {
+
+.btn-primary {
   background-color: #a47764;
-  border: 1px solid #fff;
-  color: #fff;
+  border-color: #a47764;
 }
-.cancel-button {
-  background-color: #fff;
-  border: 1px solid #a47764;
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #8c6354;
+  border-color: #8c6354;
+}
+
+.btn-outline-secondary {
   color: #5c3a2f;
-}
-.categoryBar {
-  cursor: pointer;
-}
-.categoryButton {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  transform: rotate(0deg);
-  transition: transform 0.3s;
-}
-.categoryButton.open {
-  transform: rotate(180deg);
-}
-.dropdown-enter-active,
-.dropdown-leave-active {
-  transition: all 0.3s ease;
-}
-.dropdown-enter-from,
-.dropdown-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-.dropdown-enter-to,
-.dropdown-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-option {
-  background: #fff;
-  color: #333;
-  font-size: 16px;
-  padding: 10px;
-}
-.content {
-  padding: 3% 5%;
-}
-.selectCurrency {
-  width: 13%;
-  position: relative;
+  border-color: #a47764;
 }
 
-.currencyBar {
-  width: 100%;
-  height: 48px;
-  border: 1px solid #ddd;
-  border-radius: 0.3rem;
-  padding: 0 15px;
-  margin: 5px 0;
-  background: #f9f9f9;
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus {
+  background-color: #f8f9fa;
+  color: #5c3a2f;
+  border-color: #a47764;
+}
+.same-height {
+  min-height: 38px; /* 부트스트랩 input 기본 높이 */
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-}
-
-.currencyButton {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  transform: rotate(0deg);
-  transition: transform 0.3s;
-}
-.currencyButton.open {
-  transform: rotate(180deg);
-}
-
-.currency-dropdown {
-  position: absolute;
-  top: 100%;
-  width: 100%;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 10;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.currency-option {
-  width: 100%;
-  height: 48px;
-  padding: 10px;
-  border: none;
-  background: white;
-  text-align: left;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.currency-option:hover {
-  background: #f0f0f0;
-}
-.resultWonContainer {
-  width: 32%;
-  margin-left: auto;
-}
-.resultWon {
-  width: 100%;
-  padding: 12px 16px;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  color: #333;
-  height: 50px;
+  align-items: center; /* 가운데 정렬 */
 }
 </style>
