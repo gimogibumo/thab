@@ -4,6 +4,8 @@ import TravelManageView from '@/views/TravelManageView.vue'
 import MainLayout from '@/layout/MainLayout.vue'
 import InputExpenseView from '@/views/InputExpenseView.vue'
 import ListExpenseView from '@/views/ListExpenseView.vue'
+import CreateTravel from '@/views/CreateTravelView.vue'
+import TravelManageDetail from '@/views/TravelManageDetail.vue'
 import SignUpView from '@/views/SignUpView.vue'
 
 import CreateTravel from '@/views/CreateTravelView.vue'
@@ -21,6 +23,8 @@ const routes = [
       { path: 'travel_manage', component: TravelManageView },
       { path: 'expense_input', component: InputExpenseView },
       { path: 'expense_list', component: ListExpenseView },
+      { path: 'create', component: CreateTravel },
+      { path: '/travel_manage/:id', component: TravelManageDetail },
       { path: 'signup', component: SignUpView },
       { path: 'create', component: CreateTravel},
       { path: 'budget_input', component: InputBudgetView }, // 예산 모으기
