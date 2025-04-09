@@ -13,7 +13,6 @@ const props = defineProps({
 })
 
 const expenses = ref([])
-const selectedCategory = ref(null)
 
 const fetchExpenses = async () => {
   try {
@@ -47,16 +46,29 @@ const saveEditedExpense = async (updatedExpense) => {
   }
 }
 
-const filteredExpenses = computed(() => {
-  const filteredByTravelId = expenses.value.filter((e) => e.travelId === props.travelId)
+const selectedCategory = ref('')
+const selectedSort = ref('latest')
 
-  const sortedExpenses = [...filteredByTravelId].sort((a, b) => {
-    return new Date(b.date) - new Date(a.date)
+const filteredExpenses = computed(() => {
+  const filtered = expenses.value.filter((e) => {
+    return (
+      e.travelId === props.travelId &&
+      (!selectedCategory.value || e.category === selectedCategory.value)
+    )
   })
 
-  return !selectedCategory.value
-    ? sortedExpenses
-    : sortedExpenses.filter((e) => e.category === selectedCategory.value)
+  switch (selectedSort.value) {
+    case 'latest':
+      return [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date))
+    case 'oldest':
+      return [...filtered].sort((a, b) => new Date(a.date) - new Date(b.date))
+    case 'high':
+      return [...filtered].sort((a, b) => b.amount - a.amount)
+    case 'low':
+      return [...filtered].sort((a, b) => a.amount - b.amount)
+    default:
+      return filtered
+  }
 })
 
 onMounted(fetchExpenses)
@@ -69,9 +81,20 @@ onMounted(fetchExpenses)
       <div class="expenses">
         <h3>지출 내역</h3>
         <div class="filters">
-          <CategoryDropdown v-model="selectedCategory" />
-          <select>
-            <option>최신순</option>
+          <select v-model="selectedCategory">
+            <option value="">전체카테고리</option>
+            <option>숙박</option>
+            <option>식비</option>
+            <option>교통</option>
+            <option>관광</option>
+            <option>쇼핑</option>
+            <option>기타</option>
+          </select>
+          <select v-model="selectedSort">
+            <option value="latest">최신순</option>
+            <option value="oldest">오래된 순</option>
+            <option value="high">금액 높은 순</option>
+            <option value="low">금액 낮은 순</option>
           </select>
         </div>
         <div class="scrollable-expenses">
