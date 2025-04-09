@@ -43,6 +43,28 @@
       "amount": 1000,
       "memo": "",
       "date": "2025-04-14"
+    },
+    {
+      "id": "5e38",
+      "travelsKey": "4423",
+      "inputName": "프랑스 뉴욕 여행",
+      "expenseName": "지하철",
+      "category": "숙박",
+      "customCategory": "",
+      "amount": 180305,
+      "memo": "ㅇㅇ",
+      "date": "2024-04-12"
+    },
+    {
+      "id": "d3c7",
+      "travelsKey": "4423",
+      "inputName": "프랑스 뉴욕 여행",
+      "expenseName": "지하철",
+      "category": "숙박",
+      "customCategory": "",
+      "amount": 0,
+      "memo": "",
+      "date": "2024-04-04"
     }
   ],
   "travels": [
@@ -79,46 +101,6 @@
       "destination": "오사카",
       "description": "오사카 유니버셜 스튜디오에서 재밌게 놀 예정",
       "totalBudget": 800000
-  "trips": [
-    {
-      "id": "d18e",
-      "title": "",
-      "startDate": "",
-      "endDate": "",
-      "destination": "",
-      "description": "",
-      "currency": "",
-      "budget": {
-        "stay": 0,
-        "transport": 0,
-        "food": 0,
-        "tour": 0,
-        "shopping": 0,
-        "etc": 0
-      },
-      "totalBudget": 0,
-      "income": 0,
-      "totalSpent": 0
-    },
-    {
-      "id": "d9bc",
-      "title": "서울 근교 당일치기 여행",
-      "startDate": "2025-04-07",
-      "endDate": "2025-04-08",
-      "destination": "서울",
-      "description": "벛꽃 구경하고 맛집 투어",
-      "currency": "KRW",
-      "budget": {
-        "stay": 0,
-        "transport": 30000,
-        "food": 20000,
-        "tour": 15000,
-        "shopping": 10000,
-        "etc": 5000
-      },
-      "totalBudget": 80000,
-      "income": 0,
-      "totalSpent": 0
     }
   ]
 }
