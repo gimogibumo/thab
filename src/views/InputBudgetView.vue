@@ -134,11 +134,11 @@ function addBudget() {
         <div class="modal-content">
           <div class="modal-title">{{ selectedGoal?.title }}에 저축하기</div>
           <div>
-            <div class="modal-money">저축 금액</div>
-            <input class="modal-input-money" type="text" v-model="inputBudget"
+            <div class="modal-content">저축 금액</div>
+            <input class="modal-input" type="text" v-model="inputBudget"
                    placeholder="금액을 입력하세요" />
-            <div class="modal-memo">메모</div>
-            <input class="modal-input-memo" type="text" v-model="inputMemo"
+            <div class="modal-content">메모</div>
+            <input class="modal-input" type="text" v-model="inputMemo"
                    placeholder="메모를 입력하세요" />
           </div>
         </div>
@@ -296,10 +296,17 @@ function addBudget() {
 .modal-container {
   background: #fff;
   border-radius: 10px;
-  width: 550px;
+  width: 400px;
   padding: 30px 20px;
   position: relative;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+.modal-content {
+  margin-bottom: 10px;
+}
+
+.modal-input {
+  margin-bottom: 15px;
 }
 
 .modal-title {

@@ -9,6 +9,7 @@ import CreateTravel from '@/views/CreateTravelView.vue'
 import InputBudgetView from '@/views/InputBudgetView.vue'
 import StatsView from '@/views/StatsView.vue'
 import MyPageView from '@/views/MyPageView.vue'
+import UpdateMyPageView from '@/views/UpdateMyPageView.vue'
 
 const routes = [
   {
@@ -24,7 +25,8 @@ const routes = [
       { path: 'create', component: CreateTravel},
       { path: 'budget_input', component: InputBudgetView }, // 예산 모으기
       { path: 'stats', component: StatsView }, // 통계
-      { path: 'my_page', component: MyPageView} // 마이 페이지
+      { path: 'my_page', component: MyPageView}, // 마이 페이지
+      { path: 'my_page/update', component: UpdateMyPageView}, // 마이페이지 수정
     ],
   },
 ]
