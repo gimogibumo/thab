@@ -1,9 +1,11 @@
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 import CreateTravelHeader from '@/components/CreateTravelHeader.vue'
 import StepIndicator from '@/components/StepIndicator.vue'
 
+const router = useRouter()
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue', 'next', 'back'])
@@ -27,13 +29,16 @@ function handleCreateTravel() {
   axios.post('http://localhost:3000/travel', travelData)
     .then(() => {
       alert('여행이 성공적으로 저장되었습니다!')
-      emit('next')
+      router.push('/travel_manage')
     })
     .catch((error) => {
       console.error('저장 실패:', error)
       alert('여행 저장에 실패했습니다.')
     })
 }
+
+const isBudgetValid = computed(() => totalBudget.value > 0)
+
 </script>
 <template>
     <div class="step-wrapper">
@@ -79,10 +84,17 @@ function handleCreateTravel() {
             </div>
           </div>
           <!-- 버튼들 -->
-            <div class="d-flex justify-content-between">
-                <button @click="$emit('back')" class="btn btn-outline-secondary">이전</button>
-                <button @click="handleCreateTravel" class="btn text-white" style="background-color: #8B6F5C;">여행 만들기</button>
-            </div>
+          <div class="d-flex justify-content-between">
+            <button @click="$emit('back')" class="btn btn-outline-secondary">이전</button>
+              <button
+                @click="handleCreateTravel"
+                class="btn text-white"
+                :disabled="!isBudgetValid"
+                style="background-color: #8B6F5C;"
+              >
+                여행 만들기
+            </button>            
+          </div>
         </div>
       </div>
     </div>
