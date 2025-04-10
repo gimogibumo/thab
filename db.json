@@ -1,76 +1,76 @@
 {
   "travel": [
-      {
-        "id": "d9bc",
-        "title": "서울 근교 당일치기 여행",
-        "startDate": "2025-04-07",
-        "endDate": "2025-04-08",
-        "destination": "서울",
-        "description": "벛꽃 구경하고 맛집 투어",
-        "currency": "KRW",
-        "budget": {
-          "stay": 0,
-          "transport": 30000,
-          "food": 20000,
-          "tour": 15000,
-          "shopping": 10000,
-          "etc": 5000
-        },
-        "totalBudget": 80000,
-        "income": 80000,
-        "totalSpent": 80000
-      }
+    {
+      "id": "d9bc",
+      "title": "서울 근교 당일치기 여행",
+      "startDate": "2025-04-07",
+      "endDate": "2025-04-08",
+      "destination": "서울",
+      "description": "벛꽃 구경하고 맛집 투어",
+      "currency": "KRW",
+      "budget": {
+        "stay": 0,
+        "transport": 30000,
+        "food": 20000,
+        "tour": 15000,
+        "shopping": 10000,
+        "etc": 5000
+      },
+      "totalBudget": 80000,
+      "income": 80000,
+      "totalSpent": 80000
+    }
   ],
   "travelChecklist": [
-      {
-        "id": "cadb",
-        "travelId": "d9bc",
-        "checklist": [
-          {
-            "label": "여권",
-            "checked": true
-          },
-          {
-            "label": "슬리퍼",
-            "checked": true
-          },
-          {
-            "label": "비행기 티켓 확인",
-            "checked": true
-          },
-          {
-            "label": "호텔 예약",
-            "checked": true
-          },
-          {
-            "label": "여권 확인",
-            "checked": false
-          }
-        ]
-      }
+    {
+      "id": "cadb",
+      "travelId": "d9bc",
+      "checklist": [
+        {
+          "label": "여권",
+          "checked": true
+        },
+        {
+          "label": "슬리퍼",
+          "checked": true
+        },
+        {
+          "label": "비행기 티켓 확인",
+          "checked": true
+        },
+        {
+          "label": "호텔 예약",
+          "checked": true
+        },
+        {
+          "label": "여권 확인",
+          "checked": false
+        }
+      ]
+    }
   ],
   "expense": [
-      {
-        "id": "ad15",
-        "travelId": "4473",
-        "inputName": "123",
-        "expenseName": "123",
-        "category": "관광",
-        "customCategory": "",
-        "amount": 50000,
-        "memo": "",
-        "date": "2025-04-08"
-      },
-      {
-        "id": "ad15",
-        "travelId": "4473",
-        "inputName": "123",
-        "expenseName": "123",
-        "category": "식비",
-        "customCategory": "",
-        "amount": 50000,
-        "memo": "",
-        "date": "2025-04-08"
-      }
+    {
+      "id": "ad15",
+      "travelId": "4473",
+      "inputName": "123",
+      "expenseName": "123",
+      "category": "관광",
+      "customCategory": "",
+      "amount": 50000,
+      "memo": "",
+      "date": "2025-04-08"
+    },
+    {
+      "id": "ad15",
+      "travelId": "4473",
+      "inputName": "123",
+      "expenseName": "123",
+      "category": "식비",
+      "customCategory": "",
+      "amount": 50000,
+      "memo": "",
+      "date": "2025-04-08"
+    }
   ]
 }
