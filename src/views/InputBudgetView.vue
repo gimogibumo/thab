@@ -11,12 +11,12 @@ const selectedId = ref(null)
 const selectedTravel = ref(null)
 
 const categories = [
-  { id: 1, name: '식비', icon: 'ph-knife-fork' },
-  { id: 2, name: '교통', icon: 'ph-car' },
-  { id: 3, name: '숙박', icon: 'ph-bed' },
-  { id: 4, name: '쇼핑', icon: 'ph-shopping-bag' },
-  { id: 5, name: '관광', icon: 'ph-camera' },
-  { id: 6, name: '기타'}
+  { id: 1, name: '식비', icon: 'fork-knife' },
+  { id: 2, name: '교통', icon: 'bus' },
+  { id: 3, name: '숙박', icon: 'bed' },
+  { id: 4, name: '쇼핑', icon: 'shopping-bag-open' },
+  { id: 5, name: '관광', icon: 'camera' },
+  { id: 6, name: '기타' }
 ]
 const selectedCategory = ref(null)
 
@@ -28,7 +28,6 @@ const selectedDetailIndex = ref(null) // 몇 번째를 수정할 건지 추적
 
 const authStore = useAuthStore()
 const userEmail = authStore.user.email
-
 onMounted(async () => {
   try {
     const [travelRes, incomeRes] = await Promise.all([
@@ -322,7 +321,11 @@ async function deleteDetail(index) {
                 :class="{ selected: selectedCategory === category.name }"
                 @click="selectedCategory = category.name"
               >
-                <i :class="['ph', category.icon, 'category-icon']"></i>
+                <!--                <img-->
+                <!--                :src="`@/assets/img/${category.icon}.svg`"-->
+                <!--                class="category-icon"-->
+                <!--                alt="category icon"-->
+                <!--              />-->
                 <div class="category-name">{{ category.name }}</div>
               </div>
             </div>
@@ -777,7 +780,7 @@ async function deleteDetail(index) {
 
 .category-item {
   width: 80px;
-  height: 80px;
+  height: 40px;
   background: #f5f5f5;
   border-radius: 12px;
   display: flex;
