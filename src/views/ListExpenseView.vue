@@ -62,7 +62,7 @@ async function listExpense() {
     const query = {}
     // console.log(filter.selectedTravelJson)
     if (filter.selectedTravelJson) {
-      query.travelsKey = filter.selectedTravelJson.id
+      query.travelId = filter.selectedTravelJson.id
     }
     const queryString = new URLSearchParams(query).toString()
     const url = `http://localhost:3000/expense?userEmail=${authStore.user.email}&${queryString ? `${queryString}` : ''}`

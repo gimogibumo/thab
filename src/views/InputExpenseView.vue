@@ -17,7 +17,7 @@ const travels = ref([])
 const selectedTravel = ref()
 
 const expense = reactive({
-  travelsKey: '',
+  travelId: '',
   inputName: '',
   expenseName: '',
   category: '',
@@ -67,7 +67,7 @@ onMounted(async () => {
 watch(selectedTravel, (newTravel) => {
   if (newTravel) {
     expense.inputName = newTravel.title
-    expense.travelsKey = newTravel.id
+    expense.travelId = newTravel.id
     expense.date = ''
   }
 })
