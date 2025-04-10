@@ -1,14 +1,16 @@
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 import { Chart, registerables } from 'chart.js'
-import { nextTick } from 'vue'
 import axios from 'axios'
 import { convertCurrency } from '@/utils/exchangeConverter.js'
+import { useAuthStore } from '@/stores/auth.js'
 
 Chart.register(...registerables)
 
 const expenses = ref()
 const convertedAmounts = reactive({})
+const travel = ref()
+const authStore = useAuthStore()
 
 // 카테고리 리스트
 const categoryNames = ['관광', '식비', '기타', '교통', '숙박', '쇼핑']
@@ -24,7 +26,6 @@ const totalExpense = computed(() => {
 
   return sum.toLocaleString()+'원'
 })
-
 
 // 카테고리별 지출
 const categories = computed(() => {
@@ -84,35 +85,37 @@ const topCategory = computed(() => {
     : '-'
 })
 
-
 // 여행별 지출 추이
 const travelExpenses = computed(() => {
   if (!expenses.value) return []
 
+  const userEmail = authStore.user.email
   const result = {}
 
   expenses.value.forEach(item => {
-    const id = item.travelId
-    if (!id) return
-    result[id] = (result[id] || 0) + item.amount
+    if (item.userEmail === userEmail) {
+      const travelId = item.travelId
+      if (!travelId) return
+      result[travelId] = (result[travelId] || 0) + (convertedAmounts[item.id] ?? 0)  // 금액 변환값으로 계산
+    }
   })
 
-  return Object.entries(result).map(([id, amount]) => ({
-    id,
-    name: travelMap[id] || `여행 ${id}`,
+  return Object.entries(result).map(([travelId, amount]) => ({
+    travelId,
+    name: travelMap.value[travelId]?.title || `여행 ${userEmail}`,
     amount
   }))
 })
 
 const travelMap = computed(() => {
   const map = {}
-  if (!expenses.value) return map
+  if (!travel.value) return map
 
-  expenses.value.forEach(item => {
-    if (!map[item.travelId]) {
-      map[item.travelId] = 0
+  travel.value.forEach(item => {
+    map[item.id] = {
+      title: item.title
     }
-    map[item.travelId] += item.amount
+    console.log(item.title)
   })
 
   return map
@@ -131,8 +134,12 @@ const renderTravelChart = () => {
         label: '여행별 지출',
         data: travelExpenses.value.map(item => item.amount),
         backgroundColor: '#8B6F5C',
-        barPercentage: 0.2,
-        categoryPercentage: 0.2
+        borderRadius: 10,
+        barThickness: 30,
+        categoryPercentage: 0.5,
+        barPercentage: 0.5,
+        hoverBackgroundColor: '#6A4E3D',
+        hoverBorderRadius: 10,
       }]
     },
     options: {
@@ -152,25 +159,44 @@ const renderTravelChart = () => {
           beginAtZero: true,
           ticks: {
             callback: value => `${value.toLocaleString()}원`
+          },
+          grid: {
+            borderColor: '#ddd',
+            borderWidth: 1,
+            color: '#f1f1f1',
+          }
+        },
+        x: {
+          grid: {
+            display: false
           }
         }
-      }
+      },
     }
   })
 }
 
+
 onMounted(async () => {
   try {
     const expenseRes = await axios.get('http://localhost:3000/expense')
+    const travelRes = await axios.get('http://localhost:3000/travel')
 
     expenses.value = expenseRes.data
+    travel.value = travelRes.data
+
     console.log(expenses.value)
-// 각 항목의 금액을 원화로 변환
+    console.log(travel.value)
+
+    // 각 항목의 금액을 원화로 변환
     for (const item of expenses.value) {
       const converted = await convertCurrency(item.amount, item.currency, 'KRW')
       convertedAmounts[item.id] = converted
     }
-    // 데이터 세팅 후 차트 렌더링
+
+   const userEmail = authStore.user.email
+   expenses.value = expenses.value.filter(item => item.userEmail === userEmail)
+
     nextTick(() => {
       renderTravelChart()
     })
@@ -207,7 +233,7 @@ onMounted(async () => {
           class="category-box">
           <div class="category-header">
             <div>{{ item.name }}</div>
-            <div>{{ item.amount }}원 ({{ item.percent }}%)</div>
+            <div>{{ item.amount.toLocaleString() }}원 ({{ item.percent }}%)</div>
           </div>
           <div class="progress-bar">
             <div
