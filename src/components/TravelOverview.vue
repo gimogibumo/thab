@@ -87,8 +87,9 @@ const getIncomeByCategory = (categoryKey) => {
 const getUsedAmount = (key) => {
   const label = categoryLabels[key] || key
   const matchedExpenses = allExpenses.value.filter(exp => exp.category === label)
-  return matchedExpenses.reduce((acc, cur) => acc + (cur.amount || 0), 0)
+  return matchedExpenses.reduce((acc, cur) => acc + (cur.moneyByWon || 0), 0)
 }
+
 
 const getCategoryPercentage = (key) => {
   const used = getUsedAmount(key)
@@ -250,16 +251,28 @@ const handleCheckToggle = async () => {
               :key="expense.id"
               class="mb-3 p-3 rounded bg-light-subtle"
             >
-              <div class="d-flex justify-content-between align-items-center mb-1">
-                <span class="text-muted small">{{ new Date(expense.date).toLocaleDateString() }}</span>
-                <span class="badge bg-light text-dark border rounded-pill px-2 py-1 small">
+              <div class="d-flex justify-content-between align-items-start flex-wrap">
+                <!-- 왼쪽: 날짜 -->
+                <div class="text-muted small me-3 min-width-80">
+                  {{ new Date(expense.date).toLocaleDateString() }}
+                </div>
+
+                <!-- 카테고리 -->
+                <div class="badge bg-light text-dark border rounded-pill px-2 py-1 small me-3 min-width-70">
                   {{ expense.category }}
-                </span>
-              </div>
-              <div class="fw-bold">{{ expense.expenseName }}</div>
-              <div class="d-flex justify-content-between align-items-center mt-1">
-                <div class="text-muted small">{{ expense.memo || '지출 내용 없음' }}</div>
-                <div class="fw-bold">{{ expense.amount.toLocaleString() }}원</div>
+                </div>
+
+                <!-- 지출명 + 메모 -->
+                <div class="flex-grow-1 me-3">
+                  <div class="fw-bold">{{ expense.expenseName || '지출 항목' }}</div>
+                  <div class="text-muted small">{{ expense.memo || '지출 내용 없음' }}</div>
+                </div>
+
+                <!-- 금액 -->
+                <div class="text-end min-width-100">
+                  <div class="fw-bold">{{ (expense.moneyByWon || 0).toLocaleString() }}원</div>
+                  <div class="text-muted small">{{ expense.amount?.toLocaleString() }}{{ expense.currency }}</div>
+                </div>
               </div>
             </li>
           </ul>

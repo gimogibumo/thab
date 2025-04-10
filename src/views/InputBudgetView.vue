@@ -164,7 +164,7 @@ async function addIncome() {
         income.value.push(incomeRes.data)
 
 
-        const travelId = selectedTravel.value.id
+        // const travelId = selectedTravel.value.id
         // const travelRes = await axios.patch(`http://localhost:3000/travel/${travelId}`, newIncome)
         // travels.value.push(travelRes.data)
       } catch (err) {
@@ -244,7 +244,7 @@ async function deleteDetail(index) {
   if (!selectedTravel.value) return
 
   // 실제 삭제
-  const deletedDetail = selectedTravel.value.details.splice(index, 1)[0]  // 삭제된 내역을 변수로 저장
+  const deletedDetail = selectedTravel.value.details.splice(index, 1)[0]
 
   // 저장액 재계산
   selectedTravel.value.income = selectedTravel.value.details.reduce((sum, d) => sum + d.amount, 0)
@@ -275,8 +275,7 @@ async function deleteDetail(index) {
     try {
       // 서버에 갱신된 여행 내역 보내기
       await axios.patch(`http://localhost:3000/travel/${travelItem.id}`, {
-        income: travelItem.income,
-        totalIncome: travelItem.totalIncome
+        income: travelItem.income
       })
     } catch (err) {
       console.error('여행 내역 갱신 실패:', err)

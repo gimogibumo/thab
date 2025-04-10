@@ -2,11 +2,21 @@
   <div class="stats-wrapper">
     <div class="chart-box">
       <h3>일별 지출 추이</h3>
-      <Bar :data="barData" :options="barOptions" />
+      <template v-if="expenses.length > 0">
+        <Bar :data="barData" :options="barOptions" />
+      </template>
+      <template v-else>
+        <div class="no-data">지출 내역이 없습니다</div>
+      </template>
     </div>
     <div class="chart-box">
       <h3>총 카테고리별 지출</h3>
-      <Doughnut :data="doughnutData" :options="doughnutOptions" />
+      <template v-if="expenses.length > 0">
+        <Doughnut :data="doughnutData" :options="doughnutOptions" />
+      </template>
+      <template v-else>
+        <div class="no-data">지출 내역이 없습니다</div>
+      </template>
     </div>
   </div>
 </template>
@@ -28,10 +38,6 @@ import {
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement)
 
 const props = defineProps({
-  travelId: {
-    type: String,
-    required: true,
-  },
   expenses: {
     type: Array,
     required: true,
@@ -51,7 +57,7 @@ const dailyExpenses = computed(() => {
     if (!acc[formattedDate]) {
       acc[formattedDate] = 0
     }
-    acc[formattedDate] += expense.amount
+    acc[formattedDate] += expense.moneyByWon
     return acc
   }, {})
 })
@@ -74,7 +80,7 @@ const categoryExpenses = computed(() => {
     if (!acc[category]) {
       acc[category] = 0
     }
-    acc[category] += expense.amount
+    acc[category] += expense.moneyByWon
     return acc
   }, {})
 })
@@ -149,6 +155,17 @@ const doughnutOptions = {
   font-size: 1rem;
   font-weight: 600;
   color: #333;
+}
+
+.no-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 250px;
+  font-size: 1rem;
+  color: #888;
+  background-color: #f9f9f9;
+  border-radius: 8px;
 }
 
 :deep(canvas) {
