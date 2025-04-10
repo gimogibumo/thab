@@ -2,6 +2,7 @@
   "travel": [
     {
       "id": "d9bc",
+      "userEmail": "a@a.a",
       "title": "서울 근교 당일치기 여행",
       "startDate": "2025-04-07",
       "endDate": "2025-04-08",
@@ -22,6 +23,7 @@
     },
     {
       "id": "s9eo",
+      "userEmail": "a@a.a",
       "title": "경기도 화성 당일치기!",
       "startDate": "2025-04-07",
       "endDate": "2025-04-08",
@@ -118,16 +120,42 @@
   "income": [
     {
       "travelId": "d9bc",
-      "saved": 1000,
+      "saved": 0,
+      "details": [],
+      "id": 1
+    },
+    {
+      "travelId": "d9bc",
+      "saved": 100000,
       "details": [
         {
           "date": "2025.04.10",
-          "title": "교통비",
-          "category": "저축",
+          "title": "",
+          "category": "쇼핑",
+          "amount": 100000
+        }
+      ],
+      "id": 2
+    },
+    {
+      "travelId": "s9eo",
+      "saved": 101005,
+      "category": "쇼핑",
+      "details": [
+        {
+          "date": "2025.04.10",
+          "title": "",
+          "category": "숙박",
+          "amount": 100005
+        },
+        {
+          "date": "2025.04.10",
+          "title": "",
+          "category": "쇼핑",
           "amount": 1000
         }
       ],
-      "id": 1
+      "id": 3
     }
   ],
   "users": [

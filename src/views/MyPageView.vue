@@ -3,6 +3,15 @@
 import { onMounted, ref } from 'vue'
 import axios from 'axios'
 
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
+
+const email = authStore.user.email
+const nickname = authStore.user.nickname
+const phone = authStore.user.phone
+const passwd = authStore.user.password
+const name = authStore.user.name
+
 const modalCheck = ref(false)
 const user = ref(null)
 
@@ -32,29 +41,29 @@ function modalClose() {
       <div class="first-info">
         <img src="https://placehold.co/100x100" alt="profile">
         <div class="top-info">
-<!--          <div class="top-nickname">{{ user.value }}</div>-->
+          <div class="top-nickname">{{ nickname }}</div>
 <!--          <div class="register-date">가입일: 2023.02.02</div>-->
         </div>
       </div>
       <hr>
       <div class="info second-info">
         <div class="info-title">이름</div>
-        <div class="info-content">THAB</div>
+        <div class="info-content">{{ name }}</div>
       </div>
       <hr>
       <div class="info third-info">
         <div class="info-title">이메일</div>
-        <div class="info-content">thab@gmail.com</div>
+        <div class="info-content">{{ email }}</div>
       </div>
       <hr>
       <div class="info fourth-info">
         <div class="info-title">전화번호</div>
-        <div class="info-content">010-5036-7875</div>
+        <div class="info-content">{{ phone }}</div>
       </div>
       <hr>
       <div class="info fifth-info">
         <div class="info-title">비밀번호</div>
-        <div class="info-content">123456</div>
+        <div class="info-content">{{ passwd }}</div>
       </div>
       <hr>
       <div class="btn-info">

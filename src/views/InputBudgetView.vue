@@ -1,23 +1,28 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
 
 const income = ref([])
 const travels = ref(null)
 const selectedId = ref(null)
 const selectedTravel = ref(null)
+const selectedCategory = ref(null)
 const modalCheck = ref(false)
 const inputBudget = ref('')
 const inputMemo = ref('')
 const selectedDetailIndex = ref(null) // 몇 번째를 수정할 건지 추적
 const categories = [
-  { id: 1, name: '식비' },
-  { id: 2, name: '교통' },
-  { id: 3, name: '숙박' },
-  { id: 4, name: '쇼핑' },
-  { id: 5, name: '관광' },
-  { id: 6, name: '기타' }
+  { id: 1, name: '식비', icon: 'ph-knife-fork' },
+  { id: 2, name: '교통', icon: 'ph-car' },
+  { id: 3, name: '숙박', icon: 'ph-bed' },
+  { id: 4, name: '쇼핑', icon: 'ph-shopping-bag' },
+  { id: 5, name: '관광', icon: 'ph-camera' }
 ]
+
+const authStore = useAuthStore()
+const userEmail = authStore.user.email
+// const userTravels = travels.value.filter(travel => travel.userEmail === userEmail)
 
 onMounted(async () => {
   try {
@@ -44,8 +49,6 @@ onMounted(async () => {
     console.error('데이터 불러오기 실패:', err)
   }
 })
-
-// 저축하기
 async function addIncome() {
   const amount = parseInt(inputBudget.value.replace(/[^0-9]/g, ''))
   const memo = inputMemo.value
@@ -63,9 +66,10 @@ async function addIncome() {
   }
 
   const existing = income.value.find(i => i.travelId === selectedTravel.value.id)
+  const category = selectedCategory.value || ''
 
+  // ==== 수정 기능 ====
   if (selectedDetailIndex.value !== null) {
-    // 수정 모드일 때
     const oldDetail = selectedTravel.value.details[selectedDetailIndex.value]
 
     // 저장 금액 업데이트
@@ -75,14 +79,15 @@ async function addIncome() {
     const updatedDetail = {
       ...oldDetail,
       title: memo,
+      category,
       amount,
-      date: oldDetail.date // 날짜는 유지
+      date: oldDetail.date
     }
 
+    // 수정된 내역을 selectedTravel와 기존 income에 반영
     selectedTravel.value.details[selectedDetailIndex.value] = updatedDetail
     selectedDetailIndex.value = null
 
-    // 기존 income에도 반영
     if (existing) {
       existing.details = [...selectedTravel.value.details]
       existing.saved = selectedTravel.value.saved
@@ -102,13 +107,13 @@ async function addIncome() {
     const newDetail = {
       date: today,
       title: memo,
-      category: '저축',
+      category,
       amount
     }
 
     if (existing) {
       existing.saved += amount
-      // existing.details.unshift(newDetail)
+      existing.details.unshift(newDetail)
 
       try {
         await axios.patch(`http://localhost:3000/income/${existing.id}`, {
@@ -119,13 +124,15 @@ async function addIncome() {
         console.error('저축 수정 실패:', err)
       }
 
-      selectedTravel.value.details.unshift(newDetail)
-      selectedTravel.value.saved += amount
+      // selectedTravel에 새로운 내역 추가
+      selectedTravel.value.details = [...existing.details] // 중복된 상태 업데이트 방지
+      selectedTravel.value.saved = existing.saved
 
     } else {
       const newIncome = {
         travelId: selectedTravel.value.id,
         saved: amount,
+        category: category,
         details: [newDetail]
       }
 
@@ -141,6 +148,7 @@ async function addIncome() {
     }
   }
 
+  // 여행 내역 업데이트
   const travelItem = travels.value.find(t => t.id === selectedTravel.value.id)
   if (travelItem) {
     travelItem.saved = selectedTravel.value.saved
@@ -151,6 +159,7 @@ async function addIncome() {
   inputMemo.value = ''
   modalClose()
 }
+
 
 // 모달 열기
 function modalOpen(income) {
@@ -163,6 +172,7 @@ function modalClose() {
   modalCheck.value = false
   inputBudget.value = ''
   inputMemo.value = ''
+  selectedCategory.value = null
 }
 
 // 목표 예산 카드 선택하기
@@ -178,10 +188,13 @@ function selectCard(id) {
 
 // 내역 수정
 function editDetail(index) {
+  // 선택한 아이템
   const item = selectedTravel.value.details[index]
+
   inputBudget.value = item.amount.toString()
   inputMemo.value = item.title
   selectedDetailIndex.value = index
+  selectedCategory.value = item.category || null
   modalCheck.value = true
 }
 
@@ -283,13 +296,20 @@ async function deleteDetail(index) {
             <input class="modal-input" type="text" v-model="inputBudget"
                    placeholder="금액을 입력하세요" />
 
+            <!-- 카테고리 선택 영역 -->
             <div class="modal-content">카테고리</div>
-            <select class="modal-input" v-model="selectedCategory">
-              <option disabled value="">카테고리를 선택하세요</option>
-              <option v-for="category in categories" :key="category.id" :value="category.name">
-                {{ category.name }}
-              </option>
-            </select>
+            <div class="category-wrap">
+              <div
+                v-for="category in categories"
+                :key="category.id"
+                class="category-item"
+                :class="{ selected: selectedCategory === category.name }"
+                @click="selectedCategory = category.name"
+              >
+                <i :class="['ph', category.icon, 'category-icon']"></i>
+                <div class="category-name">{{ category.name }}</div>
+              </div>
+            </div>
 
             <div class="modal-content">메모</div>
             <input class="modal-input" type="text" v-model="inputMemo"
@@ -562,12 +582,6 @@ async function deleteDetail(index) {
   border: none;
 }
 
-.input-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .icons button {
   background: none;
   border: none;
@@ -710,6 +724,73 @@ async function deleteDetail(index) {
   .list-content {
     padding: 10px;
   }
+}
+
+.icons button {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.icons button:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.category {
+  font-size: 12px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  background-color: #fffaf0; /* 아이보리색 */
+  border-radius: 6px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.category-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.category-item {
+  width: 80px;
+  height: 80px;
+  background: #f5f5f5;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 2px solid transparent;
+}
+
+.category-item:hover {
+  background: #eee;
+}
+
+.category-item.selected {
+  border-color: #7B5E48;
+  background: #f1e8e2;
+}
+
+.category-icon {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 6px;
+}
+
+.category-name {
+  font-size: 12px;
+  color: #444;
 }
 
 </style>

@@ -2,10 +2,16 @@
 import  {useRouter} from 'vue-router'
 import {ref} from 'vue'
 
-const router = useRouter()
+import { useAuthStore } from '@/stores/auth'
+const authStore = useAuthStore()
 
-const name = ref('')
-const phone = ref('')
+const email = authStore.user.email
+const nickname = authStore.user.nickname
+const phone = authStore.user.phone
+const passwd = authStore.user.password
+const name = authStore.user.name
+
+const router = useRouter()
 
 // 저장 버튼 클릭 시 호출
 const btnSave = () => {
