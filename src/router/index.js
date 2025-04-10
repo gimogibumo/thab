@@ -27,7 +27,6 @@ const routes = [
       { path: 'expense_list', component: ListExpenseView },
       { path: 'create', component: CreateTravel },
       { path: '/travel_manage/:id', component: TravelManageDetail },
-      { path: 'signup', component: SignUpView },
       { path: 'budget_input', component: InputBudgetView }, // 예산 모으기
       { path: 'stats', component: StatsView }, // 통계
       // { path: 'my_page', component: MyPageView} // 마이 페이지
