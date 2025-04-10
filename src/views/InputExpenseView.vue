@@ -113,9 +113,9 @@ async function submitForm() {
   if (!expense.category) return alert('카테고리를 선택해주세요!')
   if (!expense.date) return alert('여행 날짜를 선택해주세요!')
   if (expense.amount === 0 || expense.amount == '') return alert('금액을 입력해주세요!')
-
   const payload = {
     ...expense,
+    moneyByWon: moneyByWon.value,
     currency: selectedCurrency.value,
     // convertedAmount: moneyByWon.value || null,
   }

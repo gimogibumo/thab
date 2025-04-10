@@ -190,6 +190,68 @@
       "date": "2025-04-11",
       "userEmail": "qq@q.q",
       "currency": "GBP"
+    },
+    {
+      "id": "31d5",
+      "travelId": "1a7e",
+      "inputName": "행보칸 유럽 여행",
+      "expenseName": "지하철",
+      "category": "교통",
+      "amount": 18666,
+      "memo": "a",
+      "date": "2025-04-03",
+      "userEmail": "qq@q.q",
+      "currency": "GBP"
+    },
+    {
+      "id": "af66",
+      "travelId": "1a7e",
+      "inputName": "행보칸 유럽 여행",
+      "expenseName": "123",
+      "category": "식비",
+      "amount": 1866,
+      "memo": "",
+      "date": "2025-04-11",
+      "userEmail": "qq@q.q",
+      "currency": "GBP"
+    },
+    {
+      "id": "c9d0",
+      "travelId": "1a7e",
+      "inputName": "행보칸 유럽 여행",
+      "expenseName": "지하철",
+      "category": "교통",
+      "amount": 3888,
+      "memo": "",
+      "date": "2025-04-10",
+      "userEmail": "qq@q.q",
+      "currency": "BHD"
+    },
+    {
+      "id": "4ce5",
+      "travelId": "1a7e",
+      "inputName": "행보칸 유럽 여행",
+      "expenseName": "지하철",
+      "category": "교통",
+      "amount": 1,
+      "memo": "",
+      "date": "2025-04-11",
+      "userEmail": "qq@q.q",
+      "moneyByWon": 399,
+      "currency": "AED"
+    },
+    {
+      "id": "0766",
+      "travelId": "b5c3",
+      "inputName": "행보칸 도쿄 여행",
+      "expenseName": "지하철",
+      "category": "교통",
+      "amount": 100,
+      "memo": "",
+      "date": "2025-04-05",
+      "userEmail": "qq@q.q",
+      "moneyByWon": 990,
+      "currency": "JPY(100)"
     }
   ],
   "users": [
