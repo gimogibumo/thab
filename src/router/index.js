@@ -1,18 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 // import { useAuthStore } from '@/stores/auth'
-import MainLayout from '@/layout/MainLayout.vue'
-
 import MainView from '@/views/MainView.vue'
 import TravelManageView from '@/views/TravelManageView.vue'
+import MainLayout from '@/layout/MainLayout.vue'
 import InputExpenseView from '@/views/InputExpenseView.vue'
 import ListExpenseView from '@/views/ListExpenseView.vue'
 import CreateTravel from '@/views/CreateTravelView.vue'
 import TravelManageDetail from '@/views/TravelManageDetail.vue'
 import SignUpView from '@/views/SignUpView.vue'
-<<<<<<< HEAD
-=======
-
->>>>>>> e0c540787ee2af9b5543b8d7cf2c1633e57bfc4f
 import InputBudgetView from '@/views/InputBudgetView.vue'
 import StatsView from '@/views/StatsView.vue'
 import { useAuthStore } from '@/stores/auth'
@@ -33,10 +28,6 @@ const routes = [
       { path: 'create', component: CreateTravel },
       { path: '/travel_manage/:id', component: TravelManageDetail },
       { path: 'signup', component: SignUpView },
-<<<<<<< HEAD
-=======
-      { path: 'create', component: CreateTravel },
->>>>>>> e0c540787ee2af9b5543b8d7cf2c1633e57bfc4f
       { path: 'budget_input', component: InputBudgetView }, // 예산 모으기
       { path: 'stats', component: StatsView }, // 통계
       // { path: 'my_page', component: MyPageView} // 마이 페이지
