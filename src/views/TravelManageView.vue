@@ -10,7 +10,7 @@ const userEmail = computed(() => authStore.user?.email)
 const activeTab = ref('ongoing')
 const today = new Date()
 today.setHours(0, 0, 0, 0)
-const travelCards = reactive([])
+const travelCards = ref([])
 
 const calculateTravelStatus = (card) => {
   const startDate = new Date(card.startDate)
@@ -31,7 +31,7 @@ const calculateTravelStatus = (card) => {
 }
 
 const filteredAndSortedCards = computed(() => {
-  return travelCards
+  return travelCards.value
     .filter((c) => c.status === activeTab.value)
     .sort((a, b) => {
       if (activeTab.value === 'upcoming') {
@@ -47,15 +47,19 @@ const filteredAndSortedCards = computed(() => {
 const fetchTravelCards = async () => {
   try {
     const response = await axios.get('http://localhost:3000/travel')
-    response.data
+    travelCards.value = response.data
       .filter((card) => card.userEmail === userEmail.value)
-      .forEach((card) => {
+      .map((card) => {
         calculateTravelStatus(card)
-        travelCards.push(card)
+        return reactive(card)
       })
   } catch (error) {
     console.error('데이터를 가져오는 중 오류 발생:', error)
   }
+}
+const changeTab = (tab) => {
+  activeTab.value = tab
+  fetchTravelCards()
 }
 
 onMounted(() => {
@@ -71,7 +75,7 @@ onMounted(() => {
         :key="tab"
         class="tab"
         :class="{ active: activeTab === tab }"
-        @click="activeTab = tab"
+        @click="changeTab(tab)"
       >
         {{ tab === 'ongoing' ? '여행 중' : tab === 'upcoming' ? '예정된 여행' : '지난 여행' }}
       </div>
@@ -89,6 +93,7 @@ onMounted(() => {
         v-bind="card"
         :status="card.status"
         :dDay="card.dDay"
+        :income="card.income"
         :size="activeTab === 'ongoing' ? 'large' : 'small'"
       />
     </div>
