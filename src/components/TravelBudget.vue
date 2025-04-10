@@ -74,38 +74,39 @@ onMounted(fetchExpenses)
 </script>
 
 <template>
-  <div class="content">
-    <div class="container">
-      <StatsChart :travelId="travelId" :expenses="expenses" />
-      <div class="expenses">
-        <h3>지출 내역</h3>
-        <div class="filters">
-          <select v-model="selectedCategory">
-            <option value="">전체카테고리</option>
-            <option>숙박</option>
-            <option>식비</option>
-            <option>교통</option>
-            <option>관광</option>
-            <option>쇼핑</option>
-            <option>기타</option>
-          </select>
-          <select v-model="selectedSort">
-            <option value="latest">최신순</option>
-            <option value="oldest">오래된 순</option>
-            <option value="high">금액 높은 순</option>
-            <option value="low">금액 낮은 순</option>
-          </select>
-        </div>
-        <div class="scrollable-expenses">
-          <TravelBudgetCard
-            v-for="expense in filteredExpenses"
-            :key="expense.id"
-            :expense="expense"
-            :travelId="travelId"
-            @edit="saveEditedExpense"
-            @delete="handleDelete"
-          />
-        </div>
+  <div class>
+    <StatsChart :travelId="travelId" :expenses="expenses" />
+    <div class="expenses">
+      <h3>지출 내역</h3>
+      <div class="filters">
+        <select v-model="selectedCategory">
+          <option value="">전체카테고리</option>
+          <option>숙박</option>
+          <option>식비</option>
+          <option>교통</option>
+          <option>관광</option>
+          <option>쇼핑</option>
+          <option>기타</option>
+        </select>
+        <select v-model="selectedSort">
+          <option value="latest">최신순</option>
+          <option value="oldest">오래된 순</option>
+          <option value="high">금액 높은 순</option>
+          <option value="low">금액 낮은 순</option>
+        </select>
+      </div>
+      <div v-if="expenses.length <= 0">
+        <div class="no-data">지출 내역이 없습니다</div>
+      </div>
+      <div v-else class="scrollable-expenses">
+        <TravelBudgetCard
+          v-for="expense in filteredExpenses"
+          :key="expense.id"
+          :expense="expense"
+          :travelId="travelId"
+          @edit="saveEditedExpense"
+          @delete="handleDelete"
+        />
       </div>
     </div>
   </div>
@@ -113,13 +114,7 @@ onMounted(fetchExpenses)
 
 <style scoped>
 .container {
-  --bs-gutter-x: 1.5rem;
-  --bs-gutter-y: 0;
-  width: 90%;
-  padding-right: calc(var(--bs-gutter-x) * 0.5);
-  padding-left: calc(var(--bs-gutter-x) * 0.5);
-  margin-right: auto;
-  margin-left: auto;
+  width: 80%;
 }
 .expenses {
   background: #fff;
@@ -149,5 +144,16 @@ select {
   padding: 0.4rem;
   border-radius: 6px;
   border: 1px solid #ccc;
+}
+
+.no-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 250px;
+  font-size: 1rem;
+  color: #888;
+  background-color: #f9f9f9;
+  border-radius: 8px;
 }
 </style>

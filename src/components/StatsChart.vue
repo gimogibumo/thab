@@ -6,7 +6,7 @@
         <Bar :data="barData" :options="barOptions" />
       </template>
       <template v-else>
-        <div class="no-data">지출 내역이 존재하지 않습니다</div>
+        <div class="no-data">지출 내역이 없습니다</div>
       </template>
     </div>
     <div class="chart-box">
@@ -15,7 +15,7 @@
         <Doughnut :data="doughnutData" :options="doughnutOptions" />
       </template>
       <template v-else>
-        <div class="no-data">지출 내역이 존재하지 않습니다</div>
+        <div class="no-data">지출 내역이 없습니다</div>
       </template>
     </div>
   </div>
