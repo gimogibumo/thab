@@ -11,12 +11,16 @@ import { ref } from 'vue'
 import StepAgreement from '@/components/StepAgreement.vue'
 import StepForm from '@/components/StepForm.vue'
 import StepComplete from '@/components/StepComplete.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const step = ref(1)
 const agreed = ref(false)
 const formData = ref({
   name: '',
   email: '',
+  phone: '',
+  password: '',
 })
 
 const nextStep = () => {
@@ -24,15 +28,13 @@ const nextStep = () => {
 }
 
 const reset = () => {
-  step.value = 1
-  agreed.value = false
-  formData.value = { name: '', email: '' }
+  //db에 푸시
+  router.push('/login')
 }
 </script>
 
 <style scoped>
 .signup-flow {
-  max-width: 400px;
   margin: 50px auto;
   text-align: center;
 }
