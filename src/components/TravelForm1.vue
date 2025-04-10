@@ -42,7 +42,6 @@ const handleNext = () => {
 
 <template>
   <div class="step-wrapper">
-    <CreateTravelHeader title="새로운 여행 만들기" subtitle="나의 특별한 여행" />
     <div class="card shadow">
       <div class="card-body">
         <StepIndicator :currentStep="1" :stepLabel="'기본 정보'" />
