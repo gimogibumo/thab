@@ -17,6 +17,10 @@ const countries = ref([
   { code: 'US', name: '미국' },
   { code: 'FR', name: '프랑스' },
   { code: 'GB', name: '영국' },
+  { code: 'CN', name: '중국' },
+  { code: 'TH', name: '태국' },
+  { code: 'AU', name: '호주' },
+  { code: 'CA', name: '캐나다' }
 ])
 
 const countryCityMap = {
@@ -25,14 +29,22 @@ const countryCityMap = {
   US: ['뉴욕', '샌프란시스코', '라스베이거스'],
   FR: ['파리', '리옹', '마르세유'],
   GB: ['런던', '맨체스터', '에든버러'],
+  CN: ['베이징', '상하이', '광저우'],
+  TH: ['방콕', '치앙마이', '푸껫'],
+  AU: ['시드니', '멜버른', '브리즈번'],
+  CA: ['토론토', '밴쿠버', '몬트리올']
 }
 
 const countryCurrencyMap = {
-  JP: 'JPY',
+  JP: 'JPY(100)',
   KR: 'KRW',
   US: 'USD',
   FR: 'EUR',
   GB: 'GBP',
+  CN: 'CNH',
+  TH: 'THB',
+  AU: 'AUD',
+  CA: 'CAD'
 }
 
 const selectedCountry = ref('')
@@ -60,7 +72,6 @@ const isFormValid = computed(() => {
 </script>
 <template>
   <div class="step-wrapper">
-    <CreateTravelHeader title="새로운 여행 만들기" subtitle="나의 특별한 여행" />
     <div class="card shadow">
       <div class="card-body">
         <StepIndicator :currentStep="2" :stepLabel="'여행 상세'" />

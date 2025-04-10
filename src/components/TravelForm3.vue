@@ -17,8 +17,16 @@ const localForm = computed({
 
 const totalBudget = computed(() => {
   const b = localForm.value.budget
-  return b.stay + b.transport + b.food + b.tour + b.shopping + b.etc
+  return (
+    Number(b.stay || 0) +
+    Number(b.transport || 0) +
+    Number(b.food || 0) +
+    Number(b.tour || 0) +
+    Number(b.shopping || 0) +
+    Number(b.etc || 0)
+  )
 })
+
 
 function handleCreateTravel() {
   const travelData = {
@@ -42,7 +50,6 @@ const isBudgetValid = computed(() => totalBudget.value > 0)
 </script>
 <template>
     <div class="step-wrapper">
-      <CreateTravelHeader title="새로운 여행 만들기" subtitle="나의 특별한 여행" />
       <!-- 카드 -->
       <div class="card shadow">
         <!-- 폼 내용 -->
