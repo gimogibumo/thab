@@ -66,7 +66,7 @@ async function listExpense() {
     }
 
     const queryString = new URLSearchParams(query).toString()
-    const url = `http://localhost:3000/expense${queryString ? `?${queryString}` : ''}`
+    const url = `http://localhost:3000/expense?userEmail=${authStore.user.email}&${queryString ? `?${queryString}` : ''}`
 
     const res = await axios.get(url)
     let result = res.data

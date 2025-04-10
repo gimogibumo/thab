@@ -24,6 +24,7 @@ const expense = reactive({
   amount: 0,
   memo: '',
   date: '',
+  userEmail: authStore.user.email,
 })
 
 function toggleTravelDropdown() {

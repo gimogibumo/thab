@@ -116,7 +116,8 @@
       "amount": 1900,
       "memo": "asdf",
       "date": "2025-04-11",
-      "currency": "SEK"
+      "currency": "SEK",
+      "userEmail": "a@a.a"
     },
     {
       "id": "7843",
@@ -127,7 +128,8 @@
       "amount": 1213,
       "memo": "asd",
       "date": "2025-04-18",
-      "currency": "AED"
+      "currency": "AED",
+      "userEmail": "b@b.b"
     }
   ],
   "trips": [],
@@ -139,6 +141,15 @@
       "phone": "010-0100-0100",
       "password": "123123",
       "nickname": "admin",
+      "passwordCheck": "123123"
+    },
+    {
+      "id": "5a1c",
+      "name": "admin2",
+      "email": "b@b.b",
+      "phone": "010-0100-0010",
+      "password": "123123",
+      "nickname": "admin2",
       "passwordCheck": "123123"
     }
   ],
