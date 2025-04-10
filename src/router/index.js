@@ -6,9 +6,9 @@ import MainLayout from '@/layout/MainLayout.vue'
 import InputExpenseView from '@/views/InputExpenseView.vue'
 import ListExpenseView from '@/views/ListExpenseView.vue'
 import CreateTravel from '@/views/CreateTravelView.vue'
-import TravelManageDetail from '@/views/TravelManageDetail.vue'
+
 import SignUpView from '@/views/SignUpView.vue'
-import InputBudgetView from '@/views/InputBudgetView.vue'
+
 import StatsView from '@/views/StatsView.vue'
 import MyPageView from '@/views/MyPageView.vue'
 import UpdateMyPageView from '@/views/UpdateMyPageView.vue'
