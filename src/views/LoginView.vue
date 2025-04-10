@@ -48,12 +48,16 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 const login = async () => {
+  if (!email.value || !password.value) {
+    error.value = '이메일과 비밀번호를 모두 입력해주세요'
+    return
+  }
   try {
     const res = await axios.get('http://localhost:3000/users', {
       params: { email: email.value, password: password.value },
     })
 
-    if (res.data.length > 0) {
+    if (res.data.length > 0 && res.data[0]?.email && res.data[0]?.password) {
       authStore.login(res.data[0])
       router.push('/')
     } else {
