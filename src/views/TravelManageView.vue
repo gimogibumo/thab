@@ -1,12 +1,15 @@
 <script setup>
 import { ref, reactive, onMounted, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import axios from 'axios'
 import TravelCard from '@/components/TravelCard.vue'
+
+const authStore = useAuthStore()
+const userEmail = computed(() => authStore.user?.email)
 
 const activeTab = ref('upcoming')
 const today = new Date()
 today.setHours(0, 0, 0, 0)
-
 const travelCards = reactive([])
 
 const calculateTravelStatus = (card) => {
@@ -44,10 +47,12 @@ const filteredAndSortedCards = computed(() => {
 const fetchTravelCards = async () => {
   try {
     const response = await axios.get('http://localhost:3000/travel')
-    response.data.forEach((card) => {
-      calculateTravelStatus(card)
-      travelCards.push(card)
-    })
+    response.data
+      .filter((card) => card.userEmail === userEmail.value)
+      .forEach((card) => {
+        calculateTravelStatus(card)
+        travelCards.push(card)
+      })
   } catch (error) {
     console.error('데이터를 가져오는 중 오류 발생:', error)
   }
