@@ -9,8 +9,6 @@ import ListExpenseView from '@/views/ListExpenseView.vue'
 import CreateTravel from '@/views/CreateTravelView.vue'
 import TravelManageDetail from '@/views/TravelManageDetail.vue'
 import SignUpView from '@/views/SignUpView.vue'
-
-import CreateTravel from '@/views/CreateTravelView.vue'
 import InputBudgetView from '@/views/InputBudgetView.vue'
 import StatsView from '@/views/StatsView.vue'
 import { useAuthStore } from '@/stores/auth'
