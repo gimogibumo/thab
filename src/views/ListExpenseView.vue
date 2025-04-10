@@ -157,7 +157,7 @@ function changeKeyword(e) {
             >
               {{ filter.selectedTravelJson ? filter.selectedTravelJson.title : '전체 여행' }}
             </button>
-            <ul class="dropdown-menu show w-100 shadow" aria-labelledby="travelDropdown">
+            <ul class="dropdown-menu w-100 shadow" aria-labelledby="travelDropdown">
               <li>
                 <a
                   class="dropdown-item py-2 text-brown fw-bold"
