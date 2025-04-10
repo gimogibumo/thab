@@ -25,12 +25,16 @@ const categoryLabels = {
   etc: '기타'
 }
 
+const checklistId = ref(null) // 🔹 travelChecklist의 실제 ID
+
 onMounted(async () => {
   try {
     const checklistRes = await axios.get(
       `http://localhost:3000/travelChecklist?travelId=${props.travelId}`
     )
-    checkedItems.value = checklistRes.data[0]?.checklist || []
+    const checklistData = checklistRes.data[0]
+    checkedItems.value = checklistData?.checklist || []
+    checklistId.value = checklistData?.id // 🔹 실제 ID 저장
 
     const travelRes = await axios.get(
       `http://localhost:3000/travel/${props.travelId}`
@@ -42,7 +46,7 @@ onMounted(async () => {
       `http://localhost:3000/expense?travelId=${props.travelId}&_sort=date&_order=desc`
     )
     allExpenses.value = expenseRes.data
-    recentExpenses.value = expenseRes.data.slice(0, 3) // 🔹 최근 5건만 따로 저장
+    recentExpenses.value = expenseRes.data.slice(0, 3)
   } catch (err) {
     console.error('데이터 로딩 오류:', err)
   }
@@ -67,9 +71,20 @@ const getCategoryPercentage = (key) => {
   return budgeted > 0 ? Math.round((used / budgeted) * 100) : 0
 }
 
+const handleCheckToggle = async (index) => {
+  try {
+    if (!checklistId.value) {
+      throw new Error('체크리스트 ID를 찾을 수 없습니다.')
+    }
+    await axios.patch(`http://localhost:3000/travelChecklist/${checklistId.value}`, {
+      checklist: checkedItems.value
+    })
+  } catch (err) {
+    console.error('체크리스트 업데이트 실패:', err)
+    alert('체크 상태를 저장하는 데 실패했습니다.')
+  }
+}
 </script>
-
-
 <template>
 <div class="container-fluid px-4">
   <div class="row gx-3 gy-4 align-items-stretch">
@@ -127,13 +142,14 @@ const getCategoryPercentage = (key) => {
               :key="index"
               class="form-check mb-2"
             >
-              <input
-                class="form-check-input"
-                type="checkbox"
-                :id="'c-' + index"
-                :checked="item.checked"
-                disabled
-              />
+            <input
+              class="form-check-input"
+              type="checkbox"
+              :id="'c-' + index"
+              v-model="item.checked"
+              @change="handleCheckToggle(index)"
+            />
+
               <label class="form-check-label" :for="'c-' + index">
                 {{ item.label }}
               </label>

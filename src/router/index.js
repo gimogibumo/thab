@@ -31,8 +31,8 @@ const routes = [
       { path: '/travel_manage/:id', component: TravelManageDetail },
       { path: 'budget_input', component: InputBudgetView }, // 예산 모으기
       { path: 'stats', component: StatsView }, // 통계
-      { path: 'my_page', component: MyPageView }, // 마이 페이지
-      { path: 'my_page/update', component: UpdateMyPageView }, // 마이페이지 수정
+      { path: 'my_page', component: MyPageView}, // 마이 페이지
+      { path: 'my_page/update', component: UpdateMyPageView}, // 마이페이지 수정
     ],
   },
   {

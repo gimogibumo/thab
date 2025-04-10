@@ -1,6 +1,6 @@
 <template>
   <div class="card" :class="size">
-    <div class="card-header" :style="{ backgroundImage: `url(${coverImage})` }">
+    <div class="card-header" :style="{ backgroundImage: `url(${cover})` }">
       <span class="d-day">{{ dDay }}</span>
       <div class="text-overlay">
         <p class="trip-info">{{ title }}</p>
@@ -33,8 +33,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
+
 const props = defineProps({
   coverImage: String,
   id: String,
@@ -52,6 +54,31 @@ const props = defineProps({
   },
 })
 
+// ⭐ 동적 커버 이미지 설정
+const cover = ref(props.coverImage)
+
+onMounted(async () => {
+  if (!cover.value && props.title) {
+    try {
+      const response = await axios.get('https://pixabay.com/api/', {
+        params: {
+          key: '49696568-789720e76db658f1dff80e68c', // ← 너의 API 키로 교체!
+          q: props.title,
+          image_type: 'photo',
+          per_page: 5,
+          orientation: 'horizontal',
+        }
+      })
+      const hits = response.data?.hits
+      if (hits && hits.length > 0) {
+        cover.value = hits[0].webformatURL
+      }
+    } catch (error) {
+      console.error('이미지 불러오기 실패:', error)
+    }
+  }
+})
+
 const budgetLabel1 = computed(() => {
   if (props.status === 'ongoing' || props.status === 'past') return '총 예산'
   if (props.status === 'upcoming') return '목표 예산'
@@ -67,6 +94,7 @@ const budgetLabel2 = computed(() => {
 
 const mainBudget = computed(() => {
   if (props.status === 'ongoing' || props.status === 'past') return props.income
+  console.log(props.income)
   if (props.status === 'upcoming') return props.totalBudget
   return 0
 })
@@ -101,7 +129,6 @@ const goToManagePage = () => {
   router.push(`/travel_manage/${props.id}`)
 }
 </script>
-
 <style scoped>
 .card {
   width: 100%;
