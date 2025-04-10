@@ -94,6 +94,7 @@ const budgetLabel2 = computed(() => {
 
 const mainBudget = computed(() => {
   if (props.status === 'ongoing' || props.status === 'past') return props.income
+  console.log(props.income)
   if (props.status === 'upcoming') return props.totalBudget
   return 0
 })

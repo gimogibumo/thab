@@ -1,62 +1,70 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
 
-const goals = reactive([
-  {
-    id: 1,
-    title: '도쿄 여행',
-    date: '2024.01.15',
-    saved: 1650000,
-    target: 2000000,
-    details: [
-      { date: '2025.04.08', title: '연말 보너스', amount: 1153000 },
-      { date: '2025.04.01', title: '커피값 아낌 ㅎㅎ', amount: 20000 }
-    ]
-  },
-  {
-    id: 2,
-    title: '파리 여행',
-    date: '2024.07.01',
-    saved: 500000,
-    target: 3000000,
-    details: [
-      { date: '2025.04.01', title: '부수입', amount: 300000 }
-    ]
-  }
-])
+const income = ref([])
+const travels = ref(null)
+const userTravels = ref(null)
 
 const selectedId = ref(null)
+const selectedTravel = ref(null)
+
+const categories = [
+  { id: 1, name: '식비' },
+  { id: 2, name: '교통' },
+  { id: 3, name: '숙박' },
+  { id: 4, name: '쇼핑' },
+  { id: 5, name: '관광' },
+  { id: 6, name: '기타' }
+]
+const selectedCategory = ref(null)
+
 const modalCheck = ref(false)
-const selectedGoal = ref(null)
 const inputBudget = ref('')
 const inputMemo = ref('')
+const selectedDetailIndex = ref(null) // 몇 번째를 수정할 건지 추적
 
-// 모달 열기
-function modalOpen(goal) {
-  modalCheck.value = true
-  selectedGoal.value = goal
-}
 
-// 모달 닫기
-function modalClose() {
-  modalCheck.value = false
-  inputBudget.value = ''
-  inputMemo.value = ''
-}
+const authStore = useAuthStore()
+const userEmail = authStore.user.email
+onMounted(async () => {
+  try {
+    const [travelRes, incomeRes] = await Promise.all([
+      axios.get('http://localhost:3000/travel'),
+      axios.get('http://localhost:3000/income')
+    ])
 
-// 목표 예산 카드 선택하기
-function selectCard(id) {
-  if (selectedId.value === id) {
-    selectedId.value = null
-    selectedGoal.value = null
-  } else {
-    selectedId.value = id
-    selectedGoal.value = goals.find((goal) => goal.id === id) || null
+    const travelList = travelRes.data.map(travel => {
+      const matchedIncome = incomeRes.data.find(i => i.travelId === travel.id)
+      const totalSaved = matchedIncome ? matchedIncome.income : 0
+      const details = matchedIncome ? matchedIncome.details : []
+
+      return {
+        ...travel,
+        income: totalSaved,
+        details
+      }
+    })
+
+    travels.value = travelList
+    income.value = incomeRes.data
+    userTravels.value = travels.value
+      .filter(travel => travel.userEmail === userEmail) // 사용자 이메일로 필터링
+      .filter(travel => {
+        const currentDate = new Date() // 현재 날짜
+        const travelStartDate = new Date(travel.startDate) // 여행 시작 날짜
+        return travelStartDate > currentDate // 여행 시작 날짜가 현재 날짜 이후인 것만 필터링
+      })
+
+    console.log(userEmail)
+    console.log(userTravels.value)
+  } catch (err) {
+    console.error('데이터 불러오기 실패:', err)
   }
-}
+})
 
-// 저축하기
-function addBudget() {
+async function addIncome() {
   const amount = parseInt(inputBudget.value.replace(/[^0-9]/g, ''))
   const memo = inputMemo.value
 
@@ -65,98 +73,329 @@ function addBudget() {
     return
   }
 
-  // 오늘 날짜 생성
+  if (!selectedCategory.value) {
+    alert('카테고리를 지정해주세요.')
+    return
+  }
+
   const today = new Date().toISOString().slice(0, 10).replace(/-/g, '.')
 
-  // 내역 추가
-  selectedGoal.value.details.unshift({
-    date: today,
-    title: memo,
-    amount
-  })
+  if (!selectedTravel.value) {
+    alert('선택된 여행이 없습니다.')
+    return
+  }
 
-  selectedGoal.value.saved += amount
+  const existing = income.value.find(i => i.travelId === selectedTravel.value.id)
+  const category = selectedCategory.value || ''
+
+  // ==== 수정 기능 ====
+  if (selectedDetailIndex.value !== null) {
+    const oldDetail = selectedTravel.value.details[selectedDetailIndex.value]
+
+    // 저장 금액 업데이트
+    selectedTravel.value.income -= oldDetail.amount
+    selectedTravel.value.income += amount
+
+    const updatedDetail = {
+      ...oldDetail,
+      title: memo,
+      category,
+      amount,
+      date: oldDetail.date
+    }
+
+    // 수정된 내역을 selectedTravel와 기존 income에 반영
+    selectedTravel.value.details[selectedDetailIndex.value] = updatedDetail
+    selectedDetailIndex.value = null
+
+    if (existing) {
+      // 기존 데이터 수정 반영
+      existing.details = [...selectedTravel.value.details]
+      existing.income = selectedTravel.value.income
+
+      try {
+        // 서버에 수정된 내역 반영
+        await axios.patch(`http://localhost:3000/income/${existing.id}`, {
+          details: existing.details,
+          income: existing.income
+        })
+      } catch (err) {
+        console.error('수정 저장 실패:', err)
+      }
+    }
+  } else {
+    // 새로 추가하는 경우
+    const newDetail = {
+      date: today,
+      title: memo,
+      category,
+      amount
+    }
+
+    if (existing) {
+      // 기존 데이터에 새 수입 추가
+      existing.income += amount
+      existing.details.unshift(newDetail)
+
+      try {
+        // 서버에 수정된 내역 반영
+        await axios.patch(`http://localhost:3000/income/${existing.id}`, {
+          details: existing.details,
+          income: existing.income
+        })
+      } catch (err) {
+        console.error('저축 수정 실패:', err)
+      }
+
+      // selectedTravel에 새로운 내역 추가
+      selectedTravel.value.details = [...existing.details] // 중복된 상태 업데이트 방지
+      selectedTravel.value.income = existing.income
+
+    } else {
+      const newIncome = {
+        travelId: selectedTravel.value.id,
+        income: amount,
+        details: [newDetail]
+      }
+
+      try {
+        // 새 수입 데이터 서버에 추가
+        const incomeRes = await axios.post('http://localhost:3000/income', newIncome)
+        income.value.push(incomeRes.data)
+
+
+        const travelId = selectedTravel.value.id
+        console.log('흠ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ' + travelId)
+        const travelRes = await axios.patch(`http://localhost:3000/travel/${travelId}`, newIncome)
+        travels.value.push(travelRes.data)
+
+      } catch (err) {
+        console.error('새 저축 추가 실패:', err)
+      }
+
+      selectedTravel.value.details = [newDetail]
+      selectedTravel.value.income = amount
+    }
+  }
+
+// 여행 내역 업데이트
+  const travelItem = travels.value.find(t => t.id === selectedTravel.value.id)
+  if (travelItem) {
+    // 클라이언트 측에서 income 갱신
+    travelItem.income = selectedTravel.value.income
+
+    // totalIncome 갱신
+    travelItem.totalIncome = travelItem.details.reduce((total, detail) => total + detail.amount, 0)
+
+    // 서버에 업데이트된 여행 내역 전송
+    try {
+      await axios.patch(`http://localhost:3000/travel/${travelItem.id}`, {
+        income: travelItem.income,
+        totalIncome: travelItem.totalIncome
+      })
+    } catch (err) {
+      console.error('여행 내역 업데이트 실패:', err)
+    }
+  }
+
+  // 초기화
+  inputBudget.value = ''
+  inputMemo.value = ''
   modalClose()
+}
+
+
+// 모달 열기
+function modalOpen(income) {
+  modalCheck.value = true
+  selectedTravel.value = income
+}
+
+// 모달 닫기
+function modalClose() {
+  modalCheck.value = false
+  inputBudget.value = ''
+  inputMemo.value = ''
+  selectedCategory.value = null
+}
+
+// 목표 예산 카드 선택하기
+function selectCard(id) {
+  if (selectedId.value === id) {
+    selectedId.value = null
+    selectedTravel.value = null
+  } else {
+    selectedId.value = id
+    selectedTravel.value = travels.value.find((income) => income.id === id) || null
+  }
+}
+
+// 내역 수정
+function editDetail(index) {
+  // 선택한 아이템
+  const item = selectedTravel.value.details[index]
+
+  inputBudget.value = item.amount.toString()
+  inputMemo.value = item.title
+  selectedDetailIndex.value = index
+  selectedCategory.value = item.category || null
+  modalCheck.value = true
+}
+
+// 내역 삭제
+async function deleteDetail(index) {
+  if (!selectedTravel.value) return
+
+  // 실제 삭제
+  const deletedDetail = selectedTravel.value.details.splice(index, 1)[0]  // 삭제된 내역을 변수로 저장
+
+  // 저장액 재계산
+  selectedTravel.value.income = selectedTravel.value.details.reduce((sum, d) => sum + d.amount, 0)
+
+  const existing = income.value.find(i => i.travelId === selectedTravel.value.id)
+  if (existing) {
+    existing.details = [...selectedTravel.value.details]
+    existing.income = selectedTravel.value.income
+
+    try {
+      // 서버에서 내역 삭제 후 income 갱신
+      await axios.patch(`http://localhost:3000/income/${existing.id}`, {
+        details: existing.details,
+        income: existing.income
+      })
+    } catch (err) {
+      console.error('삭제 후 저장 실패:', err)
+    }
+  }
+
+  // 여행 내역 업데이트
+  const travelItem = travels.value.find(t => t.id === selectedTravel.value.id)
+  if (travelItem) {
+    travelItem.income = selectedTravel.value.income
+    // totalIncome 갱신
+    travelItem.totalIncome = travelItem.details.reduce((total, detail) => total + detail.amount, 0)
+
+    try {
+      // 서버에 갱신된 여행 내역 보내기
+      await axios.patch(`http://localhost:3000/travel/${travelItem.id}`, {
+        income: travelItem.income,
+        totalIncome: travelItem.totalIncome
+      })
+    } catch (err) {
+      console.error('여행 내역 갱신 실패:', err)
+    }
+  }
 }
 
 </script>
 <template>
   <div class="content">
     <div class="page-title">예산 모으기</div>
-    <div class="goal-wrap" v-for="goal in goals" :key="goal.id">
+    <div class="goal-wrap" v-for="travel in userTravels" :key="travel.id">
       <div class="goal-card"
            :class="[
-               { active: selectedId === goal.id },
+               { active: selectedId === travel.id },
                selectedId !== null ? 'shrinked' : '']"
-           @click="selectCard(goal.id)">
+           @click="selectCard(travel.id)">
         <div class="top">
           <div>
-            <div class="title">{{ goal.title }}</div>
-            <div class="date">목표일: {{ goal.date }}</div>
+            <div class="title">{{ travel.title }}</div>
+            <div class="date">목표일: {{ travel.startDate }}</div>
           </div>
           <div class="amount">
-            <div class="saved">{{ goal.saved.toLocaleString() }}원</div>
-            <div class="target">목표: {{ goal.target.toLocaleString() }}원</div>
+            <div class="income">{{ travel.income.toLocaleString() }}원</div>
+            <div class="target">목표: {{ travel.totalBudget.toLocaleString() }}원</div>
           </div>
         </div>
         <div class="progress-bar">
           <div class="progress"
-               :style="{ width: Math.floor((goal.saved / goal.target) * 100) + '%' }"></div>
+               :style="{ width: Math.floor((travel.income / travel.totalBudget) * 100) + '%' }"></div>
         </div>
         <div class="bottom">
-          <div>{{ Math.floor((goal.saved / goal.target) * 100) }}% 달성</div>
-          <div>잔여: {{ (goal.target - goal.saved).toLocaleString() }}원</div>
+          <div>{{ Math.floor((travel.income / travel.totalBudget) * 100) }}% 달성</div>
+          <div>잔여: {{ (travel.totalBudget - travel.income).toLocaleString() }}원</div>
         </div>
       </div>
     </div>
 
+    <!-- 사이드 패널 -->
     <div class="slide-panel" :class="{ active: selectedId !== null }">
       <button class="slide-close-btn" @click="selectCard(null)">×</button>
-      <div v-if="selectedGoal">
-        <div class="title">{{ selectedGoal.title }} 저축 내역</div>
+      <div v-if="selectedTravel">
+        <div class="title">{{ selectedTravel.title }} 저축 내역</div>
         <div class="list-content"
-             v-for="item in selectedGoal.details"
+             v-for="(item, index) in selectedTravel.details"
              :key="item.date + item.title">
           <div>
             <div class="input-date">{{ item.date }}</div>
             <div class="input-title">{{ item.title }}</div>
           </div>
-          <div class="input">+{{ item.amount.toLocaleString() }}원</div>
+          <div>
+            <div class="input">+{{ item.amount }}원</div>
+            <div class="category">{{ item.category }}</div>
+          </div>
+          <div class="icons">
+            <button @click="editDetail(index)">수정</button>
+            <button @click="deleteDetail(index)">삭제</button>
+          </div>
         </div>
-        <button class="open-modal-btn" @click="modalOpen(selectedGoal)">저축하기</button>
+        <button class="open-modal-btn" @click="modalOpen(selectedTravel)">저축하기</button>
       </div>
     </div>
 
-    <!-- 모달창 ui -->
+    <!-- 모달 -->
     <div v-show="modalCheck" class="modal-overlay" @click="modalClose">
       <div class="modal-container" @click.stop>
         <div class="modal-content">
-          <div class="modal-title">{{ selectedGoal?.title }}에 저축하기</div>
+          <div class="modal-title">{{ selectedTravel?.title }}에 저축하기</div>
           <div>
-            <div class="modal-money">저축 금액</div>
-            <input class="modal-input-money" type="text" v-model="inputBudget"
+            <div class="modal-content">저축 금액</div>
+            <input class="modal-input" type="text" v-model="inputBudget"
                    placeholder="금액을 입력하세요" />
-            <div class="modal-memo">메모</div>
-            <input class="modal-input-memo" type="text" v-model="inputMemo"
+
+            <!-- 카테고리 선택 영역 -->
+            <div class="modal-content">카테고리</div>
+            <div class="category-wrap">
+              <div
+                v-for="category in categories"
+                :key="category.id"
+                class="category-item"
+                :class="{ selected: selectedCategory === category.name }"
+                @click="selectedCategory = category.name"
+              >
+                <!--                <img-->
+                <!--                :src="`@/assets/img/${category.icon}.svg`"-->
+                <!--                class="category-icon"-->
+                <!--                alt="category icon"-->
+                <!--              />-->
+                <div class="category-name">{{ category.name }}</div>
+              </div>
+            </div>
+
+            <div class="modal-content">메모</div>
+            <input class="modal-input" type="text" v-model="inputMemo"
                    placeholder="메모를 입력하세요" />
           </div>
         </div>
         <div class="modal-btn">
           <button class="cancel" @click="modalClose">취소</button>
-          <button class="save" @click="addBudget">저축하기</button>
+          <button class="save" @click="addIncome">저장</button>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
 <style scoped>
 .content {
-  padding: 50px;
+  padding: 3% 5%;
 }
+
 .content::-webkit-scrollbar {
   display: none;
 }
+
 .page-title {
   font-size: 24px;
   font-weight: bold;
@@ -174,7 +413,7 @@ function addBudget() {
 .goal-card {
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   padding: 20px;
   width: 1000px;
   transition: all 0.3s ease;
@@ -215,7 +454,7 @@ function addBudget() {
   text-align: right;
 }
 
-.saved {
+.income {
   font-weight: bold;
   font-size: 15px;
   color: #7B5E48;
@@ -294,10 +533,18 @@ function addBudget() {
 .modal-container {
   background: #fff;
   border-radius: 10px;
-  width: 550px;
+  width: 400px;
   padding: 30px 20px;
   position: relative;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content {
+  margin-bottom: 10px;
+}
+
+.modal-input {
+  margin-bottom: 15px;
 }
 
 .modal-title {
@@ -396,6 +643,13 @@ function addBudget() {
   border: none;
 }
 
+.icons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
 /* 태블릿 대응 (768px 이하) */
 @media (max-width: 768px) {
   .goal-wrap {
@@ -466,7 +720,7 @@ function addBudget() {
     font-size: 12px;
   }
 
-  .saved {
+  .income {
     font-size: 14px;
   }
 
@@ -498,7 +752,7 @@ function addBudget() {
     font-size: 14px;
   }
 
-  .saved {
+  .income {
     font-size: 13px;
   }
 
@@ -531,6 +785,73 @@ function addBudget() {
   .list-content {
     padding: 10px;
   }
+}
+
+.icons button {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.icons button:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.category {
+  font-size: 12px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  background-color: #fffaf0; /* 아이보리색 */
+  border-radius: 6px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.category-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.category-item {
+  width: 80px;
+  height: 40px;
+  background: #f5f5f5;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 2px solid transparent;
+}
+
+.category-item:hover {
+  background: #eee;
+}
+
+.category-item.selected {
+  border-color: #7B5E48;
+  background: #f1e8e2;
+}
+
+.category-icon {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 6px;
+}
+
+.category-name {
+  font-size: 12px;
+  color: #444;
 }
 
 </style>

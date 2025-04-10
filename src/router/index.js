@@ -10,6 +10,8 @@ import TravelManageDetail from '@/views/TravelManageDetail.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import InputBudgetView from '@/views/InputBudgetView.vue'
 import StatsView from '@/views/StatsView.vue'
+import MyPageView from '@/views/MyPageView.vue'
+import UpdateMyPageView from '@/views/UpdateMyPageView.vue'
 import { useAuthStore } from '@/stores/auth'
 import LoginView from '@/views/LoginView.vue'
 // import { useAuthStore } from '@/stores/auth'
@@ -27,10 +29,10 @@ const routes = [
       { path: 'expense_list', component: ListExpenseView },
       { path: 'create', component: CreateTravel },
       { path: '/travel_manage/:id', component: TravelManageDetail },
-      { path: 'signup', component: SignUpView },
       { path: 'budget_input', component: InputBudgetView }, // 예산 모으기
       { path: 'stats', component: StatsView }, // 통계
-      // { path: 'my_page', component: MyPageView} // 마이 페이지
+      { path: 'my_page', component: MyPageView}, // 마이 페이지
+      { path: 'my_page/update', component: UpdateMyPageView}, // 마이페이지 수정
     ],
   },
   {

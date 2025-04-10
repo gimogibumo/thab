@@ -24,7 +24,7 @@ const isCollapsed = computed(() => sidebarStore.isCollapsed)
 }
 
 .collapsed .content {
-  margin-left: 80px;
+  margin-left: 70px;
   transition: margin-left 0.3s ease;
 }
 
