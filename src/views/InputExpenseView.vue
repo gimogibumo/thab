@@ -2,7 +2,6 @@
 import { ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import { convertCurrency } from '@/utils/exchangeConverter'
 
 const router = useRouter()
 const categories = ['숙박', '식비', '교통', '관광', '쇼핑', '기타']
@@ -11,6 +10,16 @@ const currencyJson = ref(null)
 const showCurrencyDropdown = ref(false)
 const selectedCurrency = ref('')
 const moneyByWon = ref('')
+const showTravelDropdown = ref(false)
+
+function toggleTravelDropdown() {
+  showTravelDropdown.value = !showTravelDropdown.value
+}
+
+function selectTravel(travel) {
+  selectedTravel.value = travel
+  showTravelDropdown.value = false
+}
 
 function toggleCurrencyDropdown() {
   showCurrencyDropdown.value = !showCurrencyDropdown.value
@@ -67,6 +76,13 @@ watch([() => expense.amount, selectedCurrency], ([newAmount, newCurrency]) => {
       const rate = parseFloat(rateObj.deal_bas_r.replace(',', ''))
       moneyByWon.value = (newAmount ? newAmount * rate : 0).toFixed(2)
       moneyByWon.value = parseInt(moneyByWon.value)
+
+      if (parseInt(moneyByWon.value) >= 1000000000) {
+        alert('금액이 너무 높습니다 다시 입력해주세요!')
+        expense.amount = 0
+        moneyByWon.value = ''
+        return
+      }
     }
   }
 })
@@ -118,18 +134,31 @@ function cancelForm() {
             <div class="card-body p-4">
               <div class="row g-3">
                 <div class="col-12">
-                  <label for="inputName" class="form-label">여행 선택</label>
-                  <select id="inputName" class="form-select" v-model="selectedTravel">
-                    <option selected hidden value="undefined">여행을 선택하세요</option>
-                    <option
-                      v-for="travel in travels"
-                      :key="travel.id"
-                      :value="travel"
-                      class="text-nowrap overflow-auto"
+                  <label class="form-label">여행 선택</label>
+                  <div class="dropdown">
+                    <button
+                      class="form-select d-flex justify-content-between align-items-center"
+                      type="button"
+                      @click="toggleTravelDropdown"
                     >
-                      {{ travel.title }}
-                    </option>
-                  </select>
+                      <span>{{ selectedTravel?.title || '여행을 선택하세요' }}</span>
+                      <i
+                        class="bi"
+                        :class="showTravelDropdown ? 'bi-chevron-up' : 'bi-chevron-down'"
+                      ></i>
+                    </button>
+                    <ul
+                      class="dropdown-menu w-100"
+                      :class="{ show: showTravelDropdown }"
+                      style="max-height: 200px; overflow-y: auto"
+                    >
+                      <li v-for="travel in travels" :key="travel.id">
+                        <button type="button" class="dropdown-item" @click="selectTravel(travel)">
+                          {{ travel.title }}
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
 
                 <div class="col-12">

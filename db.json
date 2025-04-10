@@ -1,17 +1,6 @@
 {
   "expense": [
     {
-      "id": "2042",
-      "travelsKey": "4423",
-      "inputName": "프랑스 뉴욕 여행",
-      "expenseName": "지하철",
-      "category": "교통",
-      "customCategory": "",
-      "amount": 10000,
-      "memo": "",
-      "date": "2024-04-10"
-    },
-    {
       "id": "2d8b",
       "travelsKey": "4423",
       "inputName": "프랑스 뉴욕 여행",
@@ -65,17 +54,6 @@
       "amount": 0,
       "memo": "",
       "date": "2024-04-04"
-    },
-    {
-      "id": "9776",
-      "travelsKey": "4423",
-      "inputName": "프랑스 뉴욕 여행",
-      "expenseName": "지하철",
-      "category": "교통",
-      "customCategory": "",
-      "amount": 1465,
-      "memo": "",
-      "date": "2024-04-06"
     }
   ],
   "travels": [
