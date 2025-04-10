@@ -1,59 +1,30 @@
 {
   "expense": [
     {
-      "id": "2d8b",
+      "id": "5282",
+      "travelsKey": "4473",
+      "inputName": "일본 오사카 여행",
+      "expenseName": "지하철",
+      "category": "식비",
+      "customCategory": "",
+      "amount": 10,
+      "memo": "",
+      "date": "2025-04-11",
+      "currency": "BHD",
+      "convertedAmount": 388884
+    },
+    {
+      "id": "8e63",
       "travelsKey": "4423",
       "inputName": "프랑스 뉴욕 여행",
       "expenseName": "지하철",
-      "category": "교통",
-      "customCategory": "",
-      "amount": 10000,
-      "memo": "test",
-      "date": "2024-04-03"
-    },
-    {
-      "id": "ca09",
-      "travelsKey": "4423",
-      "inputName": "프랑스 뉴욕 여행",
-      "expenseName": "고기",
       "category": "식비",
       "customCategory": "",
       "amount": 10000,
       "memo": "",
-      "date": "2024-03-15"
-    },
-    {
-      "id": "d3ec",
-      "travelsKey": "4473",
-      "inputName": "일본 오사카 여행",
-      "expenseName": "지하철",
-      "category": "교통",
-      "customCategory": "",
-      "amount": 1000,
-      "memo": "",
-      "date": "2025-04-14"
-    },
-    {
-      "id": "5e38",
-      "travelsKey": "4423",
-      "inputName": "프랑스 뉴욕 여행",
-      "expenseName": "지하철",
-      "category": "숙박",
-      "customCategory": "",
-      "amount": 180305,
-      "memo": "ㅇㅇ",
-      "date": "2024-04-12"
-    },
-    {
-      "id": "d3c7",
-      "travelsKey": "4423",
-      "inputName": "프랑스 뉴욕 여행",
-      "expenseName": "지하철",
-      "category": "숙박",
-      "customCategory": "",
-      "amount": 0,
-      "memo": "",
-      "date": "2024-04-04"
+      "date": "2025-04-04",
+      "currency": "BHD",
+      "convertedAmount": 38888400
     }
   ],
   "travels": [

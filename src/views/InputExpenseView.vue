@@ -74,10 +74,15 @@ watch([() => expense.amount, selectedCurrency], ([newAmount, newCurrency]) => {
     const rateObj = currencyJson.value.find((item) => item.cur_unit === newCurrency)
     if (rateObj) {
       const rate = parseFloat(rateObj.deal_bas_r.replace(',', ''))
+      console.log(rate)
       moneyByWon.value = (newAmount ? newAmount * rate : 0).toFixed(2)
       moneyByWon.value = parseInt(moneyByWon.value)
+      console.log(moneyByWon.value)
+      if (!newAmount || !newCurrency) {
+        return
+      }
 
-      if (parseInt(moneyByWon.value) >= 1000000000) {
+      if (moneyByWon.value >= 1000000000) {
         alert('금액이 너무 높습니다 다시 입력해주세요!')
         expense.amount = 0
         moneyByWon.value = ''
@@ -103,13 +108,21 @@ async function submitForm() {
   if (!expense.expenseName) return alert('지출 항목을 입력해주세요!')
   if (!expense.category) return alert('카테고리를 선택해주세요!')
   if (!expense.date) return alert('여행 날짜를 선택해주세요!')
-  if (expense.amount === 0) return alert('금액을 입력해주세요!')
+  if (expense.amount === 0 || expense.amount == '') return alert('금액을 입력해주세요!')
 
-  if (moneyByWon.value) {
-    expense.amount = moneyByWon.value
+  console.log('변환된 금액 (moneyByWon):', moneyByWon.value)
+  console.log('사용자 입력 금액 (expense.amount):', expense.amount)
+
+  // ✅ expense.amount는 건드리지 말고,
+  // 환율 변환 금액은 별도로 서버에 보낼 때 추가
+  const payload = {
+    ...expense,
+    currency: selectedCurrency.value,
+    convertedAmount: moneyByWon.value || null, // 필요하면 변환 금액을 추가
   }
+
   try {
-    await axios.post('http://localhost:3000/expense', expense)
+    await axios.post('http://localhost:3000/expense', payload)
     alert('지출 내역이 저장되었습니다!')
     router.push('/expense_list')
   } catch (err) {
@@ -168,8 +181,6 @@ function cancelForm() {
                     type="date"
                     class="form-control"
                     v-model="expense.date"
-                    :min="selectedTravel?.startDate"
-                    :max="selectedTravel?.endDate"
                     :disabled="!selectedTravel"
                   />
                 </div>
