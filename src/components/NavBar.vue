@@ -1,22 +1,16 @@
 <template>
   <div :class="['sidebar', isCollapsed ? 'collapsed' : 'expanded']">
     <div v-if="!isCollapsed" class="text-center py-4 border-bottom">
-      <div class="fs-2 fw-bold">THAB</div>
+      <router-link to="/" class="fs-2 fw-bold text-white text-decoration-none d-inline-block">
+        THAB
+      </router-link>
       <div class="profile-circle mx-auto mt-3"></div>
-      <div class="mt-2 fw-semibold">김이윤박</div>
+      <div class="mt-2 fw-semibold" v-text="userInfo.name"></div>
       <div class="text-muted small">도쿄 여행 중 (2/5)</div>
     </div>
 
     <div class="flex-grow-1 overflow-auto">
       <div class="px-3 py-2">
-        <!-- 홈 버튼: 일정 관리 바로 위 -->
-        <div class="mb-2">
-          <router-link to="/" class="nav-btn d-flex align-items-center">
-            <i class="bi bi-house-door"></i>
-            <span v-if="!isCollapsed" class="ms-2">홈</span>
-          </router-link>
-        </div>
-
         <div v-for="category in navCategories" :key="category.name">
           <div class="text-muted px-3 fw-bold" v-if="!isCollapsed">{{ category.name }}</div>
           <div v-for="item in category.items" :key="item.name" class="ms-3">
@@ -31,7 +25,7 @@
     </div>
 
     <div class="px-3 mb-3 d-flex justify-content-between">
-      <button v-if="!isCollapsed" class="btn btn-danger w-75">
+      <button v-if="!isCollapsed" class="btn btn-danger w-75" @click="loggingOut">
         <i class="bi bi-box-arrow-right"></i> <span v-if="!isCollapsed">로그아웃</span>
       </button>
       <button class="btn btn-light" @click="toggleSidebar">
@@ -42,32 +36,39 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '@/stores/auth'
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+// import router from '@/router'
 
+const authStore = useAuthStore()
+const userInfo = authStore.user
+console.log(userInfo.name)
 const isCollapsed = ref(false)
 const toggled = ref(false)
-
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
   toggled.value = !toggled.value
+  console.log(isCollapsed.value)
 }
-
+const loggingOut = () => {
+  authStore.logout()
+  window.location.reload()
+}
 const handleResize = () => {
   if (window.innerWidth <= 1024 || toggled.value) {
     isCollapsed.value = true
+    console.log('phonesize')
   } else {
     isCollapsed.value = false
+    console.log('originalsize')
   }
 }
-
 onMounted(() => {
   window.addEventListener('resize', handleResize)
 })
-
 onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize)
 })
-
 watch(isCollapsed, (newVal) => {
   const contentElements = document.querySelectorAll("[class^='content']")
   contentElements.forEach((el) => {
@@ -90,42 +91,12 @@ const navCategories = [
   },
   {
     name: '리포트',
-    items: [
-      { name: '일별 리포트', path: '/daily-report', icon: 'bi bi-graph-up-arrow' },
-      { name: '통계', path: '/stats', icon: 'bi bi-bar-chart' },
-    ],
-  },
-  {
-    name: '설정',
-    items: [{ name: '환율 설정', path: '/settings', icon: 'bi bi-gear' }],
+    items: [{ name: '통계', path: '/stats', icon: 'bi bi-bar-chart' }],
   },
 ]
 </script>
 
 <style scoped>
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-body,
-button,
-input,
-textarea {
-  font-family:
-    'Pretendard Variable',
-    Pretendard,
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    Roboto,
-    'Helvetica Neue',
-    'Segoe UI',
-    'Apple SD Gothic Neo',
-    'Noto Sans KR',
-    'Malgun Gothic',
-    'Apple Color Emoji',
-    'Segoe UI Emoji',
-    'Segoe UI Symbol',
-    sans-serif;
-}
-
 .sidebar {
   width: 270px;
   height: 100vh;
@@ -145,6 +116,7 @@ textarea {
   display: flex;
   align-items: center;
   gap: 8px;
+  row-gap: 8px;
   padding-top: 12px;
   padding-bottom: 12px;
   padding-left: 0px;

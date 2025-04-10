@@ -104,34 +104,34 @@ const goToManagePage = () => {
 
 <style scoped>
 .card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0 auto;
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin: 10px auto;
-  box-sizing: border-box;
   position: relative;
-  min-height: 500px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 450px;
 }
 
 .card.small {
-  width: 425px;
-  max-width: 500px;
-  min-height: 530px;
-  margin-left: 0;
+  max-width: 100%;
+  min-height: 600px;
 }
 
 .card.large {
-  width: 600px;
-  max-width: 700px;
-  min-height: 400px;
+  max-width: 80%;
+  min-height: 500px;
 }
 
 .card-header {
   position: relative;
-  height: 200px;
+  height: 300px;
   background-size: cover;
   background-position: center;
   border-radius: 10px 10px 0 0;

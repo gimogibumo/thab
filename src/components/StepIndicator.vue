@@ -39,4 +39,3 @@
     backgroundColor: active ? '#8B6F5C' : '',
   })
   </script>
-  
