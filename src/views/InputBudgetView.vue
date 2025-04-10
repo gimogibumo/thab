@@ -165,10 +165,8 @@ async function addIncome() {
 
 
         const travelId = selectedTravel.value.id
-        console.log('흠ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ' + travelId)
-        const travelRes = await axios.patch(`http://localhost:3000/travel/${travelId}`, newIncome)
-        travels.value.push(travelRes.data)
-
+        // const travelRes = await axios.patch(`http://localhost:3000/travel/${travelId}`, newIncome)
+        // travels.value.push(travelRes.data)
       } catch (err) {
         console.error('새 저축 추가 실패:', err)
       }
@@ -190,8 +188,7 @@ async function addIncome() {
     // 서버에 업데이트된 여행 내역 전송
     try {
       await axios.patch(`http://localhost:3000/travel/${travelItem.id}`, {
-        income: travelItem.income,
-        totalIncome: travelItem.totalIncome
+        income: travelItem.income
       })
     } catch (err) {
       console.error('여행 내역 업데이트 실패:', err)

@@ -1,21 +1,30 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import { nextTick } from 'vue'
 import axios from 'axios'
+import { convertCurrency } from '@/utils/exchangeConverter.js'
 
 Chart.register(...registerables)
 
 const expenses = ref()
+const convertedAmounts = reactive({})
 
 // 카테고리 리스트
 const categoryNames = ['관광', '식비', '기타', '교통', '숙박', '쇼핑']
 
 // 총 지출
 const totalExpense = computed(() => {
-  if (!expenses.value) return 0
-  return expenses.value.reduce((sum, item) => sum + item.amount, 0).toLocaleString() + '원'
+  if (!expenses.value) return '0원'
+
+ const sum = expenses.value.reduce((acc, item) => {
+    const converted = convertedAmounts[item.id]
+    return acc + (converted ?? 0)  // 변환된 값이 없으면 0 처리
+  }, 0)
+
+  return sum.toLocaleString()+'원'
 })
+
 
 // 카테고리별 지출
 const categories = computed(() => {
@@ -24,22 +33,22 @@ const categories = computed(() => {
 
   expenses.value.forEach(item => {
     const category = result.find(c => c.name === item.category)
-    if (category) {
-      category.amount += item.amount
+    if (category && convertedAmounts[item.id]) {
+      category.amount += convertedAmounts[item.id]
     }
   })
 
   const total = result.reduce((sum, item) => sum + item.amount, 0)
   result.forEach(item => {
-    item.percent = total > 0 ? Math.round((item.amount / total) * 100) : 0
-  })
+    item.percent = total > 0 ? Number(((item.amount / total) * 100).toFixed(1)) : 0  })
 
   return result
 })
 
 // 이번 달 지출
 const monthExpense = computed(() => {
-  if (!expenses.value) return 0
+  if (!expenses.value) return '0원'
+
   const now = new Date()
   const sum = expenses.value
     .filter(item => {
@@ -49,17 +58,32 @@ const monthExpense = computed(() => {
         date.getMonth() === now.getMonth()
       )
     })
-    .reduce((sum, item) => sum + item.amount, 0)
+    .reduce((acc, item) => acc + (convertedAmounts[item.id] ?? 0), 0)
 
   return sum.toLocaleString() + '원'
 })
 
-// 지출 1위 카테고리
+// 지출별 1위 카테고리
 const topCategory = computed(() => {
-  const sorted = [...categories.value].sort((a, b) => b.amount - a.amount)
+  const categorySums = categoryNames.map(name => {
+    const amount = expenses.value?.reduce((sum, item) => {
+      if (item.category === name) {
+        return sum + (convertedAmounts[item.id] ?? 0)
+      }
+      return sum
+    }, 0) ?? 0
+
+    return { name, amount }
+  })
+
+  const sorted = categorySums.sort((a, b) => b.amount - a.amount)
   const maxItem = sorted[0]
-  return maxItem?.amount > 0 ? `${maxItem.name} (${maxItem.amount.toLocaleString()}원)` : '-'
+
+  return maxItem?.amount > 0
+    ? `${maxItem.name} (${maxItem.amount.toLocaleString()}원)`
+    : '-'
 })
+
 
 // 여행별 지출 추이
 const travelExpenses = computed(() => {
@@ -141,7 +165,11 @@ onMounted(async () => {
 
     expenses.value = expenseRes.data
     console.log(expenses.value)
-
+// 각 항목의 금액을 원화로 변환
+    for (const item of expenses.value) {
+      const converted = await convertCurrency(item.amount, item.currency, 'KRW')
+      convertedAmounts[item.id] = converted
+    }
     // 데이터 세팅 후 차트 렌더링
     nextTick(() => {
       renderTravelChart()
