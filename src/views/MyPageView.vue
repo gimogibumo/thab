@@ -2,6 +2,7 @@
 import { onMounted, ref, computed } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
+
 const authStore = useAuthStore()
 
 const email = authStore.user.email
@@ -11,6 +12,7 @@ const passwd = authStore.user.password
 const name = authStore.user.name
 
 const user = ref(null)
+const travelNoti = ref(null)
 const showPassword = ref(false)
 
 const modalCheck = ref(false)
@@ -27,11 +29,37 @@ const pwdError = ref('')
 const newPwdError = ref('')
 
 onMounted(async () => {
-  const userRes = await axios.get('http://localhost:3000/users')
+  try {
+    const userId = authStore.user.id
+    const userRes = await axios.get(`http://localhost:3000/users/${userId}`)
+    user.value = userRes.data
+    console.log(user.value)
 
-  user.value = userRes.data
-  console.log(user.value)
+    travelNoti.value = user.value.travelToggle
+
+    console.log(travelNoti.value + "@@@@@@@")
+  } catch (error) {
+    console.error('사용자 데이터 로딩 실패:', error)
+  }
 })
+
+
+const toggleTravelNoti = async () => {
+  try {
+    const userId = authStore.user.id
+    console.log('Travel Noti Before:', travelNoti.value);
+    travelNoti.value = !travelNoti.value
+
+    await axios.patch(`http://localhost:3000/users/${userId}`, {
+      travelToggle: travelNoti.value,
+    })
+
+    console.log('여행 알림 상태 업데이트 완료', travelNoti.value)
+  } catch (error) {
+    console.error('업데이트 실패', error)
+    travelNoti.value = !travelNoti.value
+  }
+}
 
 // 모달 열기
 function modalOpen() {
@@ -166,22 +194,28 @@ const updatePwd = async () => {
           <div class="noti-title">여행 일정 알림</div>
           <div class="noti-content">여행 시작일이 다가오면 알림</div>
         </div>
-        <input role="switch" type="checkbox" class="noti-toggle" />
+        <input
+          role="switch"
+          type="checkbox"
+          class="noti-toggle"
+          v-model="travelNoti"
+          @click="toggleTravelNoti"
+        />
       </div>
-      <div class="noti-box">
-        <div>
-          <div class="noti-title">예산 경고 알림</div>
-          <div class="noti-content">여행 예산의 80% 이상 사용시 알림</div>
-        </div>
-        <input role="switch" type="checkbox" class="noti-toggle" />
-      </div>
-      <div class="noti-box">
-        <div>
-          <div class="noti-title">저축 목표 알림</div>
-          <div class="noti-content">저축 목표 달성률 90% 도달시 알림</div>
-        </div>
-        <input role="switch" type="checkbox" class="noti-toggle" />
-      </div>
+      <!--      <div class="noti-box">
+              <div>
+                <div class="noti-title">예산 경고 알림</div>
+                <div class="noti-content">여행 예산의 80% 이상 사용시 알림</div>
+              </div>
+              <input role="switch" type="checkbox" class="noti-toggle" />
+            </div>
+            <div class="noti-box">
+              <div>
+                <div class="noti-title">저축 목표 알림</div>
+                <div class="noti-content">저축 목표 달성률 90% 도달시 알림</div>
+              </div>
+              <input role="switch" type="checkbox" class="noti-toggle" />
+            </div>-->
     </div>
     <div class="bottom">
       <div>
