@@ -174,13 +174,25 @@ async function addIncome() {
     }
   }
 
-  // 여행 내역 업데이트
-  const travelItem = travels.value.find(t => t.id === selectedTravel.value.id)
-  if (travelItem) {
-    travelItem.income = selectedTravel.value.income
-    // totalIncome 갱신
-    travelItem.totalIncome = travelItem.details.reduce((total, detail) => total + detail.amount, 0)
+// 여행 내역 업데이트
+const travelItem = travels.value.find(t => t.id === selectedTravel.value.id)
+if (travelItem) {
+  // 클라이언트 측에서 income 갱신
+  travelItem.income = selectedTravel.value.income
+
+  // totalIncome 갱신
+  travelItem.totalIncome = travelItem.details.reduce((total, detail) => total + detail.amount, 0)
+
+  // 서버에 업데이트된 여행 내역 전송
+  try {
+    await axios.patch(`http://localhost:3000/travel/${travelItem.id}`, {
+      income: travelItem.income,
+      totalIncome: travelItem.totalIncome
+    })
+  } catch (err) {
+    console.error('여행 내역 업데이트 실패:', err)
   }
+}
 
   // 초기화
   inputBudget.value = ''
@@ -231,7 +243,7 @@ async function deleteDetail(index) {
   if (!selectedTravel.value) return
 
   // 실제 삭제
-  selectedTravel.value.details.splice(index, 1)
+  const deletedDetail = selectedTravel.value.details.splice(index, 1)[0]  // 삭제된 내역을 변수로 저장
 
   // 저장액 재계산
   selectedTravel.value.income = selectedTravel.value.details.reduce((sum, d) => sum + d.amount, 0)
@@ -242,6 +254,7 @@ async function deleteDetail(index) {
     existing.income = selectedTravel.value.income
 
     try {
+      // 서버에서 내역 삭제 후 income 갱신
       await axios.patch(`http://localhost:3000/income/${existing.id}`, {
         details: existing.details,
         income: existing.income
@@ -250,9 +263,23 @@ async function deleteDetail(index) {
       console.error('삭제 후 저장 실패:', err)
     }
   }
+
+  // 여행 내역 업데이트
   const travelItem = travels.value.find(t => t.id === selectedTravel.value.id)
   if (travelItem) {
     travelItem.income = selectedTravel.value.income
+    // totalIncome 갱신
+    travelItem.totalIncome = travelItem.details.reduce((total, detail) => total + detail.amount, 0)
+
+    try {
+      // 서버에 갱신된 여행 내역 보내기
+      await axios.patch(`http://localhost:3000/travel/${travelItem.id}`, {
+        income: travelItem.income,
+        totalIncome: travelItem.totalIncome
+      })
+    } catch (err) {
+      console.error('여행 내역 갱신 실패:', err)
+    }
   }
 }
 
