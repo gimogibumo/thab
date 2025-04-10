@@ -154,10 +154,6 @@ function cancelForm() {
                       @click="toggleTravelDropdown"
                     >
                       <span>{{ selectedTravel?.title || '여행을 선택하세요' }}</span>
-                      <i
-                        class="bi"
-                        :class="showTravelDropdown ? 'bi-chevron-up' : 'bi-chevron-down'"
-                      ></i>
                     </button>
                     <ul
                       class="dropdown-menu w-100"
@@ -207,10 +203,6 @@ function cancelForm() {
                       @click="toggleCategories"
                     >
                       <span>{{ expense.category || '카테고리를 선택하세요' }}</span>
-                      <i
-                        class="bi"
-                        :class="showCategories ? 'bi-chevron-up' : 'bi-chevron-down'"
-                      ></i>
                     </button>
                     <ul
                       class="dropdown-menu w-100"
