@@ -23,31 +23,33 @@ const totalExpense = computed(() => {
 
   const sum = expenses.value.reduce((acc, item) => {
     const converted = convertedAmounts[item.id]
-    return acc + (converted ?? 0)  // 변환된 값이 없으면 0 처리
+    return acc + (converted ?? 0)
   }, 0)
 
-  return sum.toLocaleString() + '원'
+  const rounded = Math.floor(sum)
+
+  return rounded.toLocaleString() + '원'
 })
 
 // 카테고리별 지출
-const categories = computed(() => {
-  const result = categoryNames.map(name => ({ name, amount: 0, percent: 0 }))
-  if (!expenses.value) return result
-
-  expenses.value.forEach(item => {
-    const category = result.find(c => c.name === item.category)
-    if (category && convertedAmounts[item.id]) {
-      category.amount += convertedAmounts[item.id]
-    }
-  })
-
-  const total = result.reduce((sum, item) => sum + item.amount, 0)
-  result.forEach(item => {
-    item.percent = total > 0 ? Number(((item.amount / total) * 100).toFixed(1)) : 0
-  })
-
-  return result
-})
+// const categories = computed(() => {
+//   const result = categoryNames.map(name => ({ name, amount: 0, percent: 0 }))
+//   if (!expenses.value) return result
+//
+//   expenses.value.forEach(item => {
+//     const category = result.find(c => c.name === item.category)
+//     if (category && convertedAmounts[item.id]) {
+//       category.amount += convertedAmounts[item.id]
+//     }
+//   })
+//
+//   const total = result.reduce((sum, item) => sum + item.amount, 0)
+//   result.forEach(item => {
+//     item.percent = total > 0 ? Number(((item.amount / total) * 100).toFixed(1)) : 0
+//   })
+//
+//   return result
+// })
 
 // 이번 달 지출
 const monthExpense = computed(() => {
@@ -64,7 +66,9 @@ const monthExpense = computed(() => {
     })
     .reduce((acc, item) => acc + (convertedAmounts[item.id] ?? 0), 0)
 
-  return sum.toLocaleString() + '원'
+  const rounded = Math.floor(sum)
+
+  return rounded.toLocaleString() + '원'
 })
 
 // 지출별 1위 카테고리
@@ -84,7 +88,7 @@ const topCategory = computed(() => {
   const maxItem = sorted[0]
 
   return maxItem?.amount > 0
-    ? `${maxItem.name} (${maxItem.amount.toLocaleString()}원)`
+    ? `${maxItem.name}`
     : '-'
 })
 
@@ -190,8 +194,26 @@ const renderTravelChart = () => {
 
 }
 
+// 선택한 여행의 카테고리
 const selectedTravelCategories = computed(() => {
-  if (!selectedTravelId.value || !expenses.value) return []
+  if (!selectedTravelId.value || !expenses.value) {
+    const result = categoryNames.map(name => ({ name, amount: 0, percent: 0 }))
+    if (!expenses.value) return result
+
+    expenses.value.forEach(item => {
+      const category = result.find(c => c.name === item.category)
+      if (category && convertedAmounts[item.id]) {
+        category.amount += convertedAmounts[item.id]
+      }
+    })
+
+    const total = result.reduce((sum, item) => sum + item.amount, 0)
+    result.forEach(item => {
+      item.percent = total > 0 ? Number(((item.amount / total) * 100).toFixed(1)) : 0
+    })
+
+    return result
+  }
 
   const filtered = expenses.value.filter(item => item.travelId === selectedTravelId.value)
 
@@ -211,7 +233,6 @@ const selectedTravelCategories = computed(() => {
 
   return result
 })
-
 
 onMounted(async () => {
   try {
@@ -269,7 +290,7 @@ onMounted(async () => {
           class="category-box">
           <div class="category-header">
             <div>{{ item.name }}</div>
-            <div>{{ item.amount.toLocaleString() }}원 ({{ item.percent }}%)</div>
+            <div>{{ Math.floor(item.amount).toLocaleString() }}원 ({{ item.percent }}%)</div>
           </div>
           <div class="progress-bar">
             <div
