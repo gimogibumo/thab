@@ -2,7 +2,6 @@
 import { ref, computed, onMounted } from 'vue'
 import TravelBudgetCard from '@/components/TravelBudgetCard.vue'
 import StatsChart from '@/components/StatsChart.vue'
-// import CategoryDropdown from '@/components/CategoryDropdown.vue'
 import axios from 'axios'
 
 const props = defineProps({
@@ -63,9 +62,9 @@ const filteredExpenses = computed(() => {
     case 'oldest':
       return [...filtered].sort((a, b) => new Date(a.date) - new Date(b.date))
     case 'high':
-      return [...filtered].sort((a, b) => b.amount - a.amount)
+      return [...filtered].sort((a, b) => b.moneyByWon - a.moneyByWon)
     case 'low':
-      return [...filtered].sort((a, b) => a.amount - b.amount)
+      return [...filtered].sort((a, b) => a.moneyByWon - b.moneyByWon)
     default:
       return filtered
   }
