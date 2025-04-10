@@ -303,8 +303,8 @@ async function deleteDetail(index) {
             <div class="date">목표일: {{ travel.startDate }}</div>
           </div>
           <div class="amount">
-            <div class="income">{{ travel.income.toLocaleString() }}원</div>
-            <div class="target">목표: {{ travel.totalBudget.toLocaleString() }}원</div>
+            <div class="income">{{ Number(travel.income).toLocaleString() }}원</div>
+            <div class="target">목표: {{ Number(travel.totalBudget).toLocaleString() }}원</div>
           </div>
         </div>
         <div class="progress-bar">
@@ -312,8 +312,8 @@ async function deleteDetail(index) {
                :style="{ width: Math.floor((travel.income / travel.totalBudget) * 100) + '%' }"></div>
         </div>
         <div class="bottom">
-          <div>{{ Math.floor((travel.income / travel.totalBudget) * 100) }}% 달성</div>
-          <div>잔여: {{ (travel.totalBudget - travel.income).toLocaleString() }}원</div>
+          <div>{{ Math.floor((Number(travel.income / travel.totalBudget)) * 100) }}% 달성</div>
+          <div>잔여: {{ Number(travel.totalBudget - travel.income).toLocaleString() }}원</div>
         </div>
       </div>
     </div>
