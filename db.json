@@ -59,8 +59,18 @@
         "etc": 100000
       },
       "totalBudget": 600000,
-      "income": 0,
-      "totalSpent": 0
+      "income": 10000,
+      "totalSpent": 0,
+      "travelId": "179f",
+      "details": [
+        {
+          "date": "2025.04.10",
+          "title": "라면용",
+          "category": "식비",
+          "amount": 10000
+        }
+      ],
+      "totalIncome": 10000
     }
   ],
   "travelChecklist": [
@@ -162,6 +172,21 @@
       "amount": 50000,
       "memo": "",
       "date": "2025-04-08"
+    }
+  ],
+  "income": [
+    {
+      "id": "a0e9",
+      "travelId": "179f",
+      "income": 10000,
+      "details": [
+        {
+          "date": "2025.04.10",
+          "title": "라면용",
+          "category": "식비",
+          "amount": 10000
+        }
+      ]
     }
   ]
 }

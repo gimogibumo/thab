@@ -135,7 +135,6 @@ const renderTravelChart = () => {
   })
 }
 
-
 onMounted(async () => {
   try {
     const expenseRes = await axios.get('http://localhost:3000/expense')

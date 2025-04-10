@@ -39,6 +39,7 @@ import axios from 'axios'
 
 const props = defineProps({
   coverImage: String,
+  destination: String,
   id: String,
   title: String,
   startDate: String,
@@ -58,12 +59,12 @@ const props = defineProps({
 const cover = ref(props.coverImage)
 
 onMounted(async () => {
-  if (!cover.value && props.title) {
+  if (!cover.value && props.destination) {
     try {
       const response = await axios.get('https://pixabay.com/api/', {
         params: {
           key: '49696568-789720e76db658f1dff80e68c', // ← 너의 API 키로 교체!
-          q: props.title,
+          q: props.destination,
           image_type: 'photo',
           per_page: 5,
           orientation: 'horizontal',
