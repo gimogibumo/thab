@@ -1,0 +1,216 @@
+{
+  "travel": [
+    {
+      "id": "e498",
+      "userEmail": "a@a.a",
+      "title": "일본 3박 4일",
+      "startDate": "2025-04-11",
+      "endDate": "2025-04-14",
+      "destination": "도쿄",
+      "description": "출발~",
+      "currency": "JPY",
+      "budget": {
+        "stay": 240000,
+        "transport": "",
+        "food": 0,
+        "tour": 0,
+        "shopping": 0,
+        "etc": 0
+      },
+      "totalBudget": "2400000000",
+      "income": 0,
+      "totalSpent": 0
+    },
+    {
+      "id": "11c6",
+      "userEmail": "a@a.a",
+      "title": "여행 중",
+      "startDate": "2025-04-08",
+      "endDate": "2025-04-11",
+      "destination": "도쿄",
+      "description": "여행 중",
+      "currency": "JPY",
+      "budget": {
+        "stay": 1000,
+        "transport": 10000,
+        "food": 100000,
+        "tour": 100,
+        "shopping": 10,
+        "etc": 1
+      },
+      "totalBudget": 111111,
+      "income": 1100000,
+      "totalSpent": 100000
+    },
+    {
+      "id": "7f5c",
+      "userEmail": "a@a.a",
+      "title": "sad",
+      "startDate": "2025-05-01",
+      "endDate": "2025-05-08",
+      "destination": "오사카",
+      "description": "asdasd",
+      "currency": "JPY(100)",
+      "budget": {
+        "stay": 0,
+        "transport": 213123,
+        "food": 0,
+        "tour": 0,
+        "shopping": 0,
+        "etc": 0
+      },
+      "totalBudget": 213123,
+      "income": 0,
+      "totalSpent": 0
+    }
+  ],
+  "travelChecklist": [
+    {
+      "id": "9f0c",
+      "travelId": "e498",
+      "checklist": [
+        {
+          "label": "히히",
+          "checked": false
+        },
+        {
+          "label": "재밌다",
+          "checked": false
+        }
+      ]
+    },
+    {
+      "id": "f0f1",
+      "travelId": "11c6",
+      "checklist": [
+        {
+          "label": "여권",
+          "checked": false
+        },
+        {
+          "label": "슬리퍼",
+          "checked": false
+        },
+        {
+          "label": "비행기 티켓 확인",
+          "checked": false
+        },
+        {
+          "label": "호텔 예약",
+          "checked": false
+        },
+        {
+          "label": "짐싸기",
+          "checked": false
+        }
+      ]
+    }
+  ],
+  "expense": [
+    {
+      "id": "16b7",
+      "travelsKey": "e498",
+      "inputName": "일본 3박 4일",
+      "expenseName": "sds",
+      "category": "숙박",
+      "amount": 1900,
+      "memo": "asdf",
+      "date": "2025-04-11",
+      "currency": "SEK",
+      "userEmail": "a@a.a"
+    },
+    {
+      "id": "7843",
+      "travelsKey": "11c6",
+      "inputName": "여행 중",
+      "expenseName": "asd",
+      "category": "식비",
+      "amount": 1213,
+      "memo": "asd",
+      "date": "2025-04-18",
+      "currency": "AED",
+      "userEmail": "b@b.b"
+    }
+  ],
+  "trips": [],
+  "users": [
+    {
+      "id": "030c",
+      "name": "admin",
+      "email": "a@a.a",
+      "phone": "010-0100-0100",
+      "password": "123123",
+      "nickname": "admin",
+      "passwordCheck": "123123"
+    },
+    {
+      "id": "5a1c",
+      "name": "admin2",
+      "email": "b@b.b",
+      "phone": "010-0100-0010",
+      "password": "123123",
+      "nickname": "admin2",
+      "passwordCheck": "123123"
+    }
+  ],
+  "income": [
+    {
+      "id": "fb20",
+      "travelId": "e498",
+      "saved": 100540000,
+      "category": "숙박",
+      "details": [
+        {
+          "date": "2025.04.10",
+          "title": "",
+          "category": "식비",
+          "amount": 100000
+        },
+        {
+          "date": "2025.04.10",
+          "title": "",
+          "category": "교통",
+          "amount": 100000
+        },
+        {
+          "date": "2025.04.10",
+          "title": "",
+          "category": "기타",
+          "amount": 100000
+        },
+        {
+          "date": "2025.04.10",
+          "title": "",
+          "category": "기타",
+          "amount": 100000000
+        },
+        {
+          "date": "2025.04.10",
+          "title": "히히",
+          "category": "숙박",
+          "amount": 240000
+        }
+      ]
+    },
+    {
+      "id": "4ead",
+      "travelId": "11c6",
+      "saved": 1100000,
+      "category": "식비",
+      "details": [
+        {
+          "date": "2025.04.10",
+          "title": "",
+          "category": "식비",
+          "amount": 1000000
+        },
+        {
+          "date": "2025.04.10",
+          "title": "",
+          "category": "식비",
+          "amount": 100000
+        }
+      ]
+    }
+  ]
+}
