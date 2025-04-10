@@ -1,18 +1,20 @@
 <template>
-  <div class="fullscreen-wrapper d-flex justify-content-center align-items-center">
+  <div class="fullscreen-wrapper d-flex justify-content-center align-items-center flex-wrap">
     <!-- 좌측 일러스트 -->
-    <div class="side-illustration d-none d-md-block">
+    <div class="side-illustration d-none d-lg-block me-3">
       <img src="@/assets/img/travel_left.png" alt="travel" class="img-fluid" />
     </div>
 
     <!-- 약관 카드 -->
-    <div class="agreement-card">
-      <h2 class="fw-bold text-center mb-3">약관에 동의해주세요</h2>
+    <div class="agreement-card animate__animated animate__fadeIn">
+      <h2 class="fw-bold text-center mb-3 text-dark">약관에 동의해주세요</h2>
       <p class="text-muted text-center small mb-4">
-        서비스를 시작하기 전에 아래 약관을 확인해주세요. 모든 항목은 필수입니다.
+        서비스를 시작하기 전에 아래 약관을 확인해주세요.<br />
+        모든 항목은 필수입니다.
       </p>
 
-      <div class="form-check mb-3">
+      <!-- 전체 동의 -->
+      <div class="form-check mb-3 custom-check">
         <input
           class="form-check-input"
           type="checkbox"
@@ -23,33 +25,37 @@
         <label class="form-check-label fw-semibold" for="checkAll">모든 약관에 동의합니다</label>
       </div>
 
-      <div class="form-check mb-2">
+      <!-- 개별 약관 -->
+      <div class="form-check mb-2 custom-check">
         <input class="form-check-input" type="checkbox" v-model="terms.service" id="checkService" />
         <label class="form-check-label" for="checkService">
           (필수) 서비스 이용 약관
-          <a
-            href="#"
-            class="text-primary text-decoration-underline"
-            @click.prevent="showModal = true"
+          <a href="#" class="text-decoration-underline ms-1" @click.prevent="showModal = true"
             >전문 보기</a
           >
         </label>
       </div>
 
-      <div class="form-check mb-4">
+      <div class="form-check mb-4 custom-check">
         <input class="form-check-input" type="checkbox" v-model="terms.privacy" id="checkPrivacy" />
         <label class="form-check-label" for="checkPrivacy">
           (필수) 개인정보 수집 및 이용 동의
         </label>
       </div>
 
-      <button class="btn w-100 mb-3" :disabled="!isAgreed" @click="$emit('next')">다음</button>
+      <button
+        class="btn btn-brown w-100 py-2 fw-semibold fs-6"
+        :disabled="!isAgreed"
+        @click="$emit('next')"
+      >
+        다음
+      </button>
 
-      <p class="text-center text-muted small">THAB은 여러분의 안전한 여행을 응원합니다 ✈️</p>
+      <p class="text-center text-muted small mt-3">THAB은 여러분의 안전한 여행을 응원합니다 ✈️</p>
     </div>
 
     <!-- 우측 일러스트 -->
-    <div class="side-illustration d-none d-md-block">
+    <div class="side-illustration d-none d-lg-block ms-3">
       <img src="@/assets/img/travel_right.png" alt="travel" class="img-fluid" />
     </div>
 
@@ -93,34 +99,55 @@ const toggleAll = () => {
 </script>
 
 <style scoped>
-.btn {
-  background-color: #4f382f;
-  border-color: black;
-  color: white;
-}
+@import 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css';
+
 .fullscreen-wrapper {
   min-height: 100vh;
-  background-color: #fff8f2;
-  padding: 60px 20px;
-  margin: 0%;
+  background: linear-gradient(to bottom, #fff8f2, #fcefe4);
+  padding: 40px 20px;
 }
 
 .agreement-card {
-  background-color: #faede1;
-  padding: 40px;
-  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #e4d3c1;
+  padding: 40px 32px;
+  border-radius: 24px;
   max-width: 500px;
   width: 100%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
 }
 
 .side-illustration {
-  max-width: 200px;
-  padding: 20px;
+  max-width: 220px;
+}
+
+.btn-brown {
+  background-color: #8b6f5c;
+  color: white;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-brown:hover {
+  background-color: #7b5c4a;
+  transform: scale(1.02);
+}
+
+.btn-brown:active {
+  transform: scale(0.98);
 }
 
 .form-check-input {
   margin-right: 10px;
+  accent-color: #8b6f5c;
+}
+
+.form-check-label {
+  font-size: 0.95rem;
+}
+
+.custom-check:hover .form-check-input {
+  cursor: pointer;
 }
 
 .modal {

@@ -35,7 +35,7 @@ const reset = () => {
 
 <style scoped>
 .signup-flow {
-  margin: 50px auto;
+  /* margin: 50px auto; */
   text-align: center;
 }
 </style>
