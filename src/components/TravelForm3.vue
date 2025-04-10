@@ -47,6 +47,11 @@ function handleCreateTravel() {
 
 const isBudgetValid = computed(() => totalBudget.value > 0)
 
+function preventNegative(category) {
+  if (localForm.value.budget[category] < 0) {
+    localForm.value.budget[category] = 0
+  }
+}
 </script>
 <template>
     <div class="step-wrapper">
@@ -67,27 +72,63 @@ const isBudgetValid = computed(() => totalBudget.value > 0)
           <div class="row g-3 mb-4">
             <div class="col-6 col-md-4">
               <label class="form-label">숙박</label>
-              <input type="number" class="form-control" v-model.number="localForm.budget.stay"/>
+              <input
+                type="number"
+                class="form-control"
+                v-model.number="localForm.budget.stay"
+                min="0"
+                @input="preventNegative('stay')"
+              />            
             </div>
             <div class="col-6 col-md-4">
               <label class="form-label">교통</label>
-              <input type="number" class="form-control" v-model.number="localForm.budget.transport" />
+              <input
+                type="number"
+                class="form-control"
+                v-model.number="localForm.budget.transport"
+                min="0"
+                @input="preventNegative('transport')"
+              />            
             </div>
             <div class="col-6 col-md-4">
               <label class="form-label">식비</label>
-              <input type="number" class="form-control" v-model.number="localForm.budget.food" />
+              <input
+                type="number"
+                class="form-control"
+                v-model.number="localForm.budget.food"
+                min="0"
+                @input="preventNegative('food')"
+              />            
             </div>
             <div class="col-6 col-md-4">
               <label class="form-label">관광</label>
-              <input type="number" class="form-control" v-model.number="localForm.budget.tour" />
+              <input
+                type="number"
+                class="form-control"
+                v-model.number="localForm.budget.tour"
+                min="0"
+                @input="preventNegative('tour')"
+              />            
             </div>
             <div class="col-6 col-md-4">
               <label class="form-label">쇼핑</label>
-              <input type="number" class="form-control" v-model.number="localForm.budget.shopping" />
+              <input
+                type="number"
+                class="form-control"
+                v-model.number="localForm.budget.shopping"
+                min="0"
+                @input="preventNegative('shopping')"
+              />            
             </div>
             <div class="col-6 col-md-4">
               <label class="form-label">기타</label>
-              <input type="number" class="form-control" v-model.number="localForm.budget.etc" />
+              <input
+                type="number"
+                class="form-control"
+                v-model.number="localForm.budget.etc"
+                min="0"
+                @input="preventNegative('etc')"
+              />            
             </div>
           </div>
           <!-- 버튼들 -->
