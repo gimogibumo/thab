@@ -1,60 +1,23 @@
 <script setup>
-import { ref, onMounted, watch, computed } from 'vue'
-import { convertCurrency } from '@/utils/exchangeConverter'
-import axios from 'axios'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   expense: {
     type: Object,
     required: true,
   },
-  travelId: {
-    type: String,
-    required: true,
-  },
 })
 
+const currency = computed(() => props.expense.currency || 'KRW')
 const emit = defineEmits(['edit', 'delete'])
 
 const isEditing = ref(false)
 const editedExpense = ref({ ...props.expense })
-const convertedAmount = ref(0)
-const travelCurrency = ref('KRW')
-
-const displayCurrency = computed(() => {
-  return travelCurrency.value.split('(')[0]
-})
-
 const categories = ['숙박', '식비', '교통', '관광', '쇼핑', '기타']
 
-onMounted(() => {
-  fetchTravelCurrency()
+const displayCurrency = computed(() => {
+  return currency.value.split('(')[0]
 })
-
-const fetchTravelCurrency = async () => {
-  try {
-    const response = await axios.get(`http://localhost:3000/travel/${props.travelId}`)
-    const travelData = response.data
-
-    travelCurrency.value = travelData.currency || 'KRW'
-    updateConvertedAmount()
-  } catch (error) {
-    console.error('Error fetching travel data or setting currency:', error)
-  }
-}
-
-const updateConvertedAmount = () => {
-  convertedAmount.value = convertCurrency(props.expense.amount, 'KRW', travelCurrency.value)
-}
-
-watch(
-  () => editedExpense.value.amount,
-  (newVal) => {
-    convertedAmount.value = convertCurrency(newVal, 'KRW', travelCurrency.value)
-  },
-)
-
-updateConvertedAmount()
 
 const startEditing = () => {
   const date = new Date(props.expense.date)
@@ -67,16 +30,13 @@ const startEditing = () => {
 
 const cancelEdit = () => {
   editedExpense.value = { ...props.expense }
-  updateConvertedAmount()
   isEditing.value = false
 }
 
 const saveEdit = () => {
-  editedExpense.value.amount = editedExpense.value.amount
+  editedExpense.value.moneyByWon = editedExpense.value.moneyByWon
   emit('edit', { ...editedExpense.value })
-  updateConvertedAmount()
   isEditing.value = false
-  convertedAmount.value = convertCurrency(editedExpense.value.amount, 'KRW', travelCurrency.value)
 }
 </script>
 
@@ -117,17 +77,17 @@ const saveEdit = () => {
     <div class="money-info">
       <template v-if="isEditing">
         <div>
-          <input type="number" v-model.number="editedExpense.amount" />
+          <input type="number" v-model.number="editedExpense.moneyByWon" />
           <span>KRW</span>
         </div>
         <div>
-          <input type="number" :value="convertedAmount" disabled />
+          <input type="number" v-model.number="editedExpense.amount" />
           <span>{{ displayCurrency }}</span>
         </div>
       </template>
       <template v-else>
-        <div class="amount">{{ expense.amount.toLocaleString() }} KRW</div>
-        <div class="converted">{{ convertedAmount.toLocaleString() }} {{ displayCurrency }}</div>
+        <div class="amount">{{ expense.moneyByWon.toLocaleString() }} KRW</div>
+        <div class="converted">{{ expense.amount.toLocaleString() }} {{ displayCurrency }}</div>
       </template>
     </div>
     <div class="actions">
