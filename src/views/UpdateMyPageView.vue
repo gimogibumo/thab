@@ -1,6 +1,5 @@
 <script setup>
 import  {useRouter} from 'vue-router'
-import {ref} from 'vue'
 
 import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
@@ -15,8 +14,8 @@ const router = useRouter()
 
 // 저장 버튼 클릭 시 호출
 const btnSave = () => {
-  console.log('이름:', name.value)
-  console.log('전화번호:', phone.value)
+  // console.log('이름:', name)
+  // console.log('전화번호:', phone)
 
   router.push('/my_page')
 }
@@ -42,11 +41,11 @@ const btnClose = () => {
       <div class="middle">
         <div class="name">
           <div class="title">이름</div>
-          <input type="text" placeholder="THAB" value="THAB">
+          <input type="text" placeholder="THAB" v-model="name">
         </div>
         <div class="phone">
           <div class="title">전화번호</div>
-          <input type="text" placeholder="010-1234-5678" value="010-1234-5678">
+          <input type="text" placeholder="010-1234-5678" v-model="phone">
         </div>
       </div>
         <div class="modal-btn">

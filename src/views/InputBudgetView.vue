@@ -5,24 +5,29 @@ import { useAuthStore } from '@/stores/auth'
 
 const income = ref([])
 const travels = ref(null)
+const userTravels = ref(null)
+
 const selectedId = ref(null)
 const selectedTravel = ref(null)
-const selectedCategory = ref(null)
-const modalCheck = ref(false)
-const inputBudget = ref('')
-const inputMemo = ref('')
-const selectedDetailIndex = ref(null) // 몇 번째를 수정할 건지 추적
+
 const categories = [
   { id: 1, name: '식비', icon: 'ph-knife-fork' },
   { id: 2, name: '교통', icon: 'ph-car' },
   { id: 3, name: '숙박', icon: 'ph-bed' },
   { id: 4, name: '쇼핑', icon: 'ph-shopping-bag' },
-  { id: 5, name: '관광', icon: 'ph-camera' }
+  { id: 5, name: '관광', icon: 'ph-camera' },
+  { id: 6, name: '기타'}
 ]
+const selectedCategory = ref(null)
+
+const modalCheck = ref(false)
+const inputBudget = ref('')
+const inputMemo = ref('')
+const selectedDetailIndex = ref(null) // 몇 번째를 수정할 건지 추적
+
 
 const authStore = useAuthStore()
 const userEmail = authStore.user.email
-// const userTravels = travels.value.filter(travel => travel.userEmail === userEmail)
 
 onMounted(async () => {
   try {
@@ -45,16 +50,28 @@ onMounted(async () => {
 
     travels.value = travelList
     income.value = incomeRes.data
+
+    // userEmail에 맞는 여행 내역만 필터링
+    userTravels.value = travels.value.filter(travel => travel.userEmail === userEmail)
+
+    console.log(userEmail)
+    console.log(userTravels.value)
   } catch (err) {
     console.error('데이터 불러오기 실패:', err)
   }
 })
+
 async function addIncome() {
   const amount = parseInt(inputBudget.value.replace(/[^0-9]/g, ''))
   const memo = inputMemo.value
 
   if (!amount || amount <= 0) {
     alert('유효한 금액을 입력해주세요.')
+    return
+  }
+
+  if (!selectedCategory.value) {
+    alert('카테고리를 지정해주세요.')
     return
   }
 
@@ -229,12 +246,11 @@ async function deleteDetail(index) {
   }
 }
 
-
 </script>
 <template>
   <div class="content">
     <div class="page-title">예산 모으기</div>
-    <div class="goal-wrap" v-for="travel in travels" :key="travel.id">
+    <div class="goal-wrap" v-for="travel in userTravels" :key="travel.id">
       <div class="goal-card"
            :class="[
                { active: selectedId === travel.id },
