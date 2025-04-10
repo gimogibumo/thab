@@ -29,3 +29,8 @@ db.json
 *.sw?
 
 *.tsbuildinfo
+
+# 환율 관련 파일
+.env
+fetch_exchange.py
+db.json
