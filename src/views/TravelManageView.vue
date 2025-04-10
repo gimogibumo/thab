@@ -135,7 +135,7 @@ onMounted(() => {
 }
 
 .travel-card.two-column {
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
 }
 
 .fab {
