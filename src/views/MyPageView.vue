@@ -1,8 +1,17 @@
 <script setup>
 
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import axios from 'axios'
 
 const modalCheck = ref(false)
+const user = ref(null)
+
+onMounted(async () => {
+  const userRes = await axios.get('http://localhost:3000/users')
+
+  user.value = userRes.data
+  console.log(user.value)
+})
 
 // 모달 열기
 function modalOpen() {
@@ -13,6 +22,7 @@ function modalOpen() {
 function modalClose() {
   modalCheck.value = false
 }
+
 </script>
 
 <template>
@@ -22,8 +32,8 @@ function modalClose() {
       <div class="first-info">
         <img src="https://placehold.co/100x100" alt="profile">
         <div class="top-info">
-          <div class="top-name-title">THAB</div>
-          <div class="register-date">가입일: 2023.02.02</div>
+<!--          <div class="top-nickname">{{ user.value }}</div>-->
+<!--          <div class="register-date">가입일: 2023.02.02</div>-->
         </div>
       </div>
       <hr>
@@ -156,7 +166,7 @@ img {
   font-size: 15px;
 }
 
-.top-name-title {
+.top-nickname {
   font-size: 22px;
   font-weight: bold;
 }

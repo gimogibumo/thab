@@ -92,7 +92,7 @@
       "memo": "",
       "date": "2025-04-08"
     },
-     {
+    {
       "id": "d822",
       "travelId": "1234",
       "inputName": "123",
@@ -118,9 +118,65 @@
   "income": [
     {
       "travelId": "d9bc",
-      "saved": 1100,
-      "details": [],
+      "saved": 1000,
+      "details": [
+        {
+          "date": "2025.04.10",
+          "title": "교통비",
+          "category": "저축",
+          "amount": 1000
+        }
+      ],
       "id": 1
+    }
+  ],
+  "users": [
+    {
+      "id": "cec2",
+      "name": "김기범",
+      "email": "wolfbone0304@naver.com",
+      "phone": "010-5698-2860",
+      "password": "sver0314",
+      "nickname": "sver0314",
+      "passwordCheck": "sver0314"
+    },
+    {
+      "id": "7e9b",
+      "name": "김기범",
+      "email": "sver0314@naver.com",
+      "phone": "010-5698-2860",
+      "password": "sver0314",
+      "nickname": "wolfbone",
+      "passwordCheck": "sver0314"
+    },
+    {
+      "id": "48db",
+      "name": "admin",
+      "email": "a@a.a",
+      "phone": "010-1234-1234",
+      "password": "qwerty",
+      "nickname": "admin",
+      "passwordCheck": "qwerty"
+    },
+    {
+      "id": "0a1d",
+      "name": "admin2",
+      "email": "b@b.b",
+      "phone": "010-0000-0000",
+      "password": "qwerty",
+      "nickname": "admin2",
+      "passwordCheck": "qwerty"
+    },
+    {
+      "id": "ad15",
+      "travelId": "4473",
+      "inputName": "123",
+      "expenseName": "123",
+      "category": "식비",
+      "customCategory": "",
+      "amount": 50000,
+      "memo": "",
+      "date": "2025-04-08"
     }
   ]
 }
