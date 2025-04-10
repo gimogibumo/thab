@@ -41,6 +41,27 @@
       "totalBudget": 111111,
       "income": 1100000,
       "totalSpent": 100000
+    },
+    {
+      "id": "7f5c",
+      "userEmail": "a@a.a",
+      "title": "sad",
+      "startDate": "2025-05-01",
+      "endDate": "2025-05-08",
+      "destination": "오사카",
+      "description": "asdasd",
+      "currency": "JPY(100)",
+      "budget": {
+        "stay": 0,
+        "transport": 213123,
+        "food": 0,
+        "tour": 0,
+        "shopping": 0,
+        "etc": 0
+      },
+      "totalBudget": 213123,
+      "income": 0,
+      "totalSpent": 0
     }
   ],
   "travelChecklist": [
@@ -112,10 +133,10 @@
   "trips": [],
   "users": [
     {
-      "id": "a9dd",
+      "id": "030c",
       "name": "admin",
       "email": "a@a.a",
-      "phone": "010-0100-0010",
+      "phone": "010-0100-0100",
       "password": "123123",
       "nickname": "admin",
       "passwordCheck": "123123"
