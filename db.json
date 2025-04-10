@@ -83,5 +83,16 @@
       "description": "오사카 유니버셜 스튜디오에서 재밌게 놀 예정",
       "totalBudget": 800000
     }
+  ],
+  "users": [
+    {
+      "id": "2f99",
+      "name": "d",
+      "email": "as@a.a",
+      "phone": "010-1234-1234",
+      "password": "123123",
+      "nickname": "dd",
+      "passwordCheck": "123123"
+    }
   ]
 }
