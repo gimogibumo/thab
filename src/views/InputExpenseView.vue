@@ -17,7 +17,7 @@ const travels = ref([])
 const selectedTravel = ref()
 
 const expense = reactive({
-  travelsKey: '',
+  travelId: '',
   inputName: '',
   expenseName: '',
   category: '',
@@ -67,7 +67,7 @@ onMounted(async () => {
 watch(selectedTravel, (newTravel) => {
   if (newTravel) {
     expense.inputName = newTravel.title
-    expense.travelsKey = newTravel.id
+    expense.travelId = newTravel.id
     expense.date = ''
   }
 })
@@ -113,9 +113,9 @@ async function submitForm() {
   if (!expense.category) return alert('카테고리를 선택해주세요!')
   if (!expense.date) return alert('여행 날짜를 선택해주세요!')
   if (expense.amount === 0 || expense.amount == '') return alert('금액을 입력해주세요!')
-
   const payload = {
     ...expense,
+    moneyByWon: moneyByWon.value,
     currency: selectedCurrency.value,
     // convertedAmount: moneyByWon.value || null,
   }
