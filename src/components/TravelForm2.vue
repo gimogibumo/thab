@@ -3,7 +3,6 @@ import { computed, ref, watch } from 'vue'
 import CreateTravelHeader from '@/components/CreateTravelHeader.vue'
 import StepIndicator from '@/components/StepIndicator.vue'
 
-// Props와 emit 설정
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue', 'next', 'back'])
 
@@ -12,7 +11,6 @@ const localForm = computed({
   set: (val) => emit('update:modelValue', val)
 })
 
-// 국가 및 도시 데이터
 const countries = ref([
   { code: 'JP', name: '일본' },
   { code: 'KR', name: '대한민국' },
@@ -41,20 +39,25 @@ const selectedCountry = ref('')
 const cities = ref([])
 const selectedCity = ref('')
 
-// 국가 변경 시 도시 목록 설정
 watch(selectedCountry, (newCode) => {
   cities.value = countryCityMap[newCode] || []
-  selectedCity.value = '' // 도시 초기화
+  selectedCity.value = ''
 })
 
-// 도시 선택 시 목적지 + 통화코드 반영
 watch(selectedCity, (cityName) => {
   localForm.value.destination = cityName
   localForm.value.currency = countryCurrencyMap[selectedCountry.value] || ''
 })
+
+// ✅ 모든 값이 입력되었는지 확인하는 유효성 체크
+const isFormValid = computed(() => {
+  return (
+    selectedCountry.value &&
+    selectedCity.value &&
+    localForm.value.description?.trim()
+  )
+})
 </script>
-
-
 <template>
   <div class="step-wrapper">
     <CreateTravelHeader title="새로운 여행 만들기" subtitle="나의 특별한 여행" />
@@ -99,7 +102,14 @@ watch(selectedCity, (cityName) => {
         <!-- 버튼 -->
         <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
           <button @click="$emit('back')" class="btn btn-outline-secondary">이전</button>
-          <button @click="$emit('next')" class="btn text-white" style="background-color: #8B6F5C;">다음</button>
+          <button
+            @click="$emit('next')"
+            class="btn text-white"
+            :disabled="!isFormValid"
+            style="background-color: #8B6F5C;"
+          >
+            다음
+          </button>
         </div>
       </div>
     </div>
