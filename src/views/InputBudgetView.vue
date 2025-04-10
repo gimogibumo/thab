@@ -49,9 +49,13 @@ onMounted(async () => {
 
     travels.value = travelList
     income.value = incomeRes.data
-
-    // userEmail에 맞는 여행 내역만 필터링
-    userTravels.value = travels.value.filter(travel => travel.userEmail === userEmail)
+    userTravels.value = travels.value
+      .filter(travel => travel.userEmail === userEmail) // 사용자 이메일로 필터링
+      .filter(travel => {
+        const currentDate = new Date() // 현재 날짜
+        const travelStartDate = new Date(travel.startDate) // 여행 시작 날짜
+        return travelStartDate > currentDate // 여행 시작 날짜가 현재 날짜 이후인 것만 필터링
+      })
 
     console.log(userEmail)
     console.log(userTravels.value)
@@ -175,24 +179,24 @@ async function addIncome() {
   }
 
 // 여행 내역 업데이트
-const travelItem = travels.value.find(t => t.id === selectedTravel.value.id)
-if (travelItem) {
-  // 클라이언트 측에서 income 갱신
-  travelItem.income = selectedTravel.value.income
+  const travelItem = travels.value.find(t => t.id === selectedTravel.value.id)
+  if (travelItem) {
+    // 클라이언트 측에서 income 갱신
+    travelItem.income = selectedTravel.value.income
 
-  // totalIncome 갱신
-  travelItem.totalIncome = travelItem.details.reduce((total, detail) => total + detail.amount, 0)
+    // totalIncome 갱신
+    travelItem.totalIncome = travelItem.details.reduce((total, detail) => total + detail.amount, 0)
 
-  // 서버에 업데이트된 여행 내역 전송
-  try {
-    await axios.patch(`http://localhost:3000/travel/${travelItem.id}`, {
-      income: travelItem.income,
-      totalIncome: travelItem.totalIncome
-    })
-  } catch (err) {
-    console.error('여행 내역 업데이트 실패:', err)
+    // 서버에 업데이트된 여행 내역 전송
+    try {
+      await axios.patch(`http://localhost:3000/travel/${travelItem.id}`, {
+        income: travelItem.income,
+        totalIncome: travelItem.totalIncome
+      })
+    } catch (err) {
+      console.error('여행 내역 업데이트 실패:', err)
+    }
   }
-}
 
   // 초기화
   inputBudget.value = ''
