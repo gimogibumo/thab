@@ -7,7 +7,7 @@ import TravelCard from '@/components/TravelCard.vue'
 const authStore = useAuthStore()
 const userEmail = computed(() => authStore.user?.email)
 
-const activeTab = ref('upcoming')
+const activeTab = ref('ongoing')
 const today = new Date()
 today.setHours(0, 0, 0, 0)
 const travelCards = reactive([])
