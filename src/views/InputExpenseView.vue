@@ -126,7 +126,7 @@ function cancelForm() {
 
 <template>
   <div class="content">
-    <div class="container py-4">
+    <div class="container-fluid py-4 px-3 px-md-5">
       <h1 class="mb-4 fw-bold">지출 입력</h1>
       <form @submit.prevent="submitForm">
         <div class="main">
