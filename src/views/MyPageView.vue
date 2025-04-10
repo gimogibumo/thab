@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
 import axios from 'axios'
-
 import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 
@@ -11,19 +10,27 @@ const phone = authStore.user.phone
 const passwd = authStore.user.password
 const name = authStore.user.name
 
-const modalCheck = ref(false)
 const user = ref(null)
 const showPassword = ref(false)
+
+const modalCheck = ref(false)
+
+const pwd = ref('')
+const newPwd = ref('')
+const newPwdAgain = ref('')
+
+const maskedPwd = computed(() => '*'.repeat(pwd.value.length))
+const maskedNewPwd = computed(() => '*'.repeat(newPwd.value.length))
+const maskedNewPwdAgain = computed(() => '*'.repeat(newPwdAgain.value.length))
+
+const pwdError = ref('')
+const newPwdError = ref('')
 
 onMounted(async () => {
   const userRes = await axios.get('http://localhost:3000/users')
 
   user.value = userRes.data
   console.log(user.value)
-})
-
-const maskedPassword = computed(() => {
-  return showPassword.value ? passwd.value : '*'.repeat(passwd.value.length)
 })
 
 // 모달 열기
@@ -34,6 +41,68 @@ function modalOpen() {
 // 모달 닫기
 function modalClose() {
   modalCheck.value = false
+}
+
+const handlePwdInput = (e) => {
+  handleMaskedInput(e, pwd)
+}
+const handleNewPwdInput = (e) => {
+  handleMaskedInput(e, newPwd)
+}
+const handleNewPwdAgainInput = (e) => {
+  handleMaskedInput(e, newPwdAgain)
+}
+
+function handleMaskedInput(e, targetRef) {
+  const inputValue = e.target.value
+  const prevLength = targetRef.value.length
+  const nextLength = inputValue.length
+
+  if (nextLength < prevLength) {
+    targetRef.value = targetRef.value.slice(0, nextLength)
+  } else {
+    const newChar = inputValue[nextLength - 1] || ''
+    targetRef.value += newChar
+  }
+
+  e.target.value = '*'.repeat(targetRef.value.length)
+}
+
+const validateCurrentPwd = () => {
+  pwdError.value = pwd.value !== authStore.user.password ? '현재 비밀번호가 일치하지 않습니다.' : ''
+}
+
+const validateNewPwd = () => {
+  newPwdError.value =
+    newPwd.value !== newPwdAgain.value ? '새 비밀번호가 서로 일치하지 않습니다.' : ''
+}
+
+const updatePwd = async () => {
+  validateCurrentPwd()
+  validateNewPwd()
+
+  if (pwdError.value || newPwdError.value) return
+
+  try {
+    const updatedPassword = {
+      password: newPwd.value,
+      passwordCheck: newPwd.value,
+    }
+
+    const response = await axios.patch(
+      `http://localhost:3000/users/${authStore.user.id}`,
+      updatedPassword,
+    )
+
+    authStore.user.password = newPwd.value
+    authStore.user.passwordCheck = newPwd.value
+
+    alert('비밀번호가 성공적으로 변경되었습니다.')
+    modalClose()
+  } catch (error) {
+    console.error('비밀번호 변경 실패:', error)
+    alert('비밀번호 변경에 실패했습니다.')
+  }
 }
 </script>
 
@@ -129,11 +198,31 @@ function modalClose() {
           <div class="modal-title">비밀번호 변경</div>
           <div>
             <div class="modal-content">현재 비밀번호</div>
-            <input class="modal-input" type="text" v-model="pwd" />
+            <input
+              class="modal-input"
+              type="text"
+              :value="maskedPwd"
+              @input="handlePwdInput"
+              @blur="validateCurrentPwd"
+            />
+            <div v-if="pwdError" class="error-msg">{{ pwdError }}</div>
             <div class="modal-content">새 비밀번호</div>
-            <input class="modal-input" type="text" v-model="newPwd" />
+            <input
+              class="modal-input"
+              type="text"
+              :value="maskedNewPwd"
+              @input="handleNewPwdInput"
+              @blur="validateNewPwd"
+            />
             <div class="modal-content">새 비밀번호 확인</div>
-            <input class="modal-input" type="text" v-model="newPwdAgain" />
+            <input
+              class="modal-input"
+              type="text"
+              :value="maskedNewPwdAgain"
+              @input="handleNewPwdAgainInput"
+              @blur="validateNewPwd"
+            />
+            <div v-if="newPwdError" class="error-msg">{{ newPwdError }}</div>
           </div>
         </div>
         <div class="modal-btn">
@@ -414,6 +503,13 @@ button {
 .save {
   background: #8b6f5c;
   color: white;
+}
+
+.error-msg {
+  color: red;
+  font-size: 14px;
+  margin-top: -15px;
+  margin-bottom: 10px;
 }
 
 /* ========== 글로벌 스타일 ========== */
