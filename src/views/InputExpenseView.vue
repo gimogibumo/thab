@@ -12,6 +12,19 @@ const selectedCurrency = ref('')
 const moneyByWon = ref('')
 const showTravelDropdown = ref(false)
 
+const travels = ref([])
+const selectedTravel = ref()
+
+const expense = reactive({
+  travelsKey: '',
+  inputName: '',
+  expenseName: '',
+  category: '',
+  amount: 0,
+  memo: '',
+  date: '',
+})
+
 function toggleTravelDropdown() {
   showTravelDropdown.value = !showTravelDropdown.value
 }
@@ -33,19 +46,6 @@ function selectCurrency(currency) {
 function toggleCategories() {
   showCategories.value = !showCategories.value
 }
-const expense = reactive({
-  travelsKey: '',
-  inputName: '',
-  expenseName: '',
-  category: '',
-  customCategory: '',
-  amount: 0,
-  memo: '',
-  date: '',
-})
-
-const travels = ref([])
-const selectedTravel = ref()
 
 onMounted(async () => {
   try {
@@ -69,25 +69,26 @@ watch(selectedTravel, (newTravel) => {
     expense.date = ''
   }
 })
-watch([() => expense.amount, selectedCurrency], ([newAmount, newCurrency]) => {
-  if (newCurrency && currencyJson.value) {
-    const rateObj = currencyJson.value.find((item) => item.cur_unit === newCurrency)
-    if (rateObj) {
-      const rate = parseFloat(rateObj.deal_bas_r.replace(',', ''))
-      console.log(rate)
-      moneyByWon.value = (newAmount ? newAmount * rate : 0).toFixed(2)
-      moneyByWon.value = parseInt(moneyByWon.value)
-      console.log(moneyByWon.value)
-      if (!newAmount || !newCurrency) {
-        return
-      }
 
-      if (moneyByWon.value >= 1000000000) {
-        alert('금액이 너무 높습니다 다시 입력해주세요!')
-        expense.amount = 0
-        moneyByWon.value = ''
-        return
-      }
+watch([() => expense.amount, selectedCurrency], ([newAmount, newCurrency]) => {
+  if (!newAmount || !newCurrency || !currencyJson.value) return
+
+  const rateObj = currencyJson.value.find((item) => item.cur_unit === newCurrency)
+  if (rateObj) {
+    let rate = parseFloat(rateObj.deal_bas_r.replace(',', ''))
+
+    // (100) 붙은 통화는 100으로 나눔
+    if (newCurrency.includes('(100)')) {
+      rate = rate / 100
+    }
+
+    moneyByWon.value = (newAmount * rate).toFixed(2)
+    moneyByWon.value = parseInt(moneyByWon.value)
+
+    if (moneyByWon.value >= 1000000000) {
+      alert('금액이 너무 높습니다 다시 입력해주세요!')
+      expense.amount = 0
+      moneyByWon.value = ''
     }
   }
 })
@@ -101,6 +102,7 @@ function validateAmount() {
 
 function selectCategory(cat) {
   expense.category = cat
+  showCategories.value = false
 }
 
 async function submitForm() {
@@ -110,15 +112,10 @@ async function submitForm() {
   if (!expense.date) return alert('여행 날짜를 선택해주세요!')
   if (expense.amount === 0 || expense.amount == '') return alert('금액을 입력해주세요!')
 
-  console.log('변환된 금액 (moneyByWon):', moneyByWon.value)
-  console.log('사용자 입력 금액 (expense.amount):', expense.amount)
-
-  // ✅ expense.amount는 건드리지 말고,
-  // 환율 변환 금액은 별도로 서버에 보낼 때 추가
   const payload = {
     ...expense,
     currency: selectedCurrency.value,
-    convertedAmount: moneyByWon.value || null, // 필요하면 변환 금액을 추가
+    // convertedAmount: moneyByWon.value || null,
   }
 
   try {
@@ -175,7 +172,7 @@ function cancelForm() {
                 </div>
 
                 <div class="col-12">
-                  <label for="expenseDate" class="form-label">여행 날짜</label>
+                  <label for="expenseDate" class="form-label">지출 날짜</label>
                   <input
                     id="expenseDate"
                     type="date"

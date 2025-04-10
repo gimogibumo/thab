@@ -1,30 +1,51 @@
 {
   "expense": [
     {
-      "id": "5282",
-      "travelsKey": "4473",
-      "inputName": "일본 오사카 여행",
-      "expenseName": "지하철",
-      "category": "식비",
-      "customCategory": "",
-      "amount": 10,
-      "memo": "",
-      "date": "2025-04-11",
-      "currency": "BHD",
-      "convertedAmount": 388884
-    },
-    {
-      "id": "8e63",
+      "id": "90e0",
       "travelsKey": "4423",
       "inputName": "프랑스 뉴욕 여행",
       "expenseName": "지하철",
-      "category": "식비",
+      "category": "교통",
       "customCategory": "",
-      "amount": 10000,
+      "amount": 1,
       "memo": "",
       "date": "2025-04-04",
+      "currency": "USD"
+    },
+    {
+      "id": "c595",
+      "travelsKey": "4473",
+      "inputName": "일본 오사카 여행",
+      "expenseName": "소호 거리 쇼핑",
+      "category": "쇼핑",
+      "amount": 1,
+      "memo": "",
+      "date": "2025-04-10",
       "currency": "BHD",
-      "convertedAmount": 38888400
+      "convertedAmount": 3888
+    },
+    {
+      "id": "1a9b",
+      "travelsKey": "4473",
+      "inputName": "일본 오사카 여행",
+      "expenseName": "지하철",
+      "category": "교통",
+      "amount": 1,
+      "memo": "",
+      "date": "2025-04-04",
+      "currency": "JPY(100)",
+      "convertedAmount": 990
+    },
+    {
+      "id": "4e87",
+      "travelsKey": "4473",
+      "inputName": "일본 오사카 여행",
+      "expenseName": "호텔",
+      "category": "숙박",
+      "amount": 100000,
+      "memo": "",
+      "date": "2025-04-05",
+      "currency": "JPY(100)"
     }
   ],
   "travels": [

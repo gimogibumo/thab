@@ -2,6 +2,7 @@
 import { ref, reactive, watch, onMounted, computed } from 'vue'
 import axios from 'axios'
 import CustomDropdown from '@/components/CustomDropdown.vue'
+import { convertCurrency } from '@/utils/exchangeConverter.js'
 
 const filter = reactive({
   selectCategory: '',
@@ -15,6 +16,13 @@ const editedExpense = ref({})
 const travels = ref([])
 const isModalOpen = ref(false)
 const modalData = ref({})
+const convertedAmounts = reactive({})
+
+watch(editedExpense, async (newVal) => {
+  if (newVal.amount && newVal.currency) {
+    convertedAmount.value = await convertCurrency(newVal.amount, newVal.currency, 'KRW')
+  }
+})
 
 // ✅ 선택된 카테고리 배열
 const categoryList = ['숙박', '식비', '교통', '관광', '쇼핑', '기타']
@@ -41,9 +49,9 @@ onMounted(() => {
   findByTravel()
 })
 function validateAmount() {
-  if (expense.amount !== '') {
-    expense.amount = Math.floor(Number(expense.amount))
-    if (expense.amount < 1) expense.amount = 1
+  if (editedExpense.value.amount !== '') {
+    editedExpense.value.amount = Math.floor(Number(editedExpense.value.amount))
+    if (editedExpense.value.amount < 1) editedExpense.value.amount = 1
   }
 }
 
@@ -84,6 +92,12 @@ async function listExpense() {
     }
 
     expenseList.value = result
+    // 🛠️ 각 지출 항목에 대해 환율 변환
+    for (const item of result) {
+      if (item.amount && item.currency) {
+        convertedAmounts[item.id] = await convertCurrency(item.amount, item.currency, 'KRW')
+      }
+    }
   } catch (err) {
     console.log(err)
   }
@@ -230,12 +244,7 @@ function closeModal() {
                   </div>
                   <div class="col-md-2">
                     <select v-model="editedExpense.category" class="form-select">
-                      <option>숙박</option>
-                      <option>식비</option>
-                      <option>교통</option>
-                      <option>쇼핑</option>
-                      <option>관광</option>
-                      <option>기타</option>
+                      <option v-for="cat in categoryList" :key="cat" :value="cat">{{ cat }}</option>
                     </select>
                   </div>
                   <div class="col-md-2">
@@ -275,7 +284,9 @@ function closeModal() {
                     <div class="fw-bold">
                       {{ item.amount.toLocaleString() }} {{ item.currency }}
                     </div>
-                    <div class="text-muted">{{ item.convertedAmount.toLocaleString() }}원</div>
+                    <div class="text-muted">
+                      {{ convertedAmounts[item.id] ? parseInt(convertedAmounts[item.id]) : '-' }}원
+                    </div>
                   </div>
 
                   <!-- 버튼 -->
