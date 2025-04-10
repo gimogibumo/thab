@@ -156,4 +156,8 @@ const navCategories = [
 .content {
   transition: 0.3s ease;
 }
+
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
 </style>
