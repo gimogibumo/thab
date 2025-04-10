@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 import axios from 'axios'
 
 import { useAuthStore } from '@/stores/auth'
+
 const authStore = useAuthStore()
 
 const email = authStore.user.email
@@ -14,13 +15,40 @@ const name = authStore.user.name
 
 const modalCheck = ref(false)
 const user = ref(null)
+const travelNoti = ref(null)
 
 onMounted(async () => {
-  const userRes = await axios.get('http://localhost:3000/users')
+  try {
+    const userId = authStore.user.id
+    const userRes = await axios.get(`http://localhost:3000/users/${userId}`)
+    user.value = userRes.data
+    console.log(user.value)
 
-  user.value = userRes.data
-  console.log(user.value)
+    travelNoti.value = user.value.travelToggle
+
+    console.log(travelNoti.value + "@@@@@@@")
+  } catch (error) {
+    console.error('사용자 데이터 로딩 실패:', error)
+  }
 })
+
+
+const toggleTravelNoti = async () => {
+  try {
+    const userId = authStore.user.id
+    console.log('Travel Noti Before:', travelNoti.value);
+    travelNoti.value = !travelNoti.value
+
+    await axios.patch(`http://localhost:3000/users/${userId}`, {
+      travelToggle: travelNoti.value,
+    })
+
+    console.log('여행 알림 상태 업데이트 완료', travelNoti.value)
+  } catch (error) {
+    console.error('업데이트 실패', error)
+    travelNoti.value = !travelNoti.value
+  }
+}
 
 // 모달 열기
 function modalOpen() {
@@ -32,6 +60,8 @@ function modalClose() {
   modalCheck.value = false
 }
 
+
+
 </script>
 
 <template>
@@ -42,7 +72,7 @@ function modalClose() {
         <img src="https://placehold.co/100x100" alt="profile">
         <div class="top-info">
           <div class="top-nickname">{{ nickname }}</div>
-<!--          <div class="register-date">가입일: 2023.02.02</div>-->
+          <!--          <div class="register-date">가입일: 2023.02.02</div>-->
         </div>
       </div>
       <hr>
@@ -80,22 +110,28 @@ function modalClose() {
           <div class="noti-title">여행 일정 알림</div>
           <div class="noti-content">여행 시작일이 다가오면 알림</div>
         </div>
-        <input role="switch" type="checkbox" class="noti-toggle" />
+        <input
+          role="switch"
+          type="checkbox"
+          class="noti-toggle"
+          v-model="travelNoti"
+          @click="toggleTravelNoti"
+        />
       </div>
-      <div class="noti-box">
-        <div>
-          <div class="noti-title">예산 경고 알림</div>
-          <div class="noti-content">여행 예산의 80% 이상 사용시 알림</div>
-        </div>
-        <input role="switch" type="checkbox" class="noti-toggle" />
-      </div>
-      <div class="noti-box">
-        <div>
-          <div class="noti-title">저축 목표 알림</div>
-          <div class="noti-content">저축 목표 달성률 90% 도달시 알림</div>
-        </div>
-        <input role="switch" type="checkbox" class="noti-toggle" />
-      </div>
+      <!--      <div class="noti-box">
+              <div>
+                <div class="noti-title">예산 경고 알림</div>
+                <div class="noti-content">여행 예산의 80% 이상 사용시 알림</div>
+              </div>
+              <input role="switch" type="checkbox" class="noti-toggle" />
+            </div>
+            <div class="noti-box">
+              <div>
+                <div class="noti-title">저축 목표 알림</div>
+                <div class="noti-content">저축 목표 달성률 90% 도달시 알림</div>
+              </div>
+              <input role="switch" type="checkbox" class="noti-toggle" />
+            </div>-->
     </div>
     <div class="bottom">
       <div>
@@ -113,11 +149,11 @@ function modalClose() {
           <div class="modal-title">비밀번호 변경</div>
           <div>
             <div class="modal-content">현재 비밀번호</div>
-            <input class="modal-input" type="text" v-model="pwd"/>
+            <input class="modal-input" type="text" v-model="pwd" />
             <div class="modal-content">새 비밀번호</div>
-            <input class="modal-input" type="text" v-model="newPwd"/>
+            <input class="modal-input" type="text" v-model="newPwd" />
             <div class="modal-content">새 비밀번호 확인</div>
-            <input class="modal-input" type="text" v-model="newPwdAgain"/>
+            <input class="modal-input" type="text" v-model="newPwdAgain" />
           </div>
         </div>
         <div class="modal-btn">
