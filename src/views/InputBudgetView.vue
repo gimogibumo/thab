@@ -11,11 +11,11 @@ const selectedId = ref(null)
 const selectedTravel = ref(null)
 
 const categories = [
-  { id: 1, name: '식비', icon: 'fork-knife' },
-  { id: 2, name: '교통', icon: 'bus' },
-  { id: 3, name: '숙박', icon: 'bed' },
-  { id: 4, name: '쇼핑', icon: 'shopping-bag-open' },
-  { id: 5, name: '관광', icon: 'camera' },
+  { id: 1, name: '식비' },
+  { id: 2, name: '교통' },
+  { id: 3, name: '숙박' },
+  { id: 4, name: '쇼핑' },
+  { id: 5, name: '관광' },
   { id: 6, name: '기타' }
 ]
 const selectedCategory = ref(null)
@@ -37,21 +37,25 @@ onMounted(async () => {
 
     const travelList = travelRes.data.map(travel => {
       const matchedIncome = incomeRes.data.find(i => i.travelId === travel.id)
-      const totalSaved = matchedIncome ? matchedIncome.saved : 0
+      const totalSaved = matchedIncome ? matchedIncome.income : 0
       const details = matchedIncome ? matchedIncome.details : []
 
       return {
         ...travel,
-        saved: totalSaved,
+        income: totalSaved,
         details
       }
     })
 
     travels.value = travelList
     income.value = incomeRes.data
-
-    // userEmail에 맞는 여행 내역만 필터링
-    userTravels.value = travels.value.filter(travel => travel.userEmail === userEmail)
+    userTravels.value = travels.value
+      .filter(travel => travel.userEmail === userEmail) // 사용자 이메일로 필터링
+      .filter(travel => {
+        const currentDate = new Date() // 현재 날짜
+        const travelStartDate = new Date(travel.startDate) // 여행 시작 날짜
+        return travelStartDate > currentDate // 여행 시작 날짜가 현재 날짜 이후인 것만 필터링
+      })
 
     console.log(userEmail)
     console.log(userTravels.value)
@@ -89,8 +93,8 @@ async function addIncome() {
     const oldDetail = selectedTravel.value.details[selectedDetailIndex.value]
 
     // 저장 금액 업데이트
-    selectedTravel.value.saved -= oldDetail.amount
-    selectedTravel.value.saved += amount
+    selectedTravel.value.income -= oldDetail.amount
+    selectedTravel.value.income += amount
 
     const updatedDetail = {
       ...oldDetail,
@@ -105,19 +109,20 @@ async function addIncome() {
     selectedDetailIndex.value = null
 
     if (existing) {
+      // 기존 데이터 수정 반영
       existing.details = [...selectedTravel.value.details]
-      existing.saved = selectedTravel.value.saved
+      existing.income = selectedTravel.value.income
 
       try {
+        // 서버에 수정된 내역 반영
         await axios.patch(`http://localhost:3000/income/${existing.id}`, {
           details: existing.details,
-          saved: existing.saved
+          income: existing.income
         })
       } catch (err) {
         console.error('수정 저장 실패:', err)
       }
     }
-
   } else {
     // 새로 추가하는 경우
     const newDetail = {
@@ -128,13 +133,15 @@ async function addIncome() {
     }
 
     if (existing) {
-      existing.saved += amount
+      // 기존 데이터에 새 수입 추가
+      existing.income += amount
       existing.details.unshift(newDetail)
 
       try {
+        // 서버에 수정된 내역 반영
         await axios.patch(`http://localhost:3000/income/${existing.id}`, {
           details: existing.details,
-          saved: existing.saved
+          income: existing.income
         })
       } catch (err) {
         console.error('저축 수정 실패:', err)
@@ -142,32 +149,53 @@ async function addIncome() {
 
       // selectedTravel에 새로운 내역 추가
       selectedTravel.value.details = [...existing.details] // 중복된 상태 업데이트 방지
-      selectedTravel.value.saved = existing.saved
+      selectedTravel.value.income = existing.income
 
     } else {
       const newIncome = {
         travelId: selectedTravel.value.id,
-        saved: amount,
-        category: category,
+        income: amount,
         details: [newDetail]
       }
 
       try {
-        const res = await axios.post('http://localhost:3000/income', newIncome)
-        income.value.push(res.data)
+        // 새 수입 데이터 서버에 추가
+        const incomeRes = await axios.post('http://localhost:3000/income', newIncome)
+        income.value.push(incomeRes.data)
+
+
+        const travelId = selectedTravel.value.id
+        console.log('흠ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ' + travelId)
+        const travelRes = await axios.patch(`http://localhost:3000/travel/${travelId}`, newIncome)
+        travels.value.push(travelRes.data)
+
       } catch (err) {
         console.error('새 저축 추가 실패:', err)
       }
 
       selectedTravel.value.details = [newDetail]
-      selectedTravel.value.saved = amount
+      selectedTravel.value.income = amount
     }
   }
 
-  // 여행 내역 업데이트
+// 여행 내역 업데이트
   const travelItem = travels.value.find(t => t.id === selectedTravel.value.id)
   if (travelItem) {
-    travelItem.saved = selectedTravel.value.saved
+    // 클라이언트 측에서 income 갱신
+    travelItem.income = selectedTravel.value.income
+
+    // totalIncome 갱신
+    travelItem.totalIncome = travelItem.details.reduce((total, detail) => total + detail.amount, 0)
+
+    // 서버에 업데이트된 여행 내역 전송
+    try {
+      await axios.patch(`http://localhost:3000/travel/${travelItem.id}`, {
+        income: travelItem.income,
+        totalIncome: travelItem.totalIncome
+      })
+    } catch (err) {
+      console.error('여행 내역 업데이트 실패:', err)
+    }
   }
 
   // 초기화
@@ -219,29 +247,43 @@ async function deleteDetail(index) {
   if (!selectedTravel.value) return
 
   // 실제 삭제
-  selectedTravel.value.details.splice(index, 1)
+  const deletedDetail = selectedTravel.value.details.splice(index, 1)[0]  // 삭제된 내역을 변수로 저장
 
   // 저장액 재계산
-  selectedTravel.value.saved = selectedTravel.value.details.reduce((sum, d) => sum + d.amount, 0)
+  selectedTravel.value.income = selectedTravel.value.details.reduce((sum, d) => sum + d.amount, 0)
 
-  // income에도 반영
   const existing = income.value.find(i => i.travelId === selectedTravel.value.id)
   if (existing) {
     existing.details = [...selectedTravel.value.details]
-    existing.saved = selectedTravel.value.saved
+    existing.income = selectedTravel.value.income
 
     try {
+      // 서버에서 내역 삭제 후 income 갱신
       await axios.patch(`http://localhost:3000/income/${existing.id}`, {
         details: existing.details,
-        saved: existing.saved
+        income: existing.income
       })
     } catch (err) {
       console.error('삭제 후 저장 실패:', err)
     }
   }
+
+  // 여행 내역 업데이트
   const travelItem = travels.value.find(t => t.id === selectedTravel.value.id)
   if (travelItem) {
-    travelItem.saved = selectedTravel.value.saved
+    travelItem.income = selectedTravel.value.income
+    // totalIncome 갱신
+    travelItem.totalIncome = travelItem.details.reduce((total, detail) => total + detail.amount, 0)
+
+    try {
+      // 서버에 갱신된 여행 내역 보내기
+      await axios.patch(`http://localhost:3000/travel/${travelItem.id}`, {
+        income: travelItem.income,
+        totalIncome: travelItem.totalIncome
+      })
+    } catch (err) {
+      console.error('여행 내역 갱신 실패:', err)
+    }
   }
 }
 
@@ -261,17 +303,17 @@ async function deleteDetail(index) {
             <div class="date">목표일: {{ travel.startDate }}</div>
           </div>
           <div class="amount">
-            <div class="saved">{{ travel.saved.toLocaleString() }}원</div>
+            <div class="income">{{ travel.income.toLocaleString() }}원</div>
             <div class="target">목표: {{ travel.totalBudget.toLocaleString() }}원</div>
           </div>
         </div>
         <div class="progress-bar">
           <div class="progress"
-               :style="{ width: Math.floor((travel.saved / travel.totalBudget) * 100) + '%' }"></div>
+               :style="{ width: Math.floor((travel.income / travel.totalBudget) * 100) + '%' }"></div>
         </div>
         <div class="bottom">
-          <div>{{ Math.floor((travel.saved / travel.totalBudget) * 100) }}% 달성</div>
-          <div>잔여: {{ (travel.totalBudget - travel.saved).toLocaleString() }}원</div>
+          <div>{{ Math.floor((travel.income / travel.totalBudget) * 100) }}% 달성</div>
+          <div>잔여: {{ (travel.totalBudget - travel.income).toLocaleString() }}원</div>
         </div>
       </div>
     </div>
@@ -412,7 +454,7 @@ async function deleteDetail(index) {
   text-align: right;
 }
 
-.saved {
+.income {
   font-weight: bold;
   font-size: 15px;
   color: #7B5E48;
@@ -678,7 +720,7 @@ async function deleteDetail(index) {
     font-size: 12px;
   }
 
-  .saved {
+  .income {
     font-size: 14px;
   }
 
@@ -710,7 +752,7 @@ async function deleteDetail(index) {
     font-size: 14px;
   }
 
-  .saved {
+  .income {
     font-size: 13px;
   }
 
