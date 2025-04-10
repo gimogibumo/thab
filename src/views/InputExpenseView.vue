@@ -17,7 +17,7 @@ const travels = ref([])
 const selectedTravel = ref()
 
 const expense = reactive({
-  travelsKey: '',
+  travelId: '',
   inputName: '',
   expenseName: '',
   category: '',
@@ -67,7 +67,7 @@ onMounted(async () => {
 watch(selectedTravel, (newTravel) => {
   if (newTravel) {
     expense.inputName = newTravel.title
-    expense.travelsKey = newTravel.id
+    expense.travelId = newTravel.id
     expense.date = ''
   }
 })
@@ -113,9 +113,9 @@ async function submitForm() {
   if (!expense.category) return alert('카테고리를 선택해주세요!')
   if (!expense.date) return alert('여행 날짜를 선택해주세요!')
   if (expense.amount === 0 || expense.amount == '') return alert('금액을 입력해주세요!')
-
   const payload = {
     ...expense,
+    moneyByWon: moneyByWon.value,
     currency: selectedCurrency.value,
     // convertedAmount: moneyByWon.value || null,
   }
@@ -154,10 +154,6 @@ function cancelForm() {
                       @click="toggleTravelDropdown"
                     >
                       <span>{{ selectedTravel?.title || '여행을 선택하세요' }}</span>
-                      <i
-                        class="bi"
-                        :class="showTravelDropdown ? 'bi-chevron-up' : 'bi-chevron-down'"
-                      ></i>
                     </button>
                     <ul
                       class="dropdown-menu w-100"
@@ -207,10 +203,6 @@ function cancelForm() {
                       @click="toggleCategories"
                     >
                       <span>{{ expense.category || '카테고리를 선택하세요' }}</span>
-                      <i
-                        class="bi"
-                        :class="showCategories ? 'bi-chevron-up' : 'bi-chevron-down'"
-                      ></i>
                     </button>
                     <ul
                       class="dropdown-menu w-100"
