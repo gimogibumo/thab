@@ -13,13 +13,16 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import TravelForm1 from '@/components/TravelForm1.vue'
 import TravelForm2 from '@/components/TravelForm2.vue'
 import TravelForm3 from '@/components/TravelForm3.vue'
  
+const authStore = useAuthStore()
 const step = ref(1)
 
 const formData = ref({
+  userEmail : authStore.user?.email || '',
   title: '',
   startDate: '',
   endDate: '',
