@@ -1,3 +1,4 @@
+
 import exchangeRates from '@/../public/exchangeRates.json'
 
 const parseRate = (rateStr) => {
@@ -9,6 +10,7 @@ const parseRate = (rateStr) => {
 
 // 100단위 기준 통화 목록
 const perHundredCurrencies = ['JPY(100)', 'IDR(100)']
+
 
 /**
  * 환율 변환 함수

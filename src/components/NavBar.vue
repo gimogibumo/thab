@@ -1,9 +1,11 @@
 <template>
   <div :class="['sidebar', isCollapsed ? 'collapsed' : 'expanded']">
     <div v-if="!isCollapsed" class="text-center py-4 border-bottom">
-      <div class="fs-2 fw-bold">THAB</div>
+      <router-link to="/" class="fs-2 fw-bold text-white text-decoration-none d-inline-block">
+        THAB
+      </router-link>
       <div class="profile-circle mx-auto mt-3"></div>
-      <div class="mt-2 fw-semibold">김이윤박</div>
+      <div class="mt-2 fw-semibold" v-text="userInfo.name"></div>
       <div class="text-muted small">도쿄 여행 중 (2/5)</div>
     </div>
 
@@ -23,7 +25,7 @@
     </div>
 
     <div class="px-3 mb-3 d-flex justify-content-between">
-      <button v-if="!isCollapsed" class="btn btn-danger w-75">
+      <button v-if="!isCollapsed" class="btn btn-danger w-75" @click="loggingOut">
         <i class="bi bi-box-arrow-right"></i> <span v-if="!isCollapsed">로그아웃</span>
       </button>
       <button class="btn btn-light" @click="toggleSidebar">
@@ -34,14 +36,23 @@
 </template>
 
 <script setup>
+import { useAuthStore } from '@/stores/auth'
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+// import router from '@/router'
 
+const authStore = useAuthStore()
+const userInfo = authStore.user
+console.log(userInfo.name)
 const isCollapsed = ref(false)
 const toggled = ref(false)
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
   toggled.value = !toggled.value
   console.log(isCollapsed.value)
+}
+const loggingOut = () => {
+  authStore.logout()
+  window.location.reload()
 }
 const handleResize = () => {
   if (window.innerWidth <= 1024 || toggled.value) {
@@ -80,14 +91,7 @@ const navCategories = [
   },
   {
     name: '리포트',
-    items: [
-      { name: '일별 리포트', path: '/daily-report', icon: 'bi bi-graph-up-arrow' },
-      { name: '통계', path: '/stats', icon: 'bi bi-bar-chart' },
-    ],
-  },
-  {
-    name: '설정',
-    items: [{ name: '환율 설정', path: '/settings', icon: 'bi bi-gear' }],
+    items: [{ name: '통계', path: '/stats', icon: 'bi bi-bar-chart' }],
   },
 ]
 </script>
@@ -151,5 +155,9 @@ const navCategories = [
 
 .content {
   transition: 0.3s ease;
+}
+
+.sidebar::-webkit-scrollbar {
+  display: none;
 }
 </style>

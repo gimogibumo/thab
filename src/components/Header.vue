@@ -12,12 +12,16 @@
 </template>
 
 <script setup>
+import {useRouter} from 'vue-router'
+const router = useRouter()
+
 const onNotificationClick = () => {
   alert('알림 페이지로 이동합니다.')
 }
 
 const onProfileClick = () => {
-  alert('마이페이지로 이동합니다.')
+  // alert('마이페이지로 이동합니다.')
+  router.push('/my_page')
 }
 </script>
 
