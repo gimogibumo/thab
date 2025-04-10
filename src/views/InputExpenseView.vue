@@ -1,8 +1,9 @@
 <script setup>
 import { ref, reactive, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 import axios from 'axios'
-
+const authStore = useAuthStore()
 const router = useRouter()
 const categories = ['숙박', '식비', '교통', '관광', '쇼핑', '기타']
 const showCategories = ref(false)
@@ -49,7 +50,7 @@ function toggleCategories() {
 
 onMounted(async () => {
   try {
-    const res = await axios.get('http://localhost:3000/travels')
+    const res = await axios.get(`http://localhost:3000/travel?userEmail=${authStore.user.email}`)
     travels.value = res.data
   } catch (err) {
     console.error(err)

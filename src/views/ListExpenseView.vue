@@ -1,9 +1,11 @@
 <script setup>
 import { ref, reactive, watch, onMounted, computed } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 import axios from 'axios'
 import CustomDropdown from '@/components/CustomDropdown.vue'
 import { convertCurrency } from '@/utils/exchangeConverter.js'
 
+const authStore = useAuthStore()
 const filter = reactive({
   selectCategory: '',
   searchTitle: '',
@@ -57,8 +59,12 @@ function validateAmount() {
 
 async function findByTravel() {
   try {
-    const res = await axios.get('http://localhost:3000/travels')
+    const res = await axios.get(`http://localhost:3000/travel?userEmail=${authStore.user.email}`)
+    console.log(authStore.user)
+    console.log(res)
     travels.value = res.data
+    console.log(travels.value)
+    console.log(travels.value.length)
   } catch (err) {
     console.log(err)
   }
@@ -180,7 +186,7 @@ function closeModal() {
             >
               {{ filter.selectedTravelJson ? filter.selectedTravelJson.title : '전체 여행' }}
             </button>
-            <ul class="dropdown-menu w-100 shadow" aria-labelledby="travelDropdown">
+            <ul class="dropdown-menu show w-100 shadow" aria-labelledby="travelDropdown">
               <li>
                 <a
                   class="dropdown-item py-2 text-brown fw-bold"
