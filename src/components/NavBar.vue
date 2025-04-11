@@ -6,7 +6,6 @@
       </router-link>
       <div class="profile-circle mx-auto mt-3"></div>
       <div class="mt-2 fw-semibold" v-text="userInfo.name"></div>
-      <div class="text-muted small">도쿄 여행 중 (2/5)</div>
     </div>
 
     <div class="flex-grow-1 overflow-auto">
@@ -38,7 +37,6 @@
 <script setup>
 import { useAuthStore } from '@/stores/auth'
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
-// import router from '@/router'
 
 const authStore = useAuthStore()
 const userInfo = authStore.user
@@ -106,6 +104,7 @@ const navCategories = [
   overflow-y: auto;
   background-color: #8b6f5c;
   transition: width 0.3s ease;
+  z-index: 100000;
 }
 
 .collapsed {
