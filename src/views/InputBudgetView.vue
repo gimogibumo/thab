@@ -335,7 +335,7 @@ async function deleteDetail(index) {
             <button @click="deleteDetail(index)">삭제</button>
           </div>
         </div>
-        <button class="open-modal-btn" @click="modalOpen(selectedTravel)">저축하기</button>
+        <button class="open-modal-btn" @click="modalOpen(selectedTravel)">모으기</button>
       </div>
     </div>
 
@@ -345,7 +345,7 @@ async function deleteDetail(index) {
         <div class="modal-content">
           <div class="modal-title">{{ selectedTravel?.title }}에 저축하기</div>
           <div>
-            <div class="modal-content">저축 금액</div>
+            <div class="modal-content">금액</div>
             <input class="modal-input" type="text" v-model="inputBudget"
                    placeholder="금액을 입력하세요" />
 
