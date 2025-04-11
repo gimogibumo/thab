@@ -77,14 +77,14 @@ const signup = () => {
 <style scoped>
 .login-wrapper {
   min-height: 100vh;
-  background-color: #fff8f2;
+  background-color: #ffffff;
 }
 
 /* 왼쪽 소개 영역 */
 .intro-section {
   width: 50%;
   min-height: 100vh;
-  background-color: #8b6f5c;
+  background-color: #205781;
   color: white;
 }
 
@@ -104,18 +104,31 @@ const signup = () => {
 .login-card {
   width: 100%;
   max-width: 400px;
-  background-color: #fff;
+  background-color: #ffffff;
   border-radius: 12px;
-  border: 1px solid #e4d3c1;
+  border: 1px solid #CFDDE8;
 }
 
 .btn-brown {
-  background-color: #8b6f5c;
+  background-color: #205781;
   color: white;
   border: none;
+  transition: all 0.2s ease;
 }
 
 .btn-brown:hover {
-  background-color: #7b5c4a;
+  background-color: #173E5F;
 }
+
+.btn-outline-secondary {
+  border: 2px solid #205781;
+  color: #205781;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #4A7AA4;
+  color: white;
+}
+
 </style>

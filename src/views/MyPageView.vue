@@ -281,6 +281,7 @@ const updatePwd = async () => {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 50px;
+  color: #0F2E47;
 }
 
 /* ========== 공통 스타일 ========== */
@@ -293,7 +294,7 @@ img {
 .bottom {
   background: #fff;
   border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(15, 46, 71, 0.2);
   padding: 30px;
   width: 80%;
   margin: 0 auto 50px;
@@ -309,22 +310,26 @@ img {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 5px;
+  color: #173E5F;
 }
 
 .info-content,
 .noti-content {
   font-size: 15px;
+  color: #205781;
 }
 
 .top-nickname {
   font-size: 22px;
   font-weight: bold;
+  color: #0F2E47;
 }
 
 .setting-title {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 20px;
+  color: #173E5F;
 }
 
 .top-info {
@@ -349,6 +354,7 @@ img {
   outline: none;
   box-shadow: none;
   background-color: transparent;
+  color: #0F2E47;
 }
 
 .btn.btn-outline-secondary {
@@ -366,7 +372,7 @@ button {
 }
 
 .btn-info-update {
-  background: #8b6f5c;
+  background: #205781;
   color: white;
   flex: 1;
   margin-right: 10px;
@@ -374,48 +380,27 @@ button {
 
 .btn-pwd-update {
   background: white;
-  color: #8b6f5c;
-  border: 1px #8b6f5c solid;
+  color: #205781;
+  border: 1px solid #205781;
   flex: 1;
 }
 
 .btn-logout {
-  border: 1px #7b5c4a solid;
+  border: 1px solid #4A7AA4;
   padding: 4px 15px;
   background: white;
-}
-
-.btn.btn-outline-secondary {
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn.btn-outline-secondary:hover {
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
+  color: #4A7AA4;
 }
 
 .btn.btn-outline-secondary i {
   font-size: 1.2rem;
-  color: #8b6f5c;
+  color: #205781;
   transition: color 0.2s ease;
 }
 
 .btn.btn-outline-secondary:hover i {
-  color: #8b6f5c;
+  color: #4A7AA4;
   opacity: 1;
-}
-
-.btn.btn-outline-secondary:active {
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
 }
 
 /* ========== 토글 스위치 ========== */
@@ -424,7 +409,7 @@ button {
   position: relative;
   width: 2.25em;
   height: 1.25em;
-  border: max(2px, 0.1em) solid gray;
+  border: max(2px, 0.1em) solid #4A7AA4;
   border-radius: 1.25em;
 }
 
@@ -435,14 +420,14 @@ button {
   width: 1em;
   height: 1em;
   border-radius: 50%;
-  background-color: gray;
+  background-color: #4A7AA4;
   transform: scale(0.8);
   transition: left 250ms linear;
 }
 
 [type='checkbox']:checked {
-  background-color: #8b6f5c;
-  border-color: #7b5e48;
+  background-color: #205781;
+  border-color: #173E5F;
 }
 
 [type='checkbox']:checked::before {
@@ -466,12 +451,12 @@ button {
 }
 
 [type='checkbox']:focus-visible {
-  outline: max(2px, 0.1em) solid #7b5c4a;
+  outline: max(2px, 0.1em) solid #205781;
   outline-offset: max(2px, 0.1em);
 }
 
 [type='checkbox']:enabled:hover {
-  box-shadow: 0 0 0 max(4px, 0.2em) lightgray;
+  box-shadow: 0 0 0 max(4px, 0.2em) #CFDDE8;
 }
 
 /* ========== 모달 ========== */
@@ -490,7 +475,7 @@ button {
   border-radius: 10px;
   width: 400px;
   padding: 30px 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(15, 46, 71, 0.15);
   position: relative;
 }
 
@@ -499,10 +484,12 @@ button {
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
+  color: #0F2E47;
 }
 
 .modal-content {
   margin-bottom: 10px;
+  color: #205781;
 }
 
 .modal-input {
@@ -513,7 +500,7 @@ button {
   width: 100%;
   padding: 12px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid #CFDDE8;
   border-radius: 8px;
 }
 
@@ -530,12 +517,12 @@ button {
 }
 
 .cancel {
-  background: #f4f0ed;
-  color: #8b6f5c;
+  background: #CFDDE8;
+  color: #205781;
 }
 
 .save {
-  background: #8b6f5c;
+  background: #205781;
   color: white;
 }
 
@@ -552,6 +539,8 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: #F8FAFC;
+  color: #0F2E47;
 }
 
 fieldset {
@@ -574,3 +563,4 @@ label {
   box-sizing: border-box;
 }
 </style>
+
