@@ -68,7 +68,7 @@ onMounted(async () => {
           image_type: 'photo',
           per_page: 5,
           orientation: 'horizontal',
-        }
+        },
       })
       const hits = response.data?.hits
       if (hits && hits.length > 0) {
@@ -109,7 +109,6 @@ const subAmount = computed(() => {
   return 0
 })
 
-
 const progressLabel = computed(() => {
   if (props.status === 'ongoing') return '예산 대비 지출'
   if (props.status === 'upcoming') return '목표 예산 달성률'
@@ -140,7 +139,7 @@ const goToManagePage = () => {
   max-width: 100%;
   box-sizing: border-box;
   padding: 0;
-  margin: 0 auto;
+  margin: 0;
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -154,6 +153,10 @@ const goToManagePage = () => {
 .card.small {
   max-width: 100%;
   min-height: 600px;
+}
+
+.card.small:only-child {
+  max-width: 600px;
 }
 
 .card.large {
@@ -192,7 +195,7 @@ const goToManagePage = () => {
   top: 20px;
   right: 20px;
   background-color: #ffffff;
-  color: #0F2E47;
+  color: #0f2e47;
   padding: 5px 10px;
   border-radius: 5px;
   font-size: 14px;
@@ -239,13 +242,13 @@ const goToManagePage = () => {
 
 .progress {
   height: 100%;
-  background-color: #0F2E47;
+  background-color: #0f2e47;
 }
 
 .progress-percentage {
   font-weight: bold;
   font-size: 20px;
-  color: #0F2E47;
+  color: #0f2e47;
 }
 
 .budget-info {
@@ -293,7 +296,7 @@ const goToManagePage = () => {
   height: 56px;
   width: 100%;
   padding: 10px;
-  background-color: #0F2E47;
+  background-color: #0f2e47;
   color: white;
   border: none;
   border-radius: 5px;
