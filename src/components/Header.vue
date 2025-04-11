@@ -117,11 +117,8 @@ onMounted(async () => {
     }
 
     hasAlert.value =
-      alerts.value.travel ||
-      alerts.value.budget ||
-      alerts.value.income ||
-      alerts.value.travelSoon !== null
-    alerts.value.budgetWarning !== null
+      (alerts.travel === true && alerts.value.travelSoon !== null) ||
+      (alerts.value.budget === true && alerts.value.budgetWarning !== null)
   } catch (err) {
     console.error('데이터 로딩 오류:', err)
   }
@@ -176,7 +173,7 @@ onMounted(async () => {
 }
 
 .mypage {
-  background-color: #8b6f5c;
+  background-color: #0f2e47;
   color: white;
 }
 

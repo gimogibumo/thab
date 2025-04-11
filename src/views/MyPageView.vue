@@ -14,7 +14,7 @@ const name = authStore.user.name
 const user = ref(null)
 const travelNoti = ref(null)
 const showPassword = ref(false)
-
+const budgetNoti = ref(null)
 const modalCheck = ref(false)
 
 const pwd = ref('')
@@ -35,23 +35,22 @@ onMounted(async () => {
     user.value = userRes.data
     console.log(user.value)
 
-    travelNoti.value = user.value.travelToggle
+    travelNoti.value = user.value.travel
+    budgetNoti.value = user.value.budget
 
-    console.log(travelNoti.value + "@@@@@@@")
+    console.log(travelNoti.value + '@@@@@@@')
   } catch (error) {
     console.error('사용자 데이터 로딩 실패:', error)
   }
 })
-
-
 const toggleTravelNoti = async () => {
   try {
     const userId = authStore.user.id
-    console.log('Travel Noti Before:', travelNoti.value);
+    console.log('Travel Noti Before:', travelNoti.value)
     travelNoti.value = !travelNoti.value
 
     await axios.patch(`http://localhost:3000/users/${userId}`, {
-      travelToggle: travelNoti.value,
+      travel: travelNoti.value,
     })
 
     console.log('여행 알림 상태 업데이트 완료', travelNoti.value)
@@ -60,7 +59,22 @@ const toggleTravelNoti = async () => {
     travelNoti.value = !travelNoti.value
   }
 }
+const toggleBudgetNoti = async () => {
+  try {
+    const userId = authStore.user.id
+    console.log('Travel Noti Before:', budgetNoti.value)
+    budgetNoti.value = !budgetNoti.value
 
+    await axios.patch(`http://localhost:3000/users/${userId}`, {
+      budget: budgetNoti.value,
+    })
+
+    console.log('여행 알림 상태 업데이트 완료', budgetNoti.value)
+  } catch (error) {
+    console.error('업데이트 실패', error)
+    budgetNoti.value = !budgetNoti.value
+  }
+}
 // 모달 열기
 function modalOpen() {
   modalCheck.value = true
@@ -202,20 +216,28 @@ const updatePwd = async () => {
           @click="toggleTravelNoti"
         />
       </div>
-      <!--      <div class="noti-box">
-              <div>
-                <div class="noti-title">예산 경고 알림</div>
-                <div class="noti-content">여행 예산의 80% 이상 사용시 알림</div>
-              </div>
-              <input role="switch" type="checkbox" class="noti-toggle" />
-            </div>
-            <div class="noti-box">
-              <div>
-                <div class="noti-title">저축 목표 알림</div>
-                <div class="noti-content">저축 목표 달성률 90% 도달시 알림</div>
-              </div>
-              <input role="switch" type="checkbox" class="noti-toggle" />
-            </div>-->
+      <div class="noti-box">
+        <div>
+          <div class="noti-title">예산 경고 알림</div>
+          <div class="noti-content">여행 예산의 80% 이상 사용시 알림</div>
+        </div>
+        <input
+          role="switch"
+          type="checkbox"
+          class="noti-toggle"
+          v-model="budgetNoti"
+          @click="toggleBudgetNoti"
+        />
+      </div>
+
+      <!-- <div class="noti-box">
+        <div>
+          <div class="noti-title">저축 목표 알림</div>
+          <div class="noti-content">저축 목표 달성률 90% 도달시 알림</div>
+        </div>
+        <input role="switch" type="checkbox" class="noti-toggle" />
+      </div>
+       -->
     </div>
     <div class="bottom">
       <div>
@@ -366,7 +388,7 @@ button {
 }
 
 .btn-info-update {
-  background: #8b6f5c;
+  background: #0f2e47;
   color: white;
   flex: 1;
   margin-right: 10px;
@@ -374,13 +396,13 @@ button {
 
 .btn-pwd-update {
   background: white;
-  color: #8b6f5c;
-  border: 1px #8b6f5c solid;
+  color: #0f2e47;
+  border: 1px #0f2e47 solid;
   flex: 1;
 }
 
 .btn-logout {
-  border: 1px #7b5c4a solid;
+  border: 1px #0f2e47 solid;
   padding: 4px 15px;
   background: white;
 }
@@ -403,12 +425,12 @@ button {
 
 .btn.btn-outline-secondary i {
   font-size: 1.2rem;
-  color: #8b6f5c;
+  color: #0f2e47;
   transition: color 0.2s ease;
 }
 
 .btn.btn-outline-secondary:hover i {
-  color: #8b6f5c;
+  color: #0f2e47;
   opacity: 1;
 }
 
@@ -441,8 +463,8 @@ button {
 }
 
 [type='checkbox']:checked {
-  background-color: #8b6f5c;
-  border-color: #7b5e48;
+  background-color: #0f2e47;
+  border-color: #0f2e47;
 }
 
 [type='checkbox']:checked::before {
@@ -466,7 +488,7 @@ button {
 }
 
 [type='checkbox']:focus-visible {
-  outline: max(2px, 0.1em) solid #7b5c4a;
+  outline: max(2px, 0.1em) solid #0f2e47;
   outline-offset: max(2px, 0.1em);
 }
 
@@ -531,11 +553,11 @@ button {
 
 .cancel {
   background: #f4f0ed;
-  color: #8b6f5c;
+  color: #0f2e47;
 }
 
 .save {
-  background: #8b6f5c;
+  background: #0f2e47;
   color: white;
 }
 
