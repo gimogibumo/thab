@@ -26,6 +26,16 @@ watch(editedExpense, async (newVal) => {
 })
 
 const categoryList = ['숙박', '식비', '교통', '관광', '쇼핑', '기타']
+
+const categoryColors = {
+  숙박: '#0F2E47',   // 진한 남색
+  식비: '#173E5F',   // 중간 남색
+  교통: '#205781',   // 연한 남색
+  관광: '#4A7AA4',   // 하늘색 계열
+  쇼핑: '#CFDDE8',   // 연회색 배경
+  기타: '#B28B5E',   // 새로운 브라운 계열
+}
+
 const selectedCategories = ref([...categoryList])
 
 watch(
@@ -240,7 +250,14 @@ function changeKeyword(e) {
                     {{ item.date }}
                   </div>
                   <div class="col-md-1">
-                    <span class="badge bg-light text-dark">{{ item.category }}</span>
+                    <span
+                      class="badge text-white"
+                      :style="{
+                        backgroundColor: categoryColors[item.category] || '#6c757d'
+                      }"
+                    >
+                      {{ item.category }}
+                    </span>
                   </div>
                   <div class="col-md-3">
                     <div class="fw-bold">{{ item.expenseName }}</div>
