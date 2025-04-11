@@ -140,12 +140,12 @@ const renderTravelChart = () => {
       datasets: [{
         label: '여행별 지출',
         data: travelExpenses.value.map(item => item.amount),
-        backgroundColor: '#8B6F5C',
+        backgroundColor: '#0F2E47',
         borderRadius: 10,
         barThickness: 30,
         categoryPercentage: 0.5,
         barPercentage: 0.5,
-        hoverBackgroundColor: '#6A4E3D',
+        hoverBackgroundColor: '#205781',
         hoverBorderRadius: 10
       }]
     },
@@ -318,7 +318,6 @@ onMounted(async () => {
     </div>
   </div>
 </template>
-
 <style scoped>
 .content {
   padding: 3% 5%;
@@ -406,7 +405,7 @@ onMounted(async () => {
 }
 
 .progress {
-  background-color: #8B6F5C;
+  background-color: #0F2E47;
   height: 100%;
 }
 
