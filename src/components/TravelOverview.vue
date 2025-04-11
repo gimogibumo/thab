@@ -52,13 +52,15 @@ onMounted(async () => {
       tripStatus.value = 'past'
     }
 
-    if (tripStatus.value === 'upcoming') {
-      const incomeRes = await axios.get(`http://localhost:3000/income?travelId=${props.travelId}`)
-      const incomeData = incomeRes.data[0]
-      income.value = incomeData || { income: 0, details: [] }
-      totalIncome.value = income.value.income || 0
-    }
+    const incomeRes = await axios.get(`http://localhost:3000/income?travelId=${props.travelId}`)
+    const incomeData = incomeRes.data[0]
+    income.value = incomeData || { details: [] }
 
+    // 💡 totalIncome 계산 후 travel에 PATCH 요청으로 저장
+    totalIncome.value = income.value.details.reduce((acc, cur) => acc + (cur.amount || 0), 0)
+    await axios.patch(`http://localhost:3000/travel/${props.travelId}`, {
+      income: totalIncome.value
+    })
 
     const expenseRes = await axios.get(
       `http://localhost:3000/expense?travelId=${props.travelId}&_sort=date&_order=desc`
@@ -83,17 +85,22 @@ const getIncomeByCategory = (categoryKey) => {
     .reduce((acc, cur) => acc + (cur.amount || 0), 0)
 }
 
-
 const getUsedAmount = (key) => {
   const label = categoryLabels[key] || key
   const matchedExpenses = allExpenses.value.filter(exp => exp.category === label)
   return matchedExpenses.reduce((acc, cur) => acc + (cur.moneyByWon || 0), 0)
 }
 
+const getBudgetAmount = (key) => {
+  if (tripStatus.value === 'ongoing' || tripStatus.value === 'past') {
+    return getIncomeByCategory(key)
+  }
+  return budget.value[key] || 0
+}
 
 const getCategoryPercentage = (key) => {
   const used = getUsedAmount(key)
-  const budgeted = budget.value[key] || 0
+  const budgeted = getBudgetAmount(key)
   return budgeted > 0 ? Math.round((used / budgeted) * 100) : 0
 }
 
@@ -109,29 +116,34 @@ const handleCheckToggle = async () => {
   }
 }
 </script>
-
 <template>
   <div class="container-fluid px-4">
     <div class="row gx-3 gy-4 align-items-stretch">
-      <!-- 예산 현황 카드 -->
+            <!-- 예산 현황 카드 -->
       <div class="col-md-8">
         <div class="card h-100 p-4 shadow-sm">
           <h5 class="fw-bold mb-3">예산 현황</h5>
+
           <div v-if="tripStatus === 'upcoming'">
-            <!-- 전체 수입 대비 예산 -->
+            <!-- 예정된 여행: 전체 수입 대비 예산 -->
             <div class="d-flex justify-content-between text-muted small mb-2">
               <span>전체 수입 대비 예산</span>
               <span class="fw-bold">
-                {{ ( totalIncome || 0).toLocaleString() }}원 / {{ ( totalBudget || 0).toLocaleString() }}원
+                {{ totalIncome.toLocaleString() }}원 / {{ totalBudget.toLocaleString() }}원
               </span>
             </div>
             <div class="progress mb-4" style="height: 8px;">
               <div
-                class="progress-bar bg-warning"
+                class="progress-bar"
                 role="progressbar"
-                :style="{ width: totalBudget > 0 ? Math.round(( totalIncome / totalBudget) * 100) + '%' : '0%' }"
+                :style="{
+                  width: totalBudget > 0
+                    ? Math.round((totalIncome / totalBudget) * 100) + '%'
+                    : '0%'
+                }"
               />
             </div>
+
             <div class="row">
               <div class="col-6 mb-3" v-for="(amount, key) in budget" :key="key">
                 <div class="p-3 rounded category-card">
@@ -149,11 +161,15 @@ const handleCheckToggle = async () => {
                     <div
                       class="progress-bar"
                       role="progressbar"
-                      :style="{ width: amount > 0 ? Math.round((getIncomeByCategory(key) / amount) * 100) + '%' : '0%' }"
+                      :style="{
+                        width:
+                          amount > 0
+                            ? Math.round((getIncomeByCategory(key) / amount) * 100) + '%'
+                            : '0%'
+                      }"
                     />
                   </div>
                   <div class="d-flex justify-content-between text-muted small">
-                    <!-- 좌측: 실제 수입 / 우측: 예산 -->
                     <span>{{ getIncomeByCategory(key).toLocaleString() }}원</span>
                     <span>{{ amount.toLocaleString() }}원</span>
                   </div>
@@ -163,12 +179,13 @@ const handleCheckToggle = async () => {
           </div>
 
           <div v-else>
+            <!-- 진행 중 or 지난 여행: 전체 수입 대비 실제 지출 -->
             <div class="d-flex justify-content-between text-muted small mb-2">
-              <span>전체 예산 대비 지출</span>
+              <span>전체 수입 대비 지출</span>
               <span class="fw-bold">
                 {{
                   Object.keys(budget).reduce((acc, key) => acc + getUsedAmount(key), 0).toLocaleString()
-                }}원 / {{ totalBudget.toLocaleString() }}원
+                }}원 / {{ totalIncome.toLocaleString() }}원
               </span>
             </div>
             <div class="progress mb-4" style="height: 8px;">
@@ -178,9 +195,8 @@ const handleCheckToggle = async () => {
                 :style="{
                   width:
                     (Object.keys(budget).reduce((acc, key) => acc + getUsedAmount(key), 0) /
-                      totalBudget) *
-                      100 +
-                    '%'
+                      totalIncome) *
+                    100 + '%'
                 }"
               />
             </div>
@@ -201,7 +217,7 @@ const handleCheckToggle = async () => {
                   </div>
                   <div class="d-flex justify-content-between text-muted small">
                     <span>{{ getUsedAmount(key).toLocaleString() }}원</span>
-                    <span>{{ amount.toLocaleString() }}원</span>
+                    <span>{{ getIncomeByCategory(key).toLocaleString() }}원</span>
                   </div>
                 </div>
               </div>
@@ -300,8 +316,13 @@ const handleCheckToggle = async () => {
 }
 
 .progress-bar {
-  background-color: #8b5e3c;
+  background-color: #0F2E47;
   border-radius: 20px;
+}
+
+.form-check-input:checked {
+  background-color: #0F2E47;
+  border-color: #0F2E47;
 }
 
 .fw-bold {
@@ -312,11 +333,6 @@ const handleCheckToggle = async () => {
   color: #6c757d !important;
 }
 
-.form-check-input:checked {
-  background-color: #8b5e3c;
-  border-color: #8b5e3c;
-}
-
 .form-check-input {
   cursor: default;
 }
@@ -325,10 +341,10 @@ button {
   border-radius: 10px !important;
 }
 
+/* 예산 현황의 카테고리 카드 색상 변경 */
 .category-card {
-  background-color: #f8f4f1;
+  background-color: #E9ECEF;
   border-radius: 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-
 </style>

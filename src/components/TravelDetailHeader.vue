@@ -47,20 +47,20 @@ const formatDate = (dateStr) => {
 </template>
 <style scoped>
 .btn-brown {
-  background-color: #8B6F5C !important;
-  border-color: #8B6F5C !important;
+  background-color: #0F2E47 !important;  /* 진한 네이비 */
+  border-color: #0F2E47 !important;
   color: white !important;
 }
 
 .btn-outline-brown {
   background-color: white !important;
-  border: 1px solid #8B6F5C !important;
-  color: #8B6F5C !important;
+  border: 1px solid #205781 !important;  /* 푸른 회색 계열 */
+  color: #205781 !important;
 }
 
 .btn-outline-brown:hover {
-  background-color: #8B6F5C !important;
+  background-color: #205781 !important;  /* hover 시 배경색 */
   color: white !important;
 }
-/* hover에서도 색 바뀌게 할지 말지 물어보자 */
 </style>
+
