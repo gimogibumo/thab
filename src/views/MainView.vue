@@ -65,76 +65,76 @@ const toCreate = () => {
 
 <style scoped>
 /* 전체 배경 */
-.content {
-  padding: 0px;
-}
 .page-wrapper {
-  background-color: #fff4e8;
+  background-color: #ffffff;
 }
 
 /* Hero */
 .hero-section {
-  background-color: #fff8f2;
-  color: #4e3b32;
+  background-color: #ffffff;
+  color: #0F2E47;
 }
 .title {
   font-size: 3.2rem;
   font-weight: bold;
+  color: #0F2E47;
 }
 .subtitle {
   font-size: 1.25rem;
   margin-top: 0.5rem;
+  color: #173E5F;
   opacity: 0.9;
 }
 
-/* 카드 */
-.section-container {
-  background-color: transparent;
-}
+/* 기능 카드 */
 .feature-card {
   border-radius: 16px;
   background-color: #ffffff;
   transition: transform 0.2s ease;
+  border: 1px solid #CFDDE8;
 }
 .feature-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 14px rgba(15, 46, 71, 0.1);
 }
 .emoji {
   font-size: 2.5rem;
 }
 .section-title {
   font-size: 1.8rem;
-  color: #4e3b32;
+  color: #173E5F;
 }
 
 /* CTA */
 .cta-section {
-  background-color: transparent;
+  background-color: #ffffff;
 }
 .call-to-action {
   max-width: 420px;
   border-radius: 20px;
   padding: 28px;
+  background-color: #ffffff;
+  border: 1px solid #CFDDE8;
+  color: #0F2E47;
 }
 .btn-brown {
-  background-color: #8b6f5c;
+  background-color: #205781;
   color: white;
   border: none;
   transition: all 0.2s ease;
 }
 .btn-brown:hover {
-  background-color: #7b5c4a;
+  background-color: #173E5F;
   transform: scale(1.03);
 }
 .btn-brown-light {
   background-color: white;
-  color: #8b6f5c;
-  border: 2px solid #8b6f5c;
+  color: #205781;
+  border: 2px solid #205781;
   transition: all 0.2s ease;
 }
 .btn-brown-light:hover {
-  background-color: #8b6f5c;
+  background-color: #205781;
   color: white;
 }
 

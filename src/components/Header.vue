@@ -148,11 +148,12 @@ onMounted(async () => {
   top: 100%;
   right: 0;
   width: 260px;
-  background-color: white;
+  background-color: #fff;
   border-radius: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #CFDDE8;
   z-index: 9999;
   animation: fadeIn 0.2s ease;
+  box-shadow: 0 4px 12px rgba(15, 46, 71, 0.1);
 }
 
 @keyframes fadeIn {
@@ -173,10 +174,18 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
   position: relative;
+  background-color: #CFDDE8;
+  color: #0F2E47;
+  border: none;
+}
+
+.btn:hover {
+  background-color: #4A7AA4;
+  color: white;
 }
 
 .mypage {
-  background-color: #8b6f5c;
+  background-color: #173E5F;
   color: white;
 }
 
@@ -186,7 +195,9 @@ onMounted(async () => {
   right: 4px;
   width: 8px;
   height: 8px;
-  background-color: red;
+  background-color: #205781;
   border-radius: 50%;
+  box-shadow: 0 0 0 2px white;
 }
 </style>
+
