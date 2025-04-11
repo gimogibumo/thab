@@ -251,7 +251,7 @@ function changeKeyword(e) {
                       {{ item.amount.toLocaleString() }} {{ item.currency }}
                     </div>
                     <div class="text-muted">
-                      {{ convertedAmounts[item.id] ? parseInt(convertedAmounts[item.id]) : '-' }}원
+                      {{ convertedAmounts[item.id] ? Number(convertedAmounts[item.id]).toLocaleString('ko-KR', { maximumFractionDigits: 0 }) + '원' : '-' }}
                     </div>
                   </div>
                   <div class="col-md-3 text-end">
