@@ -1,8 +1,6 @@
 <script setup>
-
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import axios from 'axios'
-
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
@@ -13,9 +11,22 @@ const phone = authStore.user.phone
 const passwd = authStore.user.password
 const name = authStore.user.name
 
-const modalCheck = ref(false)
 const user = ref(null)
 const travelNoti = ref(null)
+const showPassword = ref(false)
+
+const modalCheck = ref(false)
+
+const pwd = ref('')
+const newPwd = ref('')
+const newPwdAgain = ref('')
+
+const maskedPwd = computed(() => '*'.repeat(pwd.value.length))
+const maskedNewPwd = computed(() => '*'.repeat(newPwd.value.length))
+const maskedNewPwdAgain = computed(() => '*'.repeat(newPwdAgain.value.length))
+
+const pwdError = ref('')
+const newPwdError = ref('')
 
 onMounted(async () => {
   try {
@@ -60,8 +71,67 @@ function modalClose() {
   modalCheck.value = false
 }
 
+const handlePwdInput = (e) => {
+  handleMaskedInput(e, pwd)
+}
+const handleNewPwdInput = (e) => {
+  handleMaskedInput(e, newPwd)
+}
+const handleNewPwdAgainInput = (e) => {
+  handleMaskedInput(e, newPwdAgain)
+}
 
+function handleMaskedInput(e, targetRef) {
+  const inputValue = e.target.value
+  const prevLength = targetRef.value.length
+  const nextLength = inputValue.length
 
+  if (nextLength < prevLength) {
+    targetRef.value = targetRef.value.slice(0, nextLength)
+  } else {
+    const newChar = inputValue[nextLength - 1] || ''
+    targetRef.value += newChar
+  }
+
+  e.target.value = '*'.repeat(targetRef.value.length)
+}
+
+const validateCurrentPwd = () => {
+  pwdError.value = pwd.value !== authStore.user.password ? '현재 비밀번호가 일치하지 않습니다.' : ''
+}
+
+const validateNewPwd = () => {
+  newPwdError.value =
+    newPwd.value !== newPwdAgain.value ? '새 비밀번호가 서로 일치하지 않습니다.' : ''
+}
+
+const updatePwd = async () => {
+  validateCurrentPwd()
+  validateNewPwd()
+
+  if (pwdError.value || newPwdError.value) return
+
+  try {
+    const updatedPassword = {
+      password: newPwd.value,
+      passwordCheck: newPwd.value,
+    }
+
+    const response = await axios.patch(
+      `http://localhost:3000/users/${authStore.user.id}`,
+      updatedPassword,
+    )
+
+    authStore.user.password = newPwd.value
+    authStore.user.passwordCheck = newPwd.value
+
+    alert('비밀번호가 성공적으로 변경되었습니다.')
+    modalClose()
+  } catch (error) {
+    console.error('비밀번호 변경 실패:', error)
+    alert('비밀번호 변경에 실패했습니다.')
+  }
+}
 </script>
 
 <template>
@@ -69,33 +139,47 @@ function modalClose() {
     <div class="page-title">마이페이지</div>
     <div class="top">
       <div class="first-info">
-        <img src="https://placehold.co/100x100" alt="profile">
+        <img src="https://placehold.co/100x100" alt="profile" />
         <div class="top-info">
           <div class="top-nickname">{{ nickname }}</div>
           <!--          <div class="register-date">가입일: 2023.02.02</div>-->
         </div>
       </div>
-      <hr>
+      <hr />
       <div class="info second-info">
         <div class="info-title">이름</div>
         <div class="info-content">{{ name }}</div>
       </div>
-      <hr>
+      <hr />
       <div class="info third-info">
         <div class="info-title">이메일</div>
         <div class="info-content">{{ email }}</div>
       </div>
-      <hr>
+      <hr />
       <div class="info fourth-info">
         <div class="info-title">전화번호</div>
         <div class="info-content">{{ phone }}</div>
       </div>
-      <hr>
+      <hr />
       <div class="info fifth-info">
         <div class="info-title">비밀번호</div>
-        <div class="info-content">{{ passwd }}</div>
+        <div class="input-group info-content">
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            class="form-control"
+            :value="passwd"
+            readonly
+          />
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            @click="showPassword = !showPassword"
+          >
+            <i :class="showPassword ? 'bi bi-eye' : 'bi bi-eye-slash'"></i>
+          </button>
+        </div>
       </div>
-      <hr>
+      <hr />
       <div class="btn-info">
         <router-link to="/my_page/update">
           <button class="btn-info-update">정보 수정</button>
@@ -104,7 +188,7 @@ function modalClose() {
       </div>
     </div>
     <div class="middle">
-      <div class="setting-title"> 알림 설정</div>
+      <div class="setting-title">알림 설정</div>
       <div class="noti-box">
         <div>
           <div class="noti-title">여행 일정 알림</div>
@@ -141,7 +225,6 @@ function modalClose() {
       <button class="btn-logout">로그아웃</button>
     </div>
 
-
     <!-- 모달창 ui -->
     <div v-show="modalCheck" class="modal-overlay" @click="modalClose">
       <div class="modal-container" @click.stop>
@@ -149,11 +232,31 @@ function modalClose() {
           <div class="modal-title">비밀번호 변경</div>
           <div>
             <div class="modal-content">현재 비밀번호</div>
-            <input class="modal-input" type="text" v-model="pwd" />
+            <input
+              class="modal-input"
+              type="text"
+              :value="maskedPwd"
+              @input="handlePwdInput"
+              @blur="validateCurrentPwd"
+            />
+            <div v-if="pwdError" class="error-msg">{{ pwdError }}</div>
             <div class="modal-content">새 비밀번호</div>
-            <input class="modal-input" type="text" v-model="newPwd" />
+            <input
+              class="modal-input"
+              type="text"
+              :value="maskedNewPwd"
+              @input="handleNewPwdInput"
+              @blur="validateNewPwd"
+            />
             <div class="modal-content">새 비밀번호 확인</div>
-            <input class="modal-input" type="text" v-model="newPwdAgain" />
+            <input
+              class="modal-input"
+              type="text"
+              :value="maskedNewPwdAgain"
+              @input="handleNewPwdAgainInput"
+              @blur="validateNewPwd"
+            />
+            <div v-if="newPwdError" class="error-msg">{{ newPwdError }}</div>
           </div>
         </div>
         <div class="modal-btn">
@@ -185,7 +288,9 @@ img {
   border-radius: 50%;
 }
 
-.top, .middle, .bottom {
+.top,
+.middle,
+.bottom {
   background: #fff;
   border-radius: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -231,10 +336,25 @@ img {
   align-items: center;
 }
 
-.noti-box, .bottom {
+.noti-box,
+.bottom {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
+}
+
+.input-group .form-control {
+  border: none;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+.btn.btn-outline-secondary {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 /* ========== 버튼 스타일 ========== */
@@ -246,7 +366,7 @@ button {
 }
 
 .btn-info-update {
-  background: #8B6F5C;
+  background: #8b6f5c;
   color: white;
   flex: 1;
   margin-right: 10px;
@@ -254,8 +374,8 @@ button {
 
 .btn-pwd-update {
   background: white;
-  color: #8B6F5C;
-  border: 1px #8B6F5C solid;
+  color: #8b6f5c;
+  border: 1px #8b6f5c solid;
   flex: 1;
 }
 
@@ -265,8 +385,41 @@ button {
   background: white;
 }
 
+.btn.btn-outline-secondary {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.btn-outline-secondary:hover {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.btn.btn-outline-secondary i {
+  font-size: 1.2rem;
+  color: #8b6f5c;
+  transition: color 0.2s ease;
+}
+
+.btn.btn-outline-secondary:hover i {
+  color: #8b6f5c;
+  opacity: 1;
+}
+
+.btn.btn-outline-secondary:active {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+
 /* ========== 토글 스위치 ========== */
-[type="checkbox"] {
+[type='checkbox'] {
   appearance: none;
   position: relative;
   width: 2.25em;
@@ -275,8 +428,8 @@ button {
   border-radius: 1.25em;
 }
 
-[type="checkbox"]::before {
-  content: "";
+[type='checkbox']::before {
+  content: '';
   position: absolute;
   left: 0;
   width: 1em;
@@ -287,37 +440,37 @@ button {
   transition: left 250ms linear;
 }
 
-[type="checkbox"]:checked {
-  background-color: #8B6F5C;
-  border-color: #7B5E48;
+[type='checkbox']:checked {
+  background-color: #8b6f5c;
+  border-color: #7b5e48;
 }
 
-[type="checkbox"]:checked::before {
+[type='checkbox']:checked::before {
   background-color: white;
   left: 1em;
 }
 
-[type="checkbox"]:disabled {
+[type='checkbox']:disabled {
   border-color: lightgray;
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-[type="checkbox"]:disabled::before {
+[type='checkbox']:disabled::before {
   background-color: lightgray;
 }
 
-[type="checkbox"]:disabled + span {
+[type='checkbox']:disabled + span {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-[type="checkbox"]:focus-visible {
+[type='checkbox']:focus-visible {
   outline: max(2px, 0.1em) solid #7b5c4a;
   outline-offset: max(2px, 0.1em);
 }
 
-[type="checkbox"]:enabled:hover {
+[type='checkbox']:enabled:hover {
   box-shadow: 0 0 0 max(4px, 0.2em) lightgray;
 }
 
@@ -356,7 +509,7 @@ button {
   margin-bottom: 15px;
 }
 
-.modal-content input[type="text"] {
+.modal-content input[type='text'] {
   width: 100%;
   padding: 12px;
   font-size: 16px;
@@ -377,13 +530,20 @@ button {
 }
 
 .cancel {
-  background: #F4F0ED;
-  color: #8B6F5C;
+  background: #f4f0ed;
+  color: #8b6f5c;
 }
 
 .save {
-  background: #8B6F5C;
+  background: #8b6f5c;
   color: white;
+}
+
+.error-msg {
+  color: red;
+  font-size: 14px;
+  margin-top: -15px;
+  margin-bottom: 10px;
 }
 
 /* ========== 글로벌 스타일 ========== */
@@ -413,5 +573,4 @@ label {
 *::after {
   box-sizing: border-box;
 }
-
 </style>
