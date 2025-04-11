@@ -79,8 +79,8 @@ onMounted(async () => {
     )
     const travelDatas = travels.data
     const today = new Date()
-    const ongoingTravel = null
-    const ongoingFlag = false
+    var ongoingTravel = null
+    var ongoingFlag = false
     for (const travel of travelDatas) {
       const startDate = new Date(travel.startDate)
       const diffTime = startDate.getTime() - today.getTime()

@@ -24,7 +24,7 @@
     </div>
 
     <div class="px-3 mb-3 d-flex justify-content-between">
-      <button v-if="!isCollapsed" class="btn btn-danger w-75" @click="loggingOut">
+      <button v-if="!isCollapsed" class="btn logout-btn btn-light w-75" @click="loggingOut">
         <i class="bi bi-box-arrow-right"></i> <span v-if="!isCollapsed">로그아웃</span>
       </button>
       <button class="btn btn-light" @click="toggleSidebar">
@@ -118,7 +118,7 @@ const navCategories = [
   row-gap: 8px;
   padding-top: 12px;
   padding-bottom: 12px;
-  padding-left: 0px;
+  padding-left: 3px;
   padding-right: 0px;
   margin: 0px 0;
   background-color: transparent;
@@ -128,7 +128,7 @@ const navCategories = [
 }
 
 .nav-btn:hover {
-  background-color: #8b6f5c;
+  background-color: #cfdde8;
   border-radius: 6px;
 }
 
@@ -158,5 +158,8 @@ const navCategories = [
 
 .sidebar::-webkit-scrollbar {
   display: none;
+}
+.logout-btn {
+  background-color: white;
 }
 </style>
