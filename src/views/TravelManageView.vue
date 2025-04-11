@@ -16,6 +16,10 @@ const calculateTravelStatus = (card) => {
   const startDate = new Date(card.startDate)
   const endDate = new Date(card.endDate)
 
+  // 각각의 날짜를 날짜 단위만 비교하도록 00시로 리셋
+  startDate.setHours(0, 0, 0, 0)
+  endDate.setHours(0, 0, 0, 0)
+
   const diffDays = Math.floor((startDate - today) / (1000 * 60 * 60 * 24))
 
   if (today >= startDate && today <= endDate) {
@@ -29,6 +33,7 @@ const calculateTravelStatus = (card) => {
     card.dDay = `D-${diffDays}`
   }
 }
+
 
 const filteredAndSortedCards = computed(() => {
   return travelCards.value
