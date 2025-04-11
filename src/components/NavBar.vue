@@ -93,7 +93,6 @@ const navCategories = [
   },
 ]
 </script>
-
 <style scoped>
 .sidebar {
   width: 270px;
@@ -101,10 +100,11 @@ const navCategories = [
   position: fixed;
   left: 0;
   top: 0;
-  overflow-y: auto;
-  background-color: #8b6f5c;
+  background-color: #0F2E47; /* 진한 네이비 */
   transition: width 0.3s ease;
+  overflow-y: auto;
   z-index: 100000;
+  color: white; /* 기본 텍스트 색상 흰색으로 */
 }
 
 .collapsed {
@@ -112,24 +112,15 @@ const navCategories = [
 }
 
 .nav-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  row-gap: 8px;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  padding-left: 3px;
-  padding-right: 0px;
-  margin: 0px 0;
-  background-color: transparent;
   color: white;
   text-decoration: none;
+  padding: 12px 0 12px 3px;
   transition: all 0.3s ease;
 }
-
 .nav-btn:hover {
-  background-color: #cfdde8;
+  background-color: #205781; /* 푸른 회색 (hover 색상) */
   border-radius: 6px;
+  color: white;
 }
 
 .profile-circle {
@@ -137,29 +128,29 @@ const navCategories = [
   height: 80px;
   background-color: #fff;
   border-radius: 50%;
-  border: 2px solid #8b6f5c;
+  border: 2px solid #0F2E47;
 }
 
-.collapsed .nav-btn span {
-  display: none;
+.text-muted {
+  color: #ffffff !important; /* 카테고리 이름도 흰색으로 덮어쓰기 */
 }
 
-.collapsed .text-muted {
-  display: none;
-}
-
+.collapsed .nav-btn span,
+.collapsed .text-muted,
 .collapsed .profile-circle {
   display: none;
-}
-
-.content {
-  transition: 0.3s ease;
 }
 
 .sidebar::-webkit-scrollbar {
   display: none;
 }
+
 .logout-btn {
-  background-color: white;
+  background-color: #ffffff;
+  color: #0F2E47;
+}
+.logout-btn:hover {
+  background-color: #205781;
+  color: white;
 }
 </style>

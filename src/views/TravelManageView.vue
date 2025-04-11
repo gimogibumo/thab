@@ -16,7 +16,6 @@ const calculateTravelStatus = (card) => {
   const startDate = new Date(card.startDate)
   const endDate = new Date(card.endDate)
 
-  // 각각의 날짜를 날짜 단위만 비교하도록 00시로 리셋
   startDate.setHours(0, 0, 0, 0)
   endDate.setHours(0, 0, 0, 0)
 
@@ -34,7 +33,6 @@ const calculateTravelStatus = (card) => {
   }
 }
 
-
 const filteredAndSortedCards = computed(() => {
   return travelCards.value
     .filter((c) => c.status === activeTab.value)
@@ -51,20 +49,32 @@ const filteredAndSortedCards = computed(() => {
 
 const fetchTravelCards = async () => {
   try {
-    const response = await axios.get('http://localhost:3000/travel')
-    travelCards.value = response.data
-      .filter((card) => card.userEmail === userEmail.value)
-      .map((card) => {
-        calculateTravelStatus(card)
-        return reactive(card)
+    const [travelRes, expenseRes] = await Promise.all([
+      axios.get('http://localhost:3000/travel'),
+      axios.get('http://localhost:3000/expense')
+    ])
+
+    const travels = travelRes.data.filter((t) => t.userEmail === userEmail.value)
+    const expenses = expenseRes.data
+
+    travelCards.value = travels.map((card) => {
+      const relatedExpenses = expenses.filter((e) => e.travelId === card.id)
+      const totalSpent = relatedExpenses.reduce((sum, e) => sum + (e.moneyByWon || 0), 0)
+
+      calculateTravelStatus(card)
+
+      return reactive({
+        ...card,
+        totalSpent
       })
+    })
   } catch (error) {
     console.error('데이터를 가져오는 중 오류 발생:', error)
   }
 }
+
 const changeTab = (tab) => {
   activeTab.value = tab
-  fetchTravelCards()
 }
 
 onMounted(() => {

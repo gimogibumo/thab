@@ -100,10 +100,15 @@ const mainBudget = computed(() => {
 })
 
 const subAmount = computed(() => {
-  if (props.status === 'upcoming') return props.income
-  if (props.status === 'ongoing' || props.status === 'past') return props.totalSpent
+  const spent = Number(props.totalSpent) || 0
+  const income = Number(props.income) || 0
+  const budget = Number(props.totalBudget) || 0
+
+  if (props.status === 'upcoming') return income
+  if (props.status === 'ongoing' || props.status === 'past') return spent
   return 0
 })
+
 
 const progressLabel = computed(() => {
   if (props.status === 'ongoing') return '예산 대비 지출'
