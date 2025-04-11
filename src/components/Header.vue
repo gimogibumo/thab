@@ -12,13 +12,9 @@
         <div class="dropdown-header fw-bold text-dark px-3 py-2 border-bottom">🔔 알림</div>
         <div class="dropdown-body px-3 py-2 text-muted small">
           <ul class="mb-0 ps-3">
-            <li v-if="alerts.travel && alerts.travelSoon != null">
+            <li v-if="alerts.travel && alerts.travelSoon != false">
               여행이 {{ alerts.travelSoon }}일 남았습니다!
             </li>
-            <li v-if="alerts.budget && alerts.budgetWarning">
-              예산의 80% 이상을 지출했어요! 지출을 확인해보세요 ⚠️
-            </li>
-            <li v-if="alerts.budget && !alerts.budgetWarning">아직 예산이 80%를 넘지 않았어요</li>
             <li v-if="!alerts.travel && !alerts.budget && !alerts.income" class="text-muted">
               새로운 알림이 없습니다.
             </li>
@@ -88,7 +84,7 @@ onMounted(async () => {
       const endDate = new Date(travel.endDate)
       const diffTime2 = endDate.getTime() - today.getTime()
       const diffDays2 = Math.ceil(diffTime2 / (1000 * 60 * 60 * 24))
-      const flag = false
+      var flag = false
       if (diffDays <= 0 && diffDays2 >= 0 && !ongoingFlag) {
         ongoingTravel = travel
         ongoingFlag = true
@@ -106,22 +102,8 @@ onMounted(async () => {
         alerts.value.budgetWarning = true
       }
     }
-    if (alerts.value.budget) {
-      for (const travel of travelDatas) {
-        const totalBudget = Number(travel.totalBudget)
-        const totalSpent = Number(travel.totalSpent)
-        if (totalBudget > 0 && totalSpent / totalBudget >= 0.0) {
-          alerts.value.budgetWarning = true
-        }
-      }
-    }
-
     hasAlert.value =
-      alerts.value.travel ||
-      alerts.value.budget ||
-      alerts.value.income ||
-      alerts.value.travelSoon !== null
-    alerts.value.budgetWarning !== null
+      (ongoingFlag && user.travel) || (alerts.value.budget && alerts.value.budgetWarning)
   } catch (err) {
     console.error('데이터 로딩 오류:', err)
   }
@@ -150,7 +132,7 @@ onMounted(async () => {
   width: 260px;
   background-color: #fff;
   border-radius: 12px;
-  border: 1px solid #CFDDE8;
+  border: 1px solid #cfdde8;
   z-index: 9999;
   animation: fadeIn 0.2s ease;
   box-shadow: 0 4px 12px rgba(15, 46, 71, 0.1);
@@ -174,18 +156,18 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
   position: relative;
-  background-color: #CFDDE8;
-  color: #0F2E47;
+  background-color: #cfdde8;
+  color: #0f2e47;
   border: none;
 }
 
 .btn:hover {
-  background-color: #4A7AA4;
+  background-color: #4a7aa4;
   color: white;
 }
 
 .mypage {
-  background-color: #173E5F;
+  background-color: #173e5f;
   color: white;
 }
 
@@ -200,4 +182,3 @@ onMounted(async () => {
   box-shadow: 0 0 0 2px white;
 }
 </style>
-

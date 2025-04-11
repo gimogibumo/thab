@@ -36,7 +36,7 @@ const emit = defineEmits(['reset'])
 
 .complete-wrapper {
   min-height: 100vh;
-  background: linear-gradient(to bottom, #fff8f2, #f6eee9);
+  background: linear-gradient(to bottom, #0f2e47, #0f2e47);
   padding: 40px 20px;
 }
 
@@ -50,14 +50,14 @@ const emit = defineEmits(['reset'])
 }
 
 .btn-brown {
-  background-color: #8b6f5c;
+  background-color: #0f2e47;
   color: white;
   border: none;
   transition: all 0.2s ease;
 }
 
 .btn-brown:hover {
-  background-color: #7b5c4a;
+  background-color: #0f2e47;
   transform: scale(1.02);
 }
 

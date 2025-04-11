@@ -1,10 +1,5 @@
 <template>
   <div class="fullscreen-wrapper d-flex justify-content-center align-items-center flex-wrap">
-    <!-- 좌측 일러스트 -->
-    <div class="side-illustration d-none d-lg-block me-3">
-      <img src="@/assets/img/travel_left.png" alt="travel" class="img-fluid" />
-    </div>
-
     <!-- 약관 카드 -->
     <div class="agreement-card animate__animated animate__fadeIn">
       <h2 class="fw-bold text-center mb-3 text-dark">약관에 동의해주세요</h2>
@@ -54,11 +49,6 @@
       <p class="text-center text-muted small mt-3">THAB은 여러분의 안전한 여행을 응원합니다 ✈️</p>
     </div>
 
-    <!-- 우측 일러스트 -->
-    <div class="side-illustration d-none d-lg-block ms-3">
-      <img src="@/assets/img/travel_right.png" alt="travel" class="img-fluid" />
-    </div>
-
     <!-- 약관 전문 모달 -->
     <div class="modal fade show" tabindex="-1" style="display: block" v-if="showModal">
       <div class="modal-dialog modal-lg">
@@ -103,13 +93,13 @@ const toggleAll = () => {
 
 .fullscreen-wrapper {
   min-height: 100vh;
-  background: linear-gradient(to bottom, #fff8f2, #fcefe4);
+  background: linear-gradient(to bottom, #0f2e47, #0f2e47);
   padding: 40px 20px;
 }
 
 .agreement-card {
   background: #ffffff;
-  border: 1px solid #e4d3c1;
+  border: 1px solid #0f2e47;
   padding: 40px 32px;
   border-radius: 24px;
   max-width: 500px;
@@ -122,14 +112,14 @@ const toggleAll = () => {
 }
 
 .btn-brown {
-  background-color: #8b6f5c;
+  background-color: #0f2e47;
   color: white;
   border: none;
   transition: all 0.2s ease;
 }
 
 .btn-brown:hover {
-  background-color: #7b5c4a;
+  background-color: #0f2e47;
   transform: scale(1.02);
 }
 
@@ -139,7 +129,7 @@ const toggleAll = () => {
 
 .form-check-input {
   margin-right: 10px;
-  accent-color: #8b6f5c;
+  accent-color: #0f2e47;
 }
 
 .form-check-label {

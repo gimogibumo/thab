@@ -122,7 +122,7 @@ const isFormValid = computed(() => {
 .emotion-wrapper {
   position: relative;
   min-height: 100vh;
-  background-color: #8b6f5c;
+  background-color: #0f2e47;
   display: flex;
   padding: 40px 20px;
   overflow: hidden;
@@ -146,8 +146,8 @@ const isFormValid = computed(() => {
   z-index: 10;
   max-width: 460px;
   width: 100%;
-  background-color: #fff7f0;
-  border: 1px solid #e4d3c1;
+  background-color: #70a0c8;
+  border: 1px solid #0f2e47;
   border-radius: 24px;
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
   padding: 40px 32px;
@@ -159,14 +159,14 @@ const isFormValid = computed(() => {
 }
 
 .btn-brown {
-  background-color: #8b6f5c;
+  background-color: #0f2e47;
   color: white;
   border: none;
   transition: all 0.25s ease;
 }
 
 .btn-brown:hover {
-  background-color: #7b5c4a;
+  background-color: #0f2e47;
   transform: scale(1.02);
 }
 

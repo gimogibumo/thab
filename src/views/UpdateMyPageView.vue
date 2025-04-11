@@ -150,13 +150,13 @@ input {
 
 .cancel {
   background: white;
-  border: #7b5c4a 1px solid;
-  color: #7b5c4a;
+  border: #0f2e47 1px solid;
+  color: #0f2e47;
 }
 
 .save {
-  border: #7b5c4a 1px solid;
-  background: #7b5c4a;
+  border: #0f2e47 1px solid;
+  background: #0f2e47;
   color: white;
 }
 </style>

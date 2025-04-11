@@ -2,7 +2,7 @@
 import { onMounted, ref, computed } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth'
-
+import router from '@/router'
 const authStore = useAuthStore()
 
 const email = authStore.user.email
@@ -12,7 +12,7 @@ const passwd = authStore.user.password
 const name = authStore.user.name
 
 const user = ref(null)
-const travelNoti = ref(null)
+const travelNoti = ref(false)
 const showPassword = ref(false)
 
 const modalCheck = ref(false)
@@ -27,7 +27,10 @@ const maskedNewPwdAgain = computed(() => '*'.repeat(newPwdAgain.value.length))
 
 const pwdError = ref('')
 const newPwdError = ref('')
-
+const toLogin = () => {
+  authStore.logout()
+  router.push('/login')
+}
 onMounted(async () => {
   try {
     const userId = authStore.user.id
@@ -35,23 +38,21 @@ onMounted(async () => {
     user.value = userRes.data
     console.log(user.value)
 
-    travelNoti.value = user.value.travelToggle
-
-    console.log(travelNoti.value + "@@@@@@@")
+    travelNoti.value = user.value.travel
+    console.log(travelNoti.value + '@@@@@@@')
   } catch (error) {
     console.error('사용자 데이터 로딩 실패:', error)
   }
 })
 
-
 const toggleTravelNoti = async () => {
   try {
     const userId = authStore.user.id
-    console.log('Travel Noti Before:', travelNoti.value);
+    console.log('Travel Noti Before:', travelNoti.value)
     travelNoti.value = !travelNoti.value
 
     await axios.patch(`http://localhost:3000/users/${userId}`, {
-      travelToggle: travelNoti.value,
+      travel: travelNoti.value,
     })
 
     console.log('여행 알림 상태 업데이트 완료', travelNoti.value)
@@ -222,7 +223,7 @@ const updatePwd = async () => {
         <div class="logout-title">로그아웃</div>
         <div class="logout-content">계정에서 로그아웃합니다.</div>
       </div>
-      <button class="btn-logout">로그아웃</button>
+      <button class="btn-logout" @click="toLogin">로그아웃</button>
     </div>
 
     <!-- 모달창 ui -->
@@ -281,7 +282,7 @@ const updatePwd = async () => {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 50px;
-  color: #0F2E47;
+  color: #0f2e47;
 }
 
 /* ========== 공통 스타일 ========== */
@@ -310,7 +311,7 @@ img {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 5px;
-  color: #173E5F;
+  color: #173e5f;
 }
 
 .info-content,
@@ -322,14 +323,14 @@ img {
 .top-nickname {
   font-size: 22px;
   font-weight: bold;
-  color: #0F2E47;
+  color: #0f2e47;
 }
 
 .setting-title {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 20px;
-  color: #173E5F;
+  color: #173e5f;
 }
 
 .top-info {
@@ -354,7 +355,7 @@ img {
   outline: none;
   box-shadow: none;
   background-color: transparent;
-  color: #0F2E47;
+  color: #0f2e47;
 }
 
 .btn.btn-outline-secondary {
@@ -386,10 +387,10 @@ button {
 }
 
 .btn-logout {
-  border: 1px solid #4A7AA4;
+  border: 1px solid #4a7aa4;
   padding: 4px 15px;
   background: white;
-  color: #4A7AA4;
+  color: #4a7aa4;
 }
 
 .btn.btn-outline-secondary i {
@@ -399,7 +400,7 @@ button {
 }
 
 .btn.btn-outline-secondary:hover i {
-  color: #4A7AA4;
+  color: #4a7aa4;
   opacity: 1;
 }
 
@@ -409,7 +410,7 @@ button {
   position: relative;
   width: 2.25em;
   height: 1.25em;
-  border: max(2px, 0.1em) solid #4A7AA4;
+  border: max(2px, 0.1em) solid #4a7aa4;
   border-radius: 1.25em;
 }
 
@@ -420,14 +421,14 @@ button {
   width: 1em;
   height: 1em;
   border-radius: 50%;
-  background-color: #4A7AA4;
+  background-color: #4a7aa4;
   transform: scale(0.8);
   transition: left 250ms linear;
 }
 
 [type='checkbox']:checked {
   background-color: #205781;
-  border-color: #173E5F;
+  border-color: #173e5f;
 }
 
 [type='checkbox']:checked::before {
@@ -456,7 +457,7 @@ button {
 }
 
 [type='checkbox']:enabled:hover {
-  box-shadow: 0 0 0 max(4px, 0.2em) #CFDDE8;
+  box-shadow: 0 0 0 max(4px, 0.2em) #cfdde8;
 }
 
 /* ========== 모달 ========== */
@@ -484,7 +485,7 @@ button {
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center;
-  color: #0F2E47;
+  color: #0f2e47;
 }
 
 .modal-content {
@@ -500,7 +501,7 @@ button {
   width: 100%;
   padding: 12px;
   font-size: 16px;
-  border: 1px solid #CFDDE8;
+  border: 1px solid #cfdde8;
   border-radius: 8px;
 }
 
@@ -517,7 +518,7 @@ button {
 }
 
 .cancel {
-  background: #CFDDE8;
+  background: #cfdde8;
   color: #205781;
 }
 
@@ -539,8 +540,8 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #F8FAFC;
-  color: #0F2E47;
+  background-color: #f8fafc;
+  color: #0f2e47;
 }
 
 fieldset {
@@ -563,4 +564,3 @@ label {
   box-sizing: border-box;
 }
 </style>
-
