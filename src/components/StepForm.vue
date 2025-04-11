@@ -88,6 +88,8 @@ import { defineProps, defineEmits } from 'vue'
 const props = defineProps({
   formData: Object,
 })
+props.formData.budget = false
+props.formData.travel = false
 const emit = defineEmits(['next'])
 
 const email = computed(() => props.formData.email)
