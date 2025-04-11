@@ -39,6 +39,10 @@ const isCollapsed = computed(() => sidebarStore.isCollapsed)
   overflow-y: auto;
 }
 
+.main_color {
+  background-color: #0f2e47;
+}
+
 @media (max-width: 1024px) {
   .collapsed .content,
   .expanded .content {
