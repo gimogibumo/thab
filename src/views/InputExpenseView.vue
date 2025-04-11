@@ -300,37 +300,85 @@ function cancelForm() {
 </template>
 
 <style scoped>
-/* Bootstrap 5 will handle most styling, but we can add custom styles here */
+/* 전체 톤에 맞춘 컬러 스타일 */
 .dropdown-item.active,
 .dropdown-item:active {
-  background-color: #a87c6a;
+  background-color: #205781;
+  color: #fff;
 }
 
 .btn-primary {
-  background-color: #a47764;
-  border-color: #a47764;
+  background-color: #205781;
+  border-color: #205781;
 }
 
 .btn-primary:hover,
 .btn-primary:focus {
-  background-color: #8c6354;
-  border-color: #8c6354;
+  background-color: #173E5F;
+  border-color: #173E5F;
 }
 
 .btn-outline-secondary {
-  color: #5c3a2f;
-  border-color: #a47764;
+  color: #0F2E47;
+  border-color: #205781;
 }
 
 .btn-outline-secondary:hover,
 .btn-outline-secondary:focus {
-  background-color: #f8f9fa;
-  color: #5c3a2f;
-  border-color: #a47764;
+  background-color: #CFDDE8;
+  color: #0F2E47;
+  border-color: #205781;
 }
+
+/* dropdown 메뉴 스타일 */
+.dropdown-menu {
+  background-color: #fff;
+  border: 1px solid #CFDDE8;
+}
+
+.dropdown-item {
+  color: #0F2E47;
+}
+
+.dropdown-item:hover {
+  background-color: #CFDDE8;
+  color: #0F2E47;
+}
+
+/* input 및 form 배경 조정 */
+.form-control {
+  border-color: #CFDDE8;
+}
+
+.form-control:focus {
+  border-color: #205781;
+  box-shadow: 0 0 0 0.2rem rgba(32, 87, 129, 0.25);
+}
+
+/* KRW 환산 금액 표시 스타일 */
 .same-height {
-  min-height: 38px; /* 부트스트랩 input 기본 높이 */
+  min-height: 38px;
   display: flex;
-  align-items: center; /* 가운데 정렬 */
+  align-items: center;
+  background-color: #CFDDE8;
+  color: #0F2E47;
+  font-weight: 500;
+  padding-left: 0.75rem;
 }
+
+/* card 스타일 조정 */
+.card {
+  border: 1px solid #CFDDE8;
+  background-color: #fff;
+}
+
+.card-body {
+  background-color: #fff;
+}
+
+/* 제목 컬러 */
+h1 {
+  color: #0F2E47;
+}
+
 </style>

@@ -382,7 +382,6 @@ async function deleteDetail(index) {
 
   </div>
 </template>
-
 <style scoped>
 .content {
   padding: 3% 5%;
@@ -417,12 +416,12 @@ async function deleteDetail(index) {
 }
 
 .goal-card:hover {
-  border: 0.1rem #7B5E48 solid;
+  border: 0.1rem #205781 solid;
 }
 
 .goal-card.active {
-  border: 0.1rem #7B5E48 solid;
-  background: rgba(122, 94, 72, 0.2);
+  border: 0.1rem #205781 solid;
+  background: #e0e7ef;
   max-width: 800px;
 }
 
@@ -453,7 +452,7 @@ async function deleteDetail(index) {
 .income {
   font-weight: bold;
   font-size: 15px;
-  color: #7B5E48;
+  color: #205781;
 }
 
 .target {
@@ -463,7 +462,7 @@ async function deleteDetail(index) {
 
 .progress-bar {
   height: 8px;
-  background: #eee;
+  background: #CFDDE8;
   border-radius: 4px;
   overflow: hidden;
   margin: 8px 0;
@@ -471,7 +470,7 @@ async function deleteDetail(index) {
 
 .progress {
   height: 100%;
-  background: #7B5E48;
+  background: #205781;
   transition: width 0.3s ease;
 }
 
@@ -502,7 +501,7 @@ async function deleteDetail(index) {
 .input {
   font-weight: bold;
   font-size: 16px;
-  color: #7B5E48;
+  color: #205781;
 }
 
 .input-title {
@@ -563,6 +562,7 @@ async function deleteDetail(index) {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+  gap: 10px;
 }
 
 .modal-btn button {
@@ -574,23 +574,18 @@ async function deleteDetail(index) {
   cursor: pointer;
 }
 
-.modal-btn {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-}
-
 .cancel {
   background: #F4F0ED;
-  color: #8B6F5C;
+  color: #173E5F;
 }
 
 .save {
-  background: #8B6F5C;
+  background: #173E5F;
   color: white;
 }
 
-.modal-input-memo, .modal-input-money {
+.modal-input-memo,
+.modal-input-money {
   margin-top: 10px;
 }
 
@@ -600,7 +595,7 @@ async function deleteDetail(index) {
 
 /* ===== 저축하기 버튼 ===== */
 .open-modal-btn {
-  background: #7B5E48;
+  background: #173E5F;
   color: white;
   padding: 12px 20px;
   border-radius: 8px;
@@ -646,7 +641,7 @@ async function deleteDetail(index) {
   font-size: 16px;
 }
 
-/* 태블릿 대응 (768px 이하) */
+/* 태블릿 대응 */
 @media (max-width: 768px) {
   .goal-wrap {
     flex-direction: column;
@@ -658,13 +653,7 @@ async function deleteDetail(index) {
     width: 100%;
     max-width: 100%;
     margin: 0 auto;
-    position: relative;
     float: none;
-  }
-
-  .budget-list {
-    margin-left: 0;
-    margin-top: 20px;
   }
 
   .modal-container {
@@ -678,111 +667,15 @@ async function deleteDetail(index) {
 
   .modal-btn {
     flex-direction: column;
-    gap: 10px;
-  }
-
-  .modal-btn button {
-    width: 100%;
   }
 
   .open-modal-btn {
     width: 100%;
     margin-top: 10px;
   }
-
-  .top,
-  .bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .amount {
-    text-align: left;
-  }
-
-  /* 폰트 사이즈 축소 */
-  .page-title {
-    font-size: 20px;
-  }
-
-  .title {
-    font-size: 15px;
-  }
-
-  .date,
-  .target,
-  .bottom {
-    font-size: 12px;
-  }
-
-  .income {
-    font-size: 14px;
-  }
-
-  .input-title {
-    font-size: 13px;
-  }
-
-  .input {
-    font-size: 15px;
-  }
-
-  .list-content {
-    font-size: 13px;
-  }
 }
 
-/* 모바일 대응 (480px 이하) */
-@media (max-width: 480px) {
-  .modal-title {
-    font-size: 16px;
-  }
-
-  .page-title {
-    font-size: 18px;
-    text-align: center;
-  }
-
-  .title {
-    font-size: 14px;
-  }
-
-  .income {
-    font-size: 13px;
-  }
-
-  .target,
-  .date,
-  .bottom,
-  .input,
-  .input-title {
-    font-size: 12px;
-  }
-
-  .modal-btn button {
-    font-size: 14px;
-    padding: 10px 12px;
-  }
-
-  .open-modal-btn {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .goal-card {
-    padding: 16px;
-  }
-
-  .budget-list {
-    padding: 16px;
-  }
-
-  .list-content {
-    padding: 10px;
-  }
-}
-
+/* 아이콘 및 카테고리 */
 .icons button {
   border: 1px solid #ccc;
   background-color: #fff;
@@ -803,7 +696,7 @@ async function deleteDetail(index) {
   font-size: 12px;
   padding: 4px 8px;
   border: 1px solid #ddd;
-  background-color: #fffaf0; /* 아이보리색 */
+  background-color: #CFDDE8;
   border-radius: 6px;
   display: inline-block;
   margin-top: 4px;
@@ -835,8 +728,8 @@ async function deleteDetail(index) {
 }
 
 .category-item.selected {
-  border-color: #7B5E48;
-  background: #f1e8e2;
+  border-color: #0F2E47;
+  background: #CFDDE8;
 }
 
 .category-icon {
@@ -849,5 +742,4 @@ async function deleteDetail(index) {
   font-size: 12px;
   color: #444;
 }
-
 </style>

@@ -91,31 +91,54 @@ const selectedCategoryLabel = computed(() => {
     return selectedCategories.value.join(', ')
 })
 </script>
-  
 <style scoped>
-  .category-btn {
-    border: 1px solid #7c4a2d;
-    color: #7c4a2d;
-    background-color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: all 0.2s;
-  }
-  
-  .category-btn:hover {
-    background-color: #f3e8e2;
-  }
-  
-  .category-btn.selected {
-    background-color: #7c4a2d;
-    color: white;
-  }
-  
-  .btn-close {
-    background-color: transparent;
-    border: none;
-    opacity: 0.7;
-  }
-  </style>
-  
+.category-btn {
+  border: 1px solid #205781;
+  color: #205781;
+  background-color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.category-btn:hover {
+  background-color: #CFDDE8;
+  color: #0F2E47;
+  border-color: #205781;
+}
+
+.category-btn.selected {
+  background-color: #205781;
+  color: white;
+  border-color: #173E5F;
+}
+
+.btn-close {
+  background-color: transparent;
+  border: none;
+  opacity: 0.7;
+}
+
+.dropdown-toggle {
+  border-color: #205781 !important;
+  color: #205781 !important;
+  background-color: white !important;
+}
+
+.dropdown-toggle:hover {
+  background-color: #CFDDE8 !important;
+  color: #0F2E47 !important;
+  border-color: #173E5F !important;
+}
+
+.dropdown-menu {
+  background-color: #F8FAFC; /* 약간 연한 회색 느낌의 배경 */
+  border: none;
+  border-radius: 12px;
+}
+
+.text-secondary {
+  color: #0F2E47 !important;
+}
+</style>

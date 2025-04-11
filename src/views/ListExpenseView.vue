@@ -285,10 +285,9 @@ function changeKeyword(e) {
     </div>
   </div>
 </template>
-
 <style scoped>
 .text-brown {
-  color: #7c4a2d;
+  color: #0F2E47; /* 가장 진한 남색으로 텍스트 강조 */
 }
 .dropdown-menu {
   border-radius: 0.75rem;
@@ -301,5 +300,41 @@ function changeKeyword(e) {
 .dropdown-item:hover,
 .dropdown-item:focus {
   background-color: #f8f9fa;
+}
+
+
+.badge.bg-light.text-dark {
+  background-color: #4A7AA4 !important; /* 카테고리 배지 색상 */
+  color: white !important;
+}
+
+.btn-group .btn {
+  font-weight: 500;
+}
+
+.btn-group .btn-sm.text-white {
+  background-color: #205781 !important; /* 수정 버튼 */
+  border: none;
+}
+
+.btn-group .btn-sm:nth-child(2) {
+  border: 1px solid #205781 !important; /* 삭제 버튼 */
+  color: #205781 !important;
+  background-color: transparent !important;
+}
+
+.btn-primary {
+  background-color: #173E5F !important;
+  border-color: #173E5F !important;
+}
+
+.btn-outline-secondary {
+  color: #173E5F !important;
+  border-color: #173E5F !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #CFDDE8 !important;
+  color: #0F2E47 !important;
 }
 </style>
