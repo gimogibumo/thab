@@ -269,7 +269,7 @@ onMounted(async () => {
     <div class="page-title">통계</div>
     <div class="top">
       <div class="total-expense">
-        <div class="total-title">총 지출</div>
+        <div class="total-title">총 여행 경비</div>
         <div class="total-content">{{ totalExpense }}</div>
       </div>
       <div class="month-expense">
@@ -282,7 +282,9 @@ onMounted(async () => {
       </div>
     </div>
     <div class="middle">
-      <div class="category-title">카테고리별 지출</div>
+      <div class="category-title">
+        {{ selectedTravelId ? '선택한 여행의 카테고리별 지출' : '전체 지출 기준 카테고리별 지출' }}
+      </div>
       <div class="category-grid">
         <div
           v-for="(item, index) in selectedTravelCategories"
