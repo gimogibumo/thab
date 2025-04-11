@@ -61,11 +61,11 @@ function preventNegative(category) {
         <div class="card-body">
           <StepIndicator :currentStep="3" :stepLabel="'예산 설정'" />
           <!-- 총 예산 표시 -->
-          <div class="mb-3 p-3 rounded" style="background-color: #e8ded8;">
+          <div class="mb-3 p-3 rounded" style="background-color: #CFDDE8;">
             <label class="form-label">총 예산</label>
-            <div class="text-end mt-1 fw-bold" style="color: #7c5a47;">{{ totalBudget }}원</div>
-            <div class="progress" style="height: 6px; background-color: #e0d6cf;">
-              <div class="progress-bar" :style="{ width: '100%', backgroundColor: '#7c5a47' }"></div>
+            <div class="text-end mt-1 fw-bold" style="color: #205781;">{{ totalBudget }}원</div>
+            <div class="progress" style="height: 6px; background-color: #205781;">
+              <div class="progress-bar" :style="{ width: '100%', backgroundColor: '#205781' }"></div>
             </div>
           </div>
           <!-- 개별 예산 입력 -->
@@ -138,7 +138,7 @@ function preventNegative(category) {
                 @click="handleCreateTravel"
                 class="btn text-white"
                 :disabled="!isBudgetValid"
-                style="background-color: #8B6F5C;"
+                style="background-color: #0F2E47;"
               >
                 여행 만들기
             </button>            

@@ -117,7 +117,7 @@ const isFormValid = computed(() => {
             @click="$emit('next')"
             class="btn text-white"
             :disabled="!isFormValid"
-            style="background-color: #8B6F5C;"
+            style="background-color: #0F2E47;"
           >
             다음
           </button>

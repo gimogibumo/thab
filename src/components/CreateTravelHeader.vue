@@ -41,9 +41,10 @@ const goToManage = () => {
   <div>
     <!-- 상단 제목 -->
     <div class="d-flex align-items-center mb-3">
+      <!-- 수정된 버튼 부분 -->
       <button
         class="btn me-2 text-white"
-        style="background-color: #8B6F5C; border: none; border-radius: 0.5rem;"
+        style="background-color: #0F2E47; border: none; border-radius: 0.5rem;"
         @click="goToManage"
       >
         <i class="bi bi-arrow-left"></i>

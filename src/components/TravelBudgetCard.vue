@@ -102,14 +102,13 @@ const saveEdit = () => {
     </div>
   </div>
 </template>
-
 <style scoped>
 .expense-card {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #eee;
+  border: 1px solid #d6dee6;
   border-radius: 12px;
   padding: 2.3rem;
   margin-bottom: 1rem;
@@ -120,21 +119,19 @@ const saveEdit = () => {
   box-sizing: border-box;
 }
 
-/* 수정 중일 때 스타일 */
 .expense-card.editing {
-  background-color: #f3eeea;
-  border: 1px solid #8b6f5c;
+  background-color: #eef3f8;
+  border: 1px solid #205781;
   padding: 40px;
 }
 
 .expense-card.editing input {
-  background-color: #fdfbf9;
-  border: 1px solid #8b6f5c;
+  background-color: #f5f9fc;
+  border: 1px solid #205781;
   border-radius: 6px;
   padding: 0.4rem 0.6rem;
   font-size: 0.9rem;
-  color: #333;
-  border: none;
+  color: #0f2e47;
 }
 
 .expense-card.editing input[type='date'] {
@@ -144,8 +141,8 @@ const saveEdit = () => {
 }
 
 .select-container select {
-  background-color: #f1e9e3;
-  color: #a47c59;
+  background-color: #e1ebf3;
+  color: #205781;
   border: none;
   border-radius: 999px;
   padding: 0.2rem 1.5rem 0.2rem 0.7rem;
@@ -169,21 +166,15 @@ const saveEdit = () => {
   top: 50%;
   transform: translateY(-50%);
   font-size: 0.6rem;
-  color: #a47c59;
+  color: #205781;
   pointer-events: none;
-}
-
-.expense-card.editing select::after {
-  content: '▼';
-  font-size: 0.6rem;
-  color: #a47c59;
-  margin-left: 0.5rem;
 }
 
 .date {
   width: 90px;
-  color: #555;
+  color: #205781;
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .info {
@@ -211,18 +202,20 @@ const saveEdit = () => {
   box-sizing: border-box;
   max-width: 120px;
   min-width: 80px;
+  color: #0f2e47;
 }
 
 .money-info span {
   font-size: 0.9rem;
-  color: #555;
+  color: #205781;
   margin-left: 0.5rem;
+  font-weight: 500;
 }
 
 .category-chip {
   display: inline-block;
-  background-color: #f1e9e3;
-  color: #a47c59;
+  background-color: #e1ebf3;
+  color: #205781;
   border-radius: 999px;
   padding: 0.2rem 0.7rem;
   font-size: 0.8rem;
@@ -233,21 +226,23 @@ const saveEdit = () => {
 .name {
   font-size: 1rem;
   font-weight: 600;
+  color: #0f2e47;
 }
 
 .memo {
   font-size: 0.85rem;
-  color: #777;
+  color: #4a5d72;
 }
 
 .amount {
   font-weight: bold;
   font-size: 1rem;
+  color: #0f2e47;
 }
 
 .converted {
   font-size: 0.85rem;
-  color: #888;
+  color: #4a5d72;
 }
 
 .actions {
@@ -262,16 +257,17 @@ const saveEdit = () => {
   border-radius: 6px;
   border: none;
   cursor: pointer;
+  font-weight: 500;
 }
 
 .edit-btn {
-  background-color: #a47c59;
+  background-color: #205781;
   color: #fff;
 }
 
 .delete-btn {
   background-color: #ffffff;
-  color: #555;
-  border: solid 0.5px #8b6f5c;
+  color: #205781;
+  border: solid 1px #205781;
 }
 </style>

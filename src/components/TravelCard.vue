@@ -192,7 +192,7 @@ const goToManagePage = () => {
   top: 20px;
   right: 20px;
   background-color: #ffffff;
-  color: #a47764;
+  color: #0F2E47;
   padding: 5px 10px;
   border-radius: 5px;
   font-size: 14px;
@@ -239,13 +239,13 @@ const goToManagePage = () => {
 
 .progress {
   height: 100%;
-  background-color: #a47764;
+  background-color: #0F2E47;
 }
 
 .progress-percentage {
   font-weight: bold;
   font-size: 20px;
-  color: #a47764;
+  color: #0F2E47;
 }
 
 .budget-info {
@@ -293,7 +293,7 @@ const goToManagePage = () => {
   height: 56px;
   width: 100%;
   padding: 10px;
-  background-color: #a47764;
+  background-color: #0F2E47;
   color: white;
   border: none;
   border-radius: 5px;

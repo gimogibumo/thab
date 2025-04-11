@@ -83,7 +83,7 @@ const handleNext = () => {
             :disabled="!isValid"
             class="btn text-white"
             :class="{ 'btn-disabled': !isValid }"
-            style="background-color: #8B6F5C;"
+            style="background-color: #0F2E47;"
           >
             다음
           </button>

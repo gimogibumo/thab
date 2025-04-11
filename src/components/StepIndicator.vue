@@ -36,6 +36,6 @@
     borderRadius: '50%',
     width: '30px',
     height: '30px',
-    backgroundColor: active ? '#8B6F5C' : '',
+    backgroundColor: active ? '#0F2E47' : '',
   })
   </script>

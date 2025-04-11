@@ -117,16 +117,18 @@ onMounted(() => {
     </router-link>
   </div>
 </template>
-
 <style scoped>
 .content {
   padding: 3% 5%;
+  color: #0F2E47;
 }
 .page-title {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 50px;
+  color: #0F2E47;
 }
+
 .tabs {
   display: flex;
   gap: 10px;
@@ -135,16 +137,17 @@ onMounted(() => {
 
 .tab {
   padding: 10px 20px;
-  border: 1px solid #a47764;
+  border: 1px solid #205781;
   border-radius: 5px;
   background-color: #fff;
-  color: #a47764;
+  color: #205781;
   cursor: pointer;
   text-align: center;
+  font-weight: 500;
 }
 
 .tab.active {
-  background-color: #a47764;
+  background-color: #205781;
   color: white;
 }
 
@@ -169,7 +172,7 @@ onMounted(() => {
   right: 30px;
   width: 60px;
   height: 60px;
-  background-color: #a47764;
+  background-color: #205781;
   color: white;
   font-size: 36px;
   border-radius: 50%;
@@ -185,7 +188,7 @@ onMounted(() => {
 }
 
 .fab:hover {
-  background-color: #8b5e4b;
+  background-color: #174360;
   transform: scale(1.1);
 }
 

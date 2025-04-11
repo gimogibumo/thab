@@ -68,7 +68,7 @@ const barData = computed(() => ({
     {
       label: '지출(원)',
       data: Object.values(dailyExpenses.value),
-      backgroundColor: '#815f43',
+      backgroundColor: '#0F2E47', // 여기 변경됨
       borderRadius: 6,
     },
   ],
@@ -90,7 +90,7 @@ const doughnutData = computed(() => ({
   datasets: [
     {
       data: Object.values(categoryExpenses.value),
-      backgroundColor: ['#8B6F5C', '#A47764', '#d3b8a3', '#C09E8C', '#D5BFB3', '#E6D5CC'],
+      backgroundColor: ['#0F2E47', '#173E5F', '#205781', '#4A7AA4', '#CFDDE8', '#D9D9D9'],
     },
   ],
 }))
