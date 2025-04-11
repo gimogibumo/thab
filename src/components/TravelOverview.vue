@@ -32,6 +32,20 @@ const categoryLabels = {
   etc: '기타'
 }
 
+const categoryColors = {
+  stay: '#0F2E47',
+  transport: '#173E5F',
+  food: '#205781',
+  tour: '#4A7AA4',
+  shopping: '#CFDDE8',
+  etc: '#B0C4DE' // 추가 색상 (연한 블루그레이 느낌)
+}
+
+const getCategoryColor = (label) => {
+  const key = Object.keys(categoryLabels).find(k => categoryLabels[k] === label)
+  return categoryColors[key] || '#B0C4DE' // 기본 색상
+}
+
 const today = new Date()
 
 onMounted(async () => {
@@ -190,7 +204,7 @@ const handleCheckToggle = async () => {
             </div>
             <div class="progress mb-4" style="height: 8px;">
               <div
-                class="progress-bar bg-warning"
+                class="progress-bar"
                 role="progressbar"
                 :style="{
                   width:
@@ -272,8 +286,10 @@ const handleCheckToggle = async () => {
                 <div class="text-muted small me-3 min-width-80">
                   {{ new Date(expense.date).toLocaleDateString() }}
                 </div>
-
-                <div class="badge category-badge px-2 py-1 small me-3 min-width-70">
+                <div
+                  class="badge text-white category-badge px-2 py-1 small me-3 min-width-70"
+                  :style="{ backgroundColor: getCategoryColor(expense.category) }"
+                >
                   {{ expense.category }}
                 </div>
                 <!-- 지출명 + 메모 -->
