@@ -12,17 +12,13 @@
         <div class="dropdown-header fw-bold text-dark px-3 py-2 border-bottom">🔔 알림</div>
         <div class="dropdown-body px-3 py-2 text-muted small">
           <ul class="mb-0 ps-3">
-            <li v-if="alerts.travel && alerts.travelSoon == null">
-              여행 정보가 등록되지 않았어요 ✈️
-            </li>
             <li v-if="alerts.travel && alerts.travelSoon != null">
               여행이 {{ alerts.travelSoon }}일 남았습니다!
             </li>
-            <li v-if="alerts.budget">예산 설정이 필요해요 💰</li>
-            <li v-if="alerts.income && alerts.budgetWarning">
+            <li v-if="alerts.budget && alerts.budgetWarning">
               예산의 80% 이상을 지출했어요! 지출을 확인해보세요 ⚠️
             </li>
-            <li v-if="alerts.income && !alerts.budgetWarning">아직 예산이 80%를 넘지 않았어요</li>
+            <li v-if="alerts.budget && !alerts.budgetWarning">아직 예산이 80%를 넘지 않았어요</li>
             <li v-if="!alerts.travel && !alerts.budget && !alerts.income" class="text-muted">
               새로운 알림이 없습니다.
             </li>
@@ -83,18 +79,33 @@ onMounted(async () => {
     )
     const travelDatas = travels.data
     const today = new Date()
-
+    const ongoingTravel = null
+    const ongoingFlag = false
     for (const travel of travelDatas) {
       const startDate = new Date(travel.startDate)
       const diffTime = startDate.getTime() - today.getTime()
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-
-      if (diffDays >= 0 && diffDays < 3) {
+      const endDate = new Date(travel.endDate)
+      const diffTime2 = endDate.getTime() - today.getTime()
+      const diffDays2 = Math.ceil(diffTime2 / (1000 * 60 * 60 * 24))
+      const flag = false
+      if (diffDays <= 0 && diffDays2 >= 0 && !ongoingFlag) {
+        ongoingTravel = travel
+        ongoingFlag = true
+      }
+      if (diffDays > 1 && diffDays < 3 && !flag) {
         alerts.value.travelSoon = diffDays
-        break // 하나만 표시하고 끝냄
+        console.log(travel)
+        flag = true
       }
     }
-
+    if (ongoingFlag) {
+      const totalBudget = Number(ongoingTravel.income)
+      const totalSpent = Number(ongoingTravel.totalSpent)
+      if (totalBudget > 0 && totalSpent / totalBudget >= 0.8) {
+        alerts.value.budgetWarning = true
+      }
+    }
     if (alerts.value.budget) {
       for (const travel of travelDatas) {
         const totalBudget = Number(travel.totalBudget)
