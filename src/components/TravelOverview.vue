@@ -273,11 +273,9 @@ const handleCheckToggle = async () => {
                   {{ new Date(expense.date).toLocaleDateString() }}
                 </div>
 
-                <!-- 카테고리 -->
-                <div class="badge bg-light text-dark border rounded-pill px-2 py-1 small me-3 min-width-70">
+                <div class="badge category-badge px-2 py-1 small me-3 min-width-70">
                   {{ expense.category }}
                 </div>
-
                 <!-- 지출명 + 메모 -->
                 <div class="flex-grow-1 me-3">
                   <div class="fw-bold">{{ expense.expenseName || '지출 항목' }}</div>
@@ -311,7 +309,7 @@ const handleCheckToggle = async () => {
 }
 
 .progress {
-  background-color: #e9ecef;
+  background-color: #ffffff; /* 기존: #e9ecef */
   border-radius: 20px;
 }
 
@@ -346,5 +344,10 @@ button {
   background-color: #E9ECEF;
   border-radius: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.category-badge {
+  background-color: #CFDDE8;
+  color: #0F2E47;
+  border: none;
 }
 </style>

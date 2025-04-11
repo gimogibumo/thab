@@ -98,7 +98,7 @@ const deleteItem = async (index) => {
 
 <template>
   <div class="p-4">
-    <h5 class="fw-bold mb-3">여행 준비 체크리스트</h5>
+    <h5 class="fw-bold mb-3" style="color: #0F2E47;">여행 준비 체크리스트</h5>
 
     <div class="bg-white shadow-sm rounded-4 p-4 mb-3">
       <div class="row gy-3">
@@ -115,12 +115,13 @@ const deleteItem = async (index) => {
                 v-model="item.checked"
                 :id="'item-' + index"
               />
-              <label class="form-check-label" :for="'item-' + index">
+              <label class="form-check-label" :for="'item-' + index" style="color: #0F2E47;">
                 {{ item.label }}
               </label>
             </div>
             <button
-              class="btn btn-sm btn-outline-danger"
+              class="btn btn-sm"
+              style="color: #fff; border: none;"
               @click="deleteItem(index)"
             >
               🗑️
@@ -134,7 +135,7 @@ const deleteItem = async (index) => {
     <div class="d-flex justify-content-end">
       <button
         class="btn text-white px-4 py-2 rounded-3"
-        style="background-color: #7b5e47;"
+        style="background-color: #205781;"
         @click="openModal"
       >
         + 항목 추가
@@ -145,10 +146,10 @@ const deleteItem = async (index) => {
     <div class="modal fade" id="addChecklistModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-4 border-0 p-4">
-          <h5 class="fw-bold mb-3">체크리스트 항목 추가</h5>
+          <h5 class="fw-bold mb-3" style="color: #0F2E47;">체크리스트 항목 추가</h5>
 
           <div class="mb-3">
-            <label class="form-label fw-semibold">항목 이름</label>
+            <label class="form-label fw-semibold" style="color: #0F2E47;">항목 이름</label>
             <input
               type="text"
               class="form-control"
@@ -161,7 +162,7 @@ const deleteItem = async (index) => {
             <button
               type="button"
               class="btn px-4 py-2 rounded-3"
-              style="background-color: #f5f0ed;"
+              style="background-color: #f5f0ed; color: #0F2E47;"
               @click="closeModal"
             >
               취소
@@ -169,7 +170,7 @@ const deleteItem = async (index) => {
             <button
               type="button"
               class="btn px-4 py-2 rounded-3 text-white"
-              style="background-color: #7b5e47;"
+              style="background-color: #205781;"
               @click="submitNewItem"
             >
               추가하기
@@ -180,3 +181,4 @@ const deleteItem = async (index) => {
     </div>
   </div>
 </template>
+
