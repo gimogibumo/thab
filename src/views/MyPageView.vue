@@ -168,7 +168,7 @@ const updatePwd = async () => {
           <input
             :type="showPassword ? 'text' : 'password'"
             class="form-control"
-            :value="passwd"
+            :value="authStore.user.password"
             readonly
           />
           <button
